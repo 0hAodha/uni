@@ -1,0 +1,100 @@
+- #[[ST2001 - Statistics in Data Science I]]
+- **Previous Topic:** [[Exploratory Data Analysis]]
+- **Next Topic:** [[Probability]]
+- **Relevant Slides:** ![Topic 3 - Sampling.pdf](../assets/Topic_3_-_Sampling_1663599787566_0.pdf)
+-
+- What is a **Parameter**? #card
+  card-last-interval:: -1
+  card-repeats:: 1
+  card-ease-factor:: 2.6
+  card-next-schedule:: 2022-11-23T00:00:00.000Z
+  card-last-reviewed:: 2022-11-22T13:40:14.581Z
+  card-last-score:: 1
+	- A **parameter** is a single value summarising some feature or variable of interest in the population.
+	- It is usually unknown.
+- What is **inference**? #card
+  card-last-interval:: 33.64
+  card-repeats:: 4
+  card-ease-factor:: 2.9
+  card-next-schedule:: 2022-11-22T23:24:34.466Z
+  card-last-reviewed:: 2022-10-20T08:24:34.467Z
+  card-last-score:: 5
+	- **Inference** is the process of making decisions about a population based on information in a sample.
+- A consequence of **natural variation** is that two samples drawn form the same population will usually give different estimates of the population parameters.
+-
+- # Sampling
+  collapsed:: true
+	- What is **non-probabilistic sampling**? #card
+	  card-last-interval:: 29.04
+	  card-repeats:: 4
+	  card-ease-factor:: 2.56
+	  card-next-schedule:: 2022-12-13T20:02:44.059Z
+	  card-last-reviewed:: 2022-11-14T20:02:44.059Z
+	  card-last-score:: 5
+		- **Non-probabilistic sampling** methods are techniques of obtaining a sample that is not chosen at random and may be subject to **sampling bias**.
+	- ## Simple Random Sample
+		- ### Difficulties:
+			- Obtaining a sampling frame (list of all experimental units).
+			- Possibly time consuming / expensive.
+			- Minority groups, by chance, may not be represented in the sample.
+	- ## Stratified Random Sampling #card
+	  card-last-interval:: -1
+	  card-repeats:: 1
+	  card-ease-factor:: 2.36
+	  card-next-schedule:: 2022-11-18T00:00:00.000Z
+	  card-last-reviewed:: 2022-11-17T20:19:40.391Z
+	  card-last-score:: 1
+		- 1. Split entire population into **homogeneous groups**, called **strata**.
+		  2. Take a Simple Random Sample from each stratum.
+		- ### Stratified VS Simple Random Sample
+			- Ensure representation from minority groups.
+			- Estimates of the population parameters per strata may be of interest.
+			- Possible reduction in cost per observation in the survey.
+			- Increased accuracy as reduced sampling error (less variation within a stratum).
+			-
+			- ### Difficulties
+				- Can you correctly allocate each individual to one & only one stratum?
+				- Should every group receive equal weight?
+				- What if some strata are more varied than others?
+				- Take into account mean, variance, and cost to get "optimal allocation".
+	- ## Cluster Sampling #card
+	  card-last-interval:: -1
+	  card-repeats:: 1
+	  card-ease-factor:: 2.36
+	  card-next-schedule:: 2022-11-18T00:00:00.000Z
+	  card-last-reviewed:: 2022-11-17T20:18:48.138Z
+	  card-last-score:: 1
+		- Instead of randomly choosing individuals, a Simple Random Sample of collection or groups of individuals is taken.
+		- The population is broken up into regions or groups, usually a *natural partition*, called a **cluster**.
+			- Internally heterogeneous, homogeneous between the clusters.
+		- Clusters are assumed representation of the entire population.
+		- Small number of clusters are selected at random.
+		- Every individual within a cluster is observed.
+		-
+		- ### Cluster Over Stratified
+			- Sampling frame not necessarily needed.
+			- May be more practical and / or economical than Simple or Stratified Random Sampling.
+			- Will be biased if the entire cluster is not sampled.
+			- Careful if homogeneity within a cluster and heterogeneity between clusters as this can increase sample error.
+			- **Note:** In stratified sampling, all strata are sampled, while in cluster sampling only some clusters are sampled.
+- # Studies & Experiments
+	- ## Observational Studies & Experiments #card
+	  card-last-interval:: 4.14
+	  card-repeats:: 2
+	  card-ease-factor:: 2.56
+	  card-next-schedule:: 2022-11-27T15:18:34.757Z
+	  card-last-reviewed:: 2022-11-23T12:18:34.758Z
+	  card-last-score:: 5
+		- In an **Observational Study**, data is collected only be *observing* what occurs.
+			- E.g., surveys, historical records.
+		- When researchers want to investigate **causal relationships**, it's best to conduct an experiment.
+			- Usually there will be both an explanatory variable & a response variable.
+			- Be wary of confounding variables.
+	- ## Designed (Comparative) Study
+		- An experiment allows us to prove a cause-and-effect relationship.
+		- The experimenter must identify:
+			- at least one **explanatory variable**, called a **factor** to manipulate.
+			- at least one **response** variable to measure.
+		- The experimenter must also control any other **nuisance factors** that could influence the response.
+			- e.g., weather, day of the week.
+				-

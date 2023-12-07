@@ -1,0 +1,3 @@
+- ![CT213-Slides.pdf](../assets/CT213-Slides_1662818364324_0.pdf)
+- ## Lab Information
+	- Labs will run from **Week 03** (Week starting 2022-09-19)

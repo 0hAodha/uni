@@ -1,0 +1,378 @@
+[{:block/name "2022年10月20日",
+  :block/created-at 1666252964929,
+  :block/updated-at 1666260437195}
+ {:block/name "2022年11月11日",
+  :block/created-at 1668152523918,
+  :block/updated-at 1668162605985}
+ {:block/name ": https:",
+  :block/created-at 1667901092192,
+  :block/updated-at 1667901092192}
+ {:block/name ": https://dbis-uibk.github.io",
+  :block/created-at 1667901092193,
+  :block/updated-at 1667901092193}
+ {:block/name ": https://dbis-uibk.github.io/relax",
+  :block/created-at 1667901092193,
+  :block/updated-at 1667901092193}
+ {:block/name ": https://dbis-uibk.github.io/relax/calc",
+  :block/created-at 1667901092193,
+  :block/updated-at 1667901092193}
+ {:block/name ": https://dbis-uibk.github.io/relax/calc/local",
+  :block/created-at 1667901092194,
+  :block/updated-at 1667901092194}
+ {:block/name ": https://dbis-uibk.github.io/relax/calc/local/uibk",
+  :block/created-at 1667901092194,
+  :block/updated-at 1667901092194}
+ {:block/name
+  ": https://dbis-uibk.github.io/relax/calc/local/uibk/local",
+  :block/created-at 1667901092195,
+  :block/updated-at 1667901092195}
+ {:block/name
+  ": https://dbis-uibk.github.io/relax/calc/local/uibk/local/0",
+  :block/created-at 1667901092191,
+  :block/updated-at 1667901092191}
+ {:block/name "a",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "abstraction & polymorphism",
+  :block/created-at 1666256757802,
+  :block/updated-at 1666857873332}
+ {:block/name "advanced pie, derangements, & counting functions",
+  :block/created-at 1665576126852,
+  :block/updated-at 1666784394067}
+ {:block/name "aggregate clauses, group by, & having clauses",
+  :block/created-at 1664362619357,
+  :block/updated-at 1665401573078}
+ {:block/name "agile methods - extreme programming",
+  :block/created-at 1664439358122,
+  :block/updated-at 1666267099375}
+ {:block/name "b",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "bidirectional",
+  :block/created-at 1667899472428,
+  :block/updated-at 1667899472428}
+ {:block/name "binomial coefficients",
+  :block/created-at 1663699875848,
+  :block/updated-at 1665269689188}
+ {:block/name "bootstrap css",
+  :block/created-at 1666267099374,
+  :block/updated-at 1668007630745}
+ {:block/name "c",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "canceled",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "cancelled",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "card",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "card7",
+  :block/created-at 1665403674807,
+  :block/updated-at 1665403674807}
+ {:block/name "cloud computing",
+  :block/created-at 1662846706068,
+  :block/updated-at 1665049290982}
+ {:block/name "coding up inheritance",
+  :block/created-at 1665648103834,
+  :block/updated-at 1666253134753}
+ {:block/name "colouring graphs; eulerian & hamiltonian graphs",
+  :block/created-at 1667999555780,
+  :block/updated-at 1668001880951}
+ {:block/name "combinatorial proofs",
+  :block/created-at 1664365559513,
+  :block/updated-at 1665139028342}
+ {:block/name "contents",
+  :block/created-at 1662755412632,
+  :block/updated-at 1662755412632}
+ {:block/name "convex polyhedra",
+  :block/created-at 1667912443470,
+  :block/updated-at 1667999555782}
+ {:block/name "counting",
+  :block/created-at 1662844737516,
+  :block/updated-at 1665137815453}
+ {:block/name "cpu management - scheduling",
+  :block/created-at 1664802250958,
+  :block/updated-at 1667997827949}
+ {:block/name "ct2106 - object-oriented programming",
+  :block/created-at 1662812504035,
+  :block/updated-at 1662812504035}
+ {:block/name "ct213 - computer systems & organisation",
+  :block/created-at 1662812363300,
+  :block/updated-at 1662828172731}
+ {:block/name "ct216 - software engineering i",
+  :block/created-at 1662812477523,
+  :block/updated-at 1662846690423}
+ {:block/name "ct230 - database systems i",
+  :block/created-at 1662812383585,
+  :block/updated-at 1662846569759}
+ {:block/name "ct255 - next generation technologies ii",
+  :block/created-at 1662755524966,
+  :block/updated-at 1662843069874}
+ {:block/name "database system introduction",
+  :block/created-at 1662845439484,
+  :block/updated-at 1665139118861}
+ {:block/name "definitions & planar graphs",
+  :block/created-at 1666785671806,
+  :block/updated-at 1667912443471}
+ {:block/name "describing data in r",
+  :block/created-at 1663587324380,
+  :block/updated-at 1665269306101}
+ {:block/name "diffie-hellman key exchange",
+  :block/created-at 1667829411273,
+  :block/updated-at 1667997679213}
+ {:block/name "discrete probability distributions: binomial & poisson",
+  :block/created-at 1665414098028,
+  :block/updated-at 1668067669851}
+ {:block/name "doing",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "done",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "draws/2022-10-19-13-24-31.excalidraw",
+  :block/created-at 1666182420922,
+  :block/updated-at 1666182420922}
+ {:block/name "draws/2022-10-28-10-59-13.excalidraw",
+  :block/created-at 1666951586883,
+  :block/updated-at 1666951586883}
+ {:block/name "draws/2022-10-28-10-59-33.excalidraw",
+  :block/created-at 1666951586883,
+  :block/updated-at 1666951586883}
+ {:block/name "draws/2022-10-28-11-04-05.excalidraw",
+  :block/created-at 1666951586882,
+  :block/updated-at 1666951586882}
+ {:block/name "draws/2022-10-28-11-22-12.excalidraw",
+  :block/created-at 1666952786830,
+  :block/updated-at 1666952786830}
+ {:block/name "draws/2022-10-28-11-25-20.excalidraw",
+  :block/created-at 1666952786830,
+  :block/updated-at 1666952786830}
+ {:block/name "draws/2022-10-28-11-38-31.excalidraw",
+  :block/created-at 1666953986830,
+  :block/updated-at 1666953986830}
+ {:block/name "entity relationship models",
+  :block/created-at 1664888080307,
+  :block/updated-at 1666785065248}
+ {:block/name "exploratory data analysis",
+  :block/created-at 1662760881692,
+  :block/updated-at 1665402231847}
+ {:block/name "extra-curriculars",
+  :block/created-at 1662817977281,
+  :block/updated-at 1662818031268}
+ {:block/name "favorites",
+  :block/created-at 1662755412632,
+  :block/updated-at 1662755412632}
+ {:block/name "file",
+  :block/created-at 1663501516528,
+  :block/updated-at 1663501516528}
+ {:block/name "file-path",
+  :block/created-at 1663501516532,
+  :block/updated-at 1663501516532}
+ {:block/name "firebase functions",
+  :block/created-at 1668108223936,
+  :block/updated-at 1668152888697}
+ {:block/name "first java code",
+  :block/created-at 1663059929750,
+  :block/updated-at 1665402183209}
+ {:block/name "friedrich nietzsche",
+  :block/created-at 1663877719000,
+  :block/updated-at 1663877723364}
+ {:block/name "gdpr",
+  :block/created-at 1662755846087,
+  :block/updated-at 1666784905393}
+ {:block/name "hash cracking using rainbow tables",
+  :block/created-at 1666007838619,
+  :block/updated-at 1666615755027}
+ {:block/name "hls__2bct-1_1662890969894_0",
+  :block/created-at 1662891145360,
+  :block/updated-at 1662891145360}
+ {:block/name "human security & passwords",
+  :block/created-at 1664798283314,
+  :block/updated-at 1666785040082}
+ {:block/name "hypothesis testing",
+  :block/created-at 1667837632146,
+  :block/updated-at 1668155180196}
+ {:block/name "in-progress",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "interfaces",
+  :block/created-at 1666857873329,
+  :block/updated-at 1667997871737}
+ {:block/name "introduction to agile methods",
+  :block/created-at 1663848388175,
+  :block/updated-at 1665401551626}
+ {:block/name "introduction to cryptography",
+  :block/created-at 1663488291074,
+  :block/updated-at 1666168991848}
+ {:block/name "introduction to cybersecurity",
+  :block/created-at 1662755701938,
+  :block/updated-at 1664807302595}
+ {:block/name "introduction to graph theory",
+  :block/created-at 1666180750693,
+  :block/updated-at 1666785671809}
+ {:block/name "introduction to inheritance",
+  :block/created-at 1665047054902,
+  :block/updated-at 1665648103836}
+ {:block/name "introduction to java",
+  :block/created-at 1662850740877,
+  :block/updated-at 1664630972286}
+ {:block/name "introduction to nodejs",
+  :block/created-at 1668066700245,
+  :block/updated-at 1668085135354}
+ {:block/name "introduction to object-oriented programming",
+  :block/created-at 1662850183398,
+  :block/updated-at 1667997875101}
+ {:block/name "introduction to sql & ddl",
+  :block/created-at 1663153069230,
+  :block/updated-at 1665402192682}
+ {:block/name "irish sign language",
+  :block/created-at 1662818031268,
+  :block/updated-at 1662818031268}
+ {:block/name "javascript functions & events",
+  :block/created-at 1668066700237,
+  :block/updated-at 1668066700237}
+ {:block/name "joins & union queries",
+  :block/created-at 1665572518087,
+  :block/updated-at 1666176972120}
+ {:block/name "later",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "ma284 - discrete mathematics",
+  :block/created-at 1662812426466,
+  :block/updated-at 1662812426466}
+ {:block/name "ma284: homework",
+  :block/created-at 1663235842961,
+  :block/updated-at 1663241964273}
+ {:block/name "memory management",
+  :block/created-at 1666616373198,
+  :block/updated-at 1667835960860}
+ {:block/name "more java code",
+  :block/created-at 1663063793212,
+  :block/updated-at 1665138691304}
+ {:block/name "normalisation",
+  :block/created-at 1666176972119,
+  :block/updated-at 1667899093310}
+ {:block/name "notes",
+  :block/created-at 1662755380739,
+  :block/updated-at 1662755380739}
+ {:block/name "now",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "oop modelling",
+  :block/created-at 1663835834720,
+  :block/updated-at 1665269607467}
+ {:block/name "overview of computer systems",
+  :block/created-at 1662828172731,
+  :block/updated-at 1665402158751}
+ {:block/name "principle of inclusion-exclusion",
+  :block/created-at 1663097242134,
+  :block/updated-at 1665139547406}
+ {:block/name "probability",
+  :block/created-at 1664207767962,
+  :block/updated-at 1666100135523}
+ {:block/name "process management",
+  :block/created-at 1664207768394,
+  :block/updated-at 1666785058913}
+ {:block/name "process synchronisation",
+  :block/created-at 1665410544532,
+  :block/updated-at 1668077904820}
+ {:block/name "programming models",
+  :block/created-at 1662842663185,
+  :block/updated-at 1667997878539}
+ {:block/name "query processing & optimisation",
+  :block/created-at 1667916510155,
+  :block/updated-at 1668077734146}
+ {:block/name "query processing: relational algebra",
+  :block/created-at 1667899093310,
+  :block/updated-at 1668077746581}
+ {:block/name "random variables",
+  :block/created-at 1665050117811,
+  :block/updated-at 1666784919123}
+ {:block/name "sampling",
+  :block/created-at 1663604282449,
+  :block/updated-at 1665401847721}
+ {:block/name "sampling distributions & confidence intervals",
+  :block/created-at 1666624196792,
+  :block/updated-at 1668111801926}
+ {:block/name "scrum roles & ceremonies",
+  :block/created-at 1663849690600,
+  :block/updated-at 1665401531298}
+ {:block/name "second year university",
+  :block/created-at 1662812271350,
+  :block/updated-at 1662890970415}
+ {:block/name "social engineering",
+  :block/created-at 1665403220751,
+  :block/updated-at 1667826227683}
+ {:block/name "software processes",
+  :block/created-at 1663178663476,
+  :block/updated-at 1665401726538}
+ {:block/name "sql dml statement",
+  :block/created-at 1663680232157,
+  :block/updated-at 1665269794723}
+ {:block/name "sql dml: select",
+  :block/created-at 1664284172095,
+  :block/updated-at 1665269774258}
+ {:block/name "sql select: working with strings & subqueries",
+  :block/created-at 1664284172064,
+  :block/updated-at 1666169126193}
+ {:block/name "st2001 - statistics in data science i",
+  :block/created-at 1662760697673,
+  :block/updated-at 1664445709714}
+ {:block/name "st2001 labs",
+  :block/created-at 1663587251924,
+  :block/updated-at 1663587333173}
+ {:block/name "stars & bars",
+  :block/created-at 1664977220358,
+  :block/updated-at 1665576126854}
+ {:block/name "system software & operating systems",
+  :block/created-at 1663453161468,
+  :block/updated-at 1666784902239}
+ {:block/name "template",
+  :block/created-at 1665268399216,
+  :block/updated-at 1665268399216}
+ {:block/name "templates",
+  :block/created-at 1665268290093,
+  :block/updated-at 1665268429238}
+ {:block/name "the normal distribution",
+  :block/created-at 1665655379797,
+  :block/updated-at 1668068172029}
+ {:block/name "the relational model",
+  :block/created-at 1663056902320,
+  :block/updated-at 1665305483011}
+ {:block/name "todo",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name
+  "twilight of the idols (how to philosophise with the hammer)",
+  :block/created-at 1663877741591,
+  :block/updated-at 1663878217528}
+ {:block/name "using r as a calculator",
+  :block/created-at 1662885317609,
+  :block/updated-at 1667997842680}
+ {:block/name "variables & types",
+  :block/created-at 1663833671558,
+  :block/updated-at 1665401889542}
+ {:block/name "wait",
+  :block/created-at 1662755412633,
+  :block/updated-at 1662755412633}
+ {:block/name "waiting",
+  :block/created-at 1662755412632,
+  :block/updated-at 1662755412633}
+ {:block/name "日本語",
+  :block/created-at 1662818014594,
+  :block/updated-at 1662818014594}
+ {:block/name "日本語かんたん",
+  :block/created-at 1664037986968,
+  :block/updated-at 1664037986968}
+ {:block/name "日本語チャレンジ",
+  :block/created-at 1664445429911,
+  :block/updated-at 1664445429911}
+ {:block/name "本",
+  :block/created-at 1663877674293,
+  :block/updated-at 1663877674293}
+ {:block/name "絵からできた漢字１",
+  :block/created-at 1664445430033, 
+  :block/updated-at 1665076855455}]

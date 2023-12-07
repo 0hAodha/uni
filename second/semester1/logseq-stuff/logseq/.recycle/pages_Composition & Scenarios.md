@@ -1,0 +1,6 @@
+- #[[CT2106 - Object-Oriented Programming]]
+- **Previous Topic:**
+- **Next Topic:** null
+- **Relevant Slides:** ![Lecture03.pdf](../assets/Lecture03_1663270555849_0.pdf)
+-
+-

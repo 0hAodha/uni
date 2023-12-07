@@ -1,0 +1,3 @@
+- #[[Second Year University]]
+- **Relevant Slides:** ![Lecture00.pdf](../assets/Lecture00_1662845418512_0.pdf)
+-

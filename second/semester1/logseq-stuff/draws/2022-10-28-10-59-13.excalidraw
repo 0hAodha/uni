@@ -1,0 +1,343 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "file://",
+  "elements": [
+    {
+      "id": "OC4sYhSC3DRPspujCKMrT",
+      "type": "freedraw",
+      "x": 307.8125,
+      "y": 220.796875,
+      "width": 89,
+      "height": 22,
+      "angle": 0,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "strokeSharpness": "round",
+      "seed": 554465363,
+      "version": 23,
+      "versionNonce": 1606201907,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1666951160509,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          9,
+          -3
+        ],
+        [
+          13,
+          -4
+        ],
+        [
+          20,
+          -5
+        ],
+        [
+          22,
+          -6
+        ],
+        [
+          23,
+          -6
+        ],
+        [
+          24,
+          -6
+        ],
+        [
+          32,
+          -8
+        ],
+        [
+          44,
+          -11
+        ],
+        [
+          59,
+          -15
+        ],
+        [
+          78,
+          -19
+        ],
+        [
+          83,
+          -21
+        ],
+        [
+          88,
+          -22
+        ],
+        [
+          89,
+          -22
+        ],
+        [
+          89,
+          -21
+        ],
+        [
+          88,
+          -21
+        ],
+        [
+          87,
+          -21
+        ],
+        [
+          86,
+          -21
+        ],
+        [
+          85,
+          -21
+        ],
+        [
+          85,
+          -20
+        ],
+        [
+          85,
+          -20
+        ]
+      ],
+      "pressures": [],
+      "simulatePressure": true,
+      "lastCommittedPoint": [
+        85,
+        -20
+      ]
+    },
+    {
+      "id": "UZOHSc_ECqyweMQsOCNMO",
+      "type": "freedraw",
+      "x": 196.8125,
+      "y": 134.796875,
+      "width": 38,
+      "height": 41,
+      "angle": 0,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "strokeSharpness": "round",
+      "seed": 222625405,
+      "version": 46,
+      "versionNonce": 294171539,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1666951162863,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          11
+        ],
+        [
+          6,
+          17
+        ],
+        [
+          9,
+          18
+        ],
+        [
+          13,
+          20
+        ],
+        [
+          16,
+          21
+        ],
+        [
+          18,
+          21
+        ],
+        [
+          22,
+          18
+        ],
+        [
+          24,
+          18
+        ],
+        [
+          27,
+          15
+        ],
+        [
+          29,
+          13
+        ],
+        [
+          30,
+          12
+        ],
+        [
+          31,
+          11
+        ],
+        [
+          33,
+          10
+        ],
+        [
+          34,
+          9
+        ],
+        [
+          36,
+          5
+        ],
+        [
+          37,
+          1
+        ],
+        [
+          38,
+          -4
+        ],
+        [
+          38,
+          -7
+        ],
+        [
+          38,
+          -10
+        ],
+        [
+          36,
+          -12
+        ],
+        [
+          32,
+          -15
+        ],
+        [
+          27,
+          -18
+        ],
+        [
+          22,
+          -20
+        ],
+        [
+          15,
+          -20
+        ],
+        [
+          12,
+          -18
+        ],
+        [
+          9,
+          -17
+        ],
+        [
+          7,
+          -16
+        ],
+        [
+          7,
+          -14
+        ],
+        [
+          6,
+          -12
+        ],
+        [
+          5,
+          -11
+        ],
+        [
+          4,
+          -10
+        ],
+        [
+          4,
+          -9
+        ],
+        [
+          3,
+          -8
+        ],
+        [
+          3,
+          -7
+        ],
+        [
+          3,
+          -6
+        ],
+        [
+          3,
+          -5
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "pressures": [],
+      "simulatePressure": true,
+      "lastCommittedPoint": [
+        5,
+        -1
+      ]
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#FFF"
+  }
+}

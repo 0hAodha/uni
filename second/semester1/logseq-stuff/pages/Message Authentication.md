@@ -1,0 +1,21 @@
+- #[[CT255 - Next Generation Technologies II]]
+- **Previous Topic:** [[Block Ciphers & Stream Ciphers]]
+- **Next Topic:**
+- **Relevant Slides:** ![ct255_09.pdf](../assets/ct255_09_1668712193123_0.pdf)
+-
+- There are four types of attacks in the context of communication across a network, which are addressed by message authentication:
+	- Masquerade (insertion of messages into the network from a fraudulent source).
+	- Content modification.
+	- Sequence modification.
+	- Timing modification (delete or repeat messages).
+- Message authentication is concerned with:
+	- Protecting the integrity of a message.
+	- Validating the identity of the originator of the message.
+	- Validating sequencing & timeliness.
+	- Non-repudiation of origin (dispute resolution).
+- # Hash Functions
+	- A hash function is a variation of a MAC, which produces a fixed-size hash code ("fingerprint") based on a variably-sized input message.
+	- A hash function is public and is not keyed, therefore the hash value must be encrypted.
+	- Traditional CRCs are too weak and cannot be used.
+		- 128-512 bit hash values are regarded as suitable.
+	-

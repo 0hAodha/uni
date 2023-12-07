@@ -1,0 +1,12 @@
+- ## Semester 1
+	- ### Timetable
+		- ![2BCT-1.pdf](../assets/2BCT-1_1662890969894_0.pdf)
+	- ### Subjects
+		- ### [[CT213 - Computer Systems & Organisation]]
+		- ### [[ CT230 - Database Systems I]]
+		- ### [[MA284 - Discrete Mathematics]]
+		- ### [[CT216 - Software Engineering I]]
+		- ### [[CT2106 - Object-Oriented Programming]]
+		- ### [[ST2001 - Statistics in Data Science I]]
+		- ### [[CT255 - Next Generation Technologies II]]
+-

@@ -1,0 +1,340 @@
+- #[[CT230 - Database Systems I]]
+- **Previous Topic:** [[Aggregate Clauses, Group By, & Having Clauses]]
+- **Next Topic:** [[Joins & Union Queries]]
+- **Relevant Slides:** ![ER-models.pdf](../assets/ER-models_1664888140370_0.pdf)
+-
+- What are **Data Models**? #card
+  card-last-interval:: -1
+  card-repeats:: 1
+  card-ease-factor:: 2.5
+  card-next-schedule:: 2022-11-19T00:00:00.000Z
+  card-last-reviewed:: 2022-11-18T18:34:07.942Z
+  card-last-score:: 1
+	- **Data models** are concepts to describe the structure of a database.
+	- They comprise:
+		- High level or logical models;
+		- Representational / Implementational data models;
+		- Physical data models.
+	- Data models allow for database abstraction.
+- What are **ER Models**? #card
+  card-last-interval:: -1
+  card-repeats:: 1
+  card-ease-factor:: 2.36
+  card-next-schedule:: 2022-11-19T00:00:00.000Z
+  card-last-reviewed:: 2022-11-18T18:34:30.174Z
+  card-last-score:: 1
+	- **Entity Relationship Models** are a top-down approach to database design that provide a way to *model the data* that will be stored in a system. The models are then used to *create tables* in the relational model.
+	- ER Models are used to identify:
+		- [1] The important data to be stored in a database called **entities**.
+		- [2] The **relationships** between the entities.
+		- [3] The **attributes** of entities.
+		- [4] The **constraints** of relationships & entities.
+-
+- # ER Model Notation
+	- A number of different notations can be used to represent the same model.
+		- Chen Notation.
+		- IE Crow's Foot Notation.
+		- UML.
+		- Integrated Definition 1. Extended (IDEF1X).
+		-
+	- The original (Chen) notation uses diamonds, rectangles, and elipses.
+		- This is easier to hand-draw, so it is useful in an exam situation.
+		- It is less implementation-oriented than other notations.
+-
+- # Some Definitions
+  collapsed:: true
+	- ## Entities
+	  collapsed:: true
+		- What is an **entity type**? #card
+		  card-last-interval:: 3.05
+		  card-repeats:: 2
+		  card-ease-factor:: 2.6
+		  card-next-schedule:: 2022-11-17T21:24:38.127Z
+		  card-last-reviewed:: 2022-11-14T20:24:38.127Z
+		  card-last-score:: 5
+			- An **entity type** is a collection of *entity instances* that share common properties or charcteristics.
+			- It is a group of objects, with the same properties, which are identified as having an independent existence.
+			- ![image.png](../assets/image_1664889325926_0.png)
+		- What is an **entity instance**? #card
+		  card-last-interval:: 11.34
+		  card-repeats:: 3
+		  card-ease-factor:: 2.56
+		  card-next-schedule:: 2022-11-26T00:47:05.851Z
+		  card-last-reviewed:: 2022-11-14T16:47:05.851Z
+		  card-last-score:: 5
+			- An **entity instance** or **entity occurrence** is a single, uniquely identifiable occurrence of an entity type (e.g., row in a table).
+			- ![image.png](../assets/image_1664889343582_0.png)
+	- ## Relationships
+		- What is a **relationship type**? #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.6
+		  card-next-schedule:: 2022-11-15T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-14T16:30:24.202Z
+		  card-last-score:: 1
+		  collapsed:: true
+			- A **relationship type** is a set of meaningful relationships among entity types.
+			- **Chen's Notation:** A diamond shape is used to name the relationship. 1 and M/N are used for the "1" and "many" sides respectively.
+			- **Crow's Foot Notation:** The titular "crow's foot" is used as the representation of "many", and one line is used for the representation of "1".
+				- ![image.png](../assets/image_1664890907305_0.png)
+			- **Example:** employee "works for" department. department "has" employee.
+			- ![image.png](../assets/image_1664889461415_0.png)
+		- What is a **relationship instance**? #card
+		  collapsed:: true
+		  card-last-interval:: 29.04
+		  card-repeats:: 4
+		  card-ease-factor:: 2.56
+		  card-next-schedule:: 2022-12-10T11:35:42.874Z
+		  card-last-reviewed:: 2022-11-11T11:35:42.874Z
+		  card-last-score:: 3
+			- A **relationship instance** or **relationship occurrence** is ==a uniquely identifiable association which includes one occurrence from each participating entity type==; reading left to right and right to left.
+			- **Example:**
+				- Left-to-Right: John Smith "works for" Research department.
+				- Right-to-Left: Research department "has" John Smith.
+		- What is the **degree** of a relationship type? #card
+		  card-last-interval:: 10.6
+		  card-repeats:: 3
+		  card-ease-factor:: 2.56
+		  card-next-schedule:: 2022-11-22T01:30:24.968Z
+		  card-last-reviewed:: 2022-11-11T11:30:24.969Z
+		  card-last-score:: 5
+		  collapsed:: true
+			- Whenever an attribute of one entity type refers to another entity type, some relationship exists.
+			- The **degree** of a relationship type is ^^the number of participating entity types.^^
+			- Relationship types may have certain constraints.
+		- What is the **Cardinality Ratio**? #card
+		  collapsed:: true
+		  card-last-interval:: 2.8
+		  card-repeats:: 2
+		  card-ease-factor:: 2.6
+		  card-next-schedule:: 2022-11-20T15:15:43.390Z
+		  card-last-reviewed:: 2022-11-17T20:15:43.391Z
+		  card-last-score:: 5
+			- The **cardinality ratio** specifies ^^the number of relationship instances that an entity can participate in.^^
+			- The possible cardinality ratios for binary relationship types are:
+				- $1:1$, "one to one" - at most one instance of entity $A$ is associated with one instance of entity $B$.
+				- $1:N$, "one to many" - for one instance of entity $A$, there are 0 or more instances of entity $B$.
+				- $M:N$, "many to many" - for one instance of entity $A$, there are 0 or more instances of entity $B$, and for one instance of entity $B$, there are 0 or more instances of entity $A$.
+				-
+		- ### Structural Constraints on Relationships
+			- Often, we may know the min & max of the cardinalities.
+				- Example: limit on the number of books that can be borrowed from a library.
+			- What are **Structural Constraints**? #card
+			  card-last-interval:: 4
+			  card-repeats:: 2
+			  card-ease-factor:: 2.22
+			  card-next-schedule:: 2022-11-25T13:06:19.301Z
+			  card-last-reviewed:: 2022-11-21T13:06:19.301Z
+			  card-last-score:: 3
+				- **Structural constraints** specify a pair of integer numbers *(min, max)* for each entity participating in a relationship.
+				- Examples: (0, 1), (1, 1), (1, N)., (1, 7).
+			-
+	- ## Attributes
+	  collapsed:: true
+		- What are **Attributes**? #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.6
+		  card-next-schedule:: 2022-11-18T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-17T20:19:08.122Z
+		  card-last-score:: 1
+		  collapsed:: true
+			- **Attributes** are ^^named property^^ or characteristic of an entity.
+			- Each entity has a set of attributes associated with it.
+			- Several types of attributes exist:
+				- Key.
+				- Composite.
+				- Derived.
+				- Multi-valued.
+			- **Notation:**
+				- **Chen:** An oval enclosing the name of the attribute.
+					- ![image.png](../assets/image_1664889737597_0.png)
+				- **Crow:** Listed in the entity box.
+					- ![image.png](../assets/image_1664889775094_0.png)
+		- What are **key attributes**? #card
+		  card-last-interval:: 5.52
+		  card-repeats:: 3
+		  card-ease-factor:: 2.46
+		  card-next-schedule:: 2022-11-20T04:37:24.678Z
+		  card-last-reviewed:: 2022-11-14T16:37:24.678Z
+		  card-last-score:: 3
+		  collapsed:: true
+			- Each entity type must have an attribute or set of attributes that ^^uniquely identifies^^ each instance from other instances of the same type.
+			- A **candidate key** is an attribute (or combination of attributes) that uniquely identifies each instance of an entity type.
+			- A **primary key (PK)** is a candidate key that has been selected as the identifier for an entity type.
+		- What is a **composite attribute**? #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.46
+		  card-next-schedule:: 2022-11-15T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-14T16:46:49.892Z
+		  card-last-score:: 1
+		  collapsed:: true
+			- A **composite attribute** is an attribute that is composed of several atomic (simple) attributes.
+			- If the composite attribute is referenced as a whole only, then there is no need to subdivide it into component attributes, otherwise you should divide it:
+				- ![image.png](../assets/image_1664890028074_0.png)
+		- What is a **derived attribute**? #card
+		  card-last-interval:: 31.05
+		  card-repeats:: 4
+		  card-ease-factor:: 2.56
+		  card-next-schedule:: 2022-12-15T21:12:18.376Z
+		  card-last-reviewed:: 2022-11-14T20:12:18.376Z
+		  card-last-score:: 5
+		  collapsed:: true
+			- A **derived attribute** is an attribute whose values can be determined from another attribute.
+			- For Chen's notation, the notation is a *dotted oval*.
+				- ![image.png](../assets/image_1664890167971_0.png)
+			- For Crow's Foot notation, derived attributes can be represented by enclosing the attribute in [square brackets], e.g., [age].
+		- What is a **multi-valued attribute**? #card
+		  collapsed:: true
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.36
+		  card-next-schedule:: 2022-11-18T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-17T20:18:04.379Z
+		  card-last-score:: 1
+			- A **multi-valued attribute** is an attribute which has lower & upper bounds on the number of values for an individual entry.
+			- For Chen's notation, multi-valued attributes can be represented by one oval inside another.
+				- ![image.png](../assets/image_1664890277505_0.png)
+			- For Crow's Foot notation, multi-valued attributes can be represented by enclosing the attribute in {curly brackets}.
+				- E.g., {skills}.
+			-
+-
+- # Total & Partial Participation
+  collapsed:: true
+	- What is **Total Participation**? #card
+	  card-last-interval:: 4
+	  card-repeats:: 2
+	  card-ease-factor:: 2.22
+	  card-next-schedule:: 2022-11-18T20:26:04.052Z
+	  card-last-reviewed:: 2022-11-14T20:26:04.052Z
+	  card-last-score:: 3
+		- **Total Participation** (Mandatory Participation): ==All instances of an entity must participate in the relationship==, i.e., *every* entity instance in one set *must* be related to an entity instance in the second via the relationship.
+			- For example, the entity "Student" must have **total participation** in the relationship "enrolled" with the entity "Course" - each student *must* be enrolled in a course.
+	- What is **Partial Participation**? #card
+	  card-last-interval:: 7.45
+	  card-repeats:: 3
+	  card-ease-factor:: 2.46
+	  card-next-schedule:: 2022-11-22T02:28:50.125Z
+	  card-last-reviewed:: 2022-11-14T16:28:50.125Z
+	  card-last-score:: 3
+		- **Partial Participation** (Optional Participation): Some subset of instances of an entity will participate in the relationship, but not all, i.e., *some* entity instances in one set are related to an entity instance in the second via the relationship.
+			- For example, the entity "Course" would have a **partial participation** in the relationship "enrolled" with the entity "Student" - a course might not have any students enrolled in it.
+	- ## Chen's Notation for Participation #card
+	  card-last-interval:: -1
+	  card-repeats:: 1
+	  card-ease-factor:: 2.22
+	  card-next-schedule:: 2022-11-23T00:00:00.000Z
+	  card-last-reviewed:: 2022-11-22T13:38:31.943Z
+	  card-last-score:: 1
+		- In both total & partial participation, the line(s) are drawn from the participating entity to the relationship (the diamond) to indicate the participation of that instance from that entity in the relationship,
+		- **Total Participation:** Double parallel lines.
+			- ![image.png](../assets/image_1664968200677_0.png)
+		- **Partial Participation:** Single line.
+			- ![image.png](../assets/image_1664968259633_0.png)
+		- Examples:
+			- ![image.png](../assets/image_1664968387620_0.png)
+			-
+	- ## Crow's Foot Notation for Participation #card
+	  card-last-interval:: -1
+	  card-repeats:: 1
+	  card-ease-factor:: 2.5
+	  card-next-schedule:: 2022-11-18T00:00:00.000Z
+	  card-last-reviewed:: 2022-11-17T20:19:01.789Z
+	  card-last-score:: 1
+	  collapsed:: true
+		- Use the idea of **Ordinality / Optionality**.
+			- **Optionality of 0:** If an entity $A$ has partial participation in a relationship to entity $B$, then $A$ is associated with 0 or more instances of entity $B$, so the **optionality sign** goes beside $B$.
+				- The optionality sign for an **Optionality of 0** is a **bar**: $|$
+			- **Optionality of 1:** If an entity $A$ has full participation in a relationship to entity $B$, then $A$ is associated with at least 1 or more of $B$, so the **optionality sign** goes beside $B$.
+				- The optionality sign for an **Optionality of 1** is a **circle** or "o": $\bigcirc$
+			- [And vice-versa.]
+		- In Crow's Foot notation, there is no diamond, so there is always a direct relationship line between the entities.
+			- The **optionality sign** is drawn on this line.
+			- The optionality drawn beside some entity $A$ refers to how an instance of entity $B$ is related to entity $A$.
+				- That is, whether $B$ can be involved partially (0) or not (1).
+		- Example in *Right to Left* Relationships:
+			- ![image.png](../assets/image_1664969067049_0.png)
+			-
+	- ## Note on Weak Entities
+		- **Note:** ^^A **weak entity type** always has a total participation constraint.^^
+			- We need to show the "identifying relationship".
+			- ![image.png](../assets/image_1664969168410_0.png)
+		- ### Chen's Notation for Weak Entities #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.5
+		  card-next-schedule:: 2022-11-19T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-18T18:34:03.316Z
+		  card-last-score:: 1
+		  collapsed:: true
+			- **Entity:** Double rectangle.
+			- **Relationship:** Double diamond.
+			- The weak entity has full participation in the relationship.
+			- ![image.png](../assets/image_1664969357926_0.png)
+			-
+		- ### Crow's Foot Notation for Weak Entities #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.5
+		  card-next-schedule:: 2022-11-18T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-17T19:36:10.883Z
+		  card-last-score:: 1
+		  collapsed:: true
+			- In Crow's Foot Notation, we can represent the **weak entity** as a normal entity, but do not choose any attributes as the primary key.
+			- For an attribute that partially determines the entity instances, we choose the "required" option.
+			- We usually represent the relationship between entities using a **solid line**.
+				- This indicates that it is an "identifying" relationship.
+				- ![image.png](../assets/image_1664969566989_0.png)
+				-
+		-
+	- In general, with entities, there may be two valid solutions, one with a weak entity, and one without.
+		- There is not a huge difficulty if you do not identify weak entities in a solution so long as all the entities have **primary attributes**.
+			- It may be slightly non-optimal in terms of introducing an additional primary key that is not needed, but this is not a huge problem for us at this level.
+-
+- # Entities or Multi-Valued Attributes?
+  collapsed:: true
+	- Sometimes, it may not be clear whether something should be modelled as a multi-valued attribute or an entity.
+		- Both may be equally correct, as long as you represent all the information that you are asked to.
+		- You may see (very little) difference between the two approaches if you map either approach to tables in a database.
+-
+- # Steps to Create an ER Model
+	- 1. Identify entities.
+	  2. Identify relationships between entities.
+	  3. Draw entities & relationships.
+	  4. Add attributes to entities (& relationships, if appropriate).
+	  5. Add cardinalities to relationships.
+	  6. Add participation constraints (total or partial) to relationships.
+	  7. Check that all entities have primary keys identified.
+-
+- # Mapping ER Models to Tables in the Relational Model
+	- Once you have you ER diagram, you now need to convert it into a set of tables so that you can implement it in a relational mode.
+		- Example: As MySQL tables using `CREATE TABLES` commands.
+	- This stage is called **Mapping ER Models to Tables in the Relational Model**, and it specifies a set of rules that must be followed in a certain order.
+	- The rules specified here are based on **Chen's Notation**.
+	- ## Steps
+		- [1] For each entity, create a table $R$ that includes all the **simple** attributes of the entity.
+		- [2] For strong entities, choose a key attribute as the primary key of the table.
+		- [3] For weak entities $R$, include the primary key attributes of the table that corresponds to the owner as foreign key attributes of $R$.
+			- The primary key of $R$ is a combination of the primary key of the owner and the partial key of the weak entity type.
+			- The relationship of the weak & strong entity is generally taken care of by this step.
+		- [4] For each **binary** $1:1$ relationship, identify entites $S$ & $T$ that participate in the relation.
+			- If applicable, choose the entity that has **total participation** in the relation.
+				- Include the primary key of the other relation as the foreign key in this table.
+				- Include any attributes of the relationship as attributes of the chosen table.
+			- If both entities have total participation in the relationship, you can choose either one for the foreign key and proceed as above, or you can map two entities & their associated attributes & relationship attributes into one table.
+		- [5] For each **binary** $1:N$ relationship, identify the table $S$ that represents the $N$ side and the table $T$ that represents the $1$ side.
+			- Include the primary key of table $T$ as a foreign key in $S$ such that each entity on the $N$ side is related to at most one entity instance on the $1$ side.
+				- Include any attributes of the relationship as attributes of $S$.
+			- For recursive $1:N$ relationships, choose the primary key of the table and include it as a foreign key in the same table with a different name.
+		- [6] For each $M:N$ relationship, create a new table $S$ to represent the relationship.
+			- Include the primary keys of the tables that represent the participating entity types as foreign keys in $S$ - their combination will form the primary key of $S$.
+				- Also include in $S$ any attributes of the relationship.
+			- For a recursive $M:N$ relationship, both foreign keys come from the same table (give different names to each) and become the new primary key.
+		- [7] For each **multi-valued attribute** $A$ of an entity $S$, create a new table $R$.
+			- $R$ will include:
+				- An attribute corresponding to $A$.
+				- The primary key of $S$, which will be a foreign key in $R$. Call this $K$.
+				- The primary key of $R$ is a combination of $A$ & $K$.
+				-
+-

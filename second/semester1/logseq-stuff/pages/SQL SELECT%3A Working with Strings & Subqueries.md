@@ -1,0 +1,181 @@
+title:: SQL SELECT: Working with Strings & Subqueries
+
+- #[[CT230 - Database Systems I]]
+- **Previous Topic:** [[SQL DML: SELECT]]
+- **Next Topic:** [[Aggregate Clauses, Group By, & Having Clauses]]
+- **Relevant Slides:** ![Topic 5 DML SELECT strings and subqueries.pdf](../assets/Topic_5_DML_SELECT_strings_and_subqueries_1664273683998_0.pdf)
+-
+- # Keywords to Modify Output
+	- `AS` #card
+	  card-last-interval:: -1
+	  card-repeats:: 1
+	  card-ease-factor:: 2.7
+	  card-next-schedule:: 2022-11-15T00:00:00.000Z
+	  card-last-reviewed:: 2022-11-14T16:35:37.700Z
+	  card-last-score:: 1
+		- Used to rename any output in `SELECT`.
+		- Can also be used to **alias** (rename) tables in `FROM`.
+	- `CONCAT` #card
+	  card-last-interval:: 11.2
+	  card-repeats:: 3
+	  card-ease-factor:: 2.8
+	  card-next-schedule:: 2022-11-25T20:35:14.265Z
+	  card-last-reviewed:: 2022-11-14T16:35:14.265Z
+	  card-last-score:: 5
+		- Used to **concatenate** strings.
+		- Similar usage to other programming languages.
+		- ```sql
+		  SELECT
+		  	CONCAT(fname, ' ', minit, ' ', lname) AS Name
+		  FROM
+		  	employee
+		  WHERE
+		  	salary BETWEEN 50000 AND 80000
+		  ORDER BY
+		  	lname;
+		  ```
+	- `CAST` #card
+	  card-last-interval:: 33.64
+	  card-repeats:: 4
+	  card-ease-factor:: 2.9
+	  card-next-schedule:: 2022-12-18T11:21:08.757Z
+	  card-last-reviewed:: 2022-11-14T20:21:08.757Z
+	  card-last-score:: 5
+		- `CAST(<expression> AS <datatype>(<length>))`
+		- Used to cast to another datatype.
+	- `ORDER BY` #card
+	  card-last-interval:: 11.2
+	  card-repeats:: 3
+	  card-ease-factor:: 2.8
+	  card-next-schedule:: 2022-11-25T20:37:08.438Z
+	  card-last-reviewed:: 2022-11-14T16:37:08.438Z
+	  card-last-score:: 5
+		- `ORDER BY <attribute list> <order (ASC or DESC)> `.
+		- Allows the results of a query to be ordered by values of one or more attributes.
+		- Either **ascending** `ASC` or **descending** `DESC` - ascending by default.
+		- Must be the *last* clause of a `SELECT` statement.
+- # `TOP` & `LIMIT` #card
+  card-last-interval:: 10.97
+  card-repeats:: 3
+  card-ease-factor:: 2.56
+  card-next-schedule:: 2022-11-25T15:38:08.480Z
+  card-last-reviewed:: 2022-11-14T16:38:08.481Z
+  card-last-score:: 5
+	- The `SELECT TOP <N>` clause is used to specify the number of tuples (N) to return, but it is not supported by MySQL.
+	- Instead, MySQL supports a `LIMIT <N>` clause which has the same functionality.
+	- The `LIMIT` clause is listed at the end of the query,
+	- Example: List the employees with the top 3 salaries.
+		- ```sql
+		  SELECT
+		  	ssn, CONCAT(fname, ' ', lname) as Name, salary
+		  FROM
+		  	employee
+		  ORDER BY
+		  	salary DESC
+		  LIMIT 4;
+		  ```
+- # Strings
+	- ## Note: 'Single' & "Double" Quotes #card
+	  card-last-interval:: 23.43
+	  card-repeats:: 4
+	  card-ease-factor:: 2.42
+	  card-next-schedule:: 2022-12-08T06:20:40.093Z
+	  card-last-reviewed:: 2022-11-14T20:20:40.094Z
+	  card-last-score:: 5
+		- MySQL usually allows single & double quotes to be used interchangably.
+		- Generally, single quotes should be used for strings (`varchar()`, `text`, etc.).
+		- ### How to Deal with Apostrophes in Strings #card
+		  card-last-interval:: 33.64
+		  card-repeats:: 4
+		  card-ease-factor:: 2.9
+		  card-next-schedule:: 2022-12-18T11:21:10.692Z
+		  card-last-reviewed:: 2022-11-14T20:21:10.692Z
+		  card-last-score:: 5
+			- You have to be careful with apostrophes in strings, as an opening quote could be accidentally closed by an apostrophe.
+			- To overcome this, if there is an apostrophe in a string, it should be replaced by **two** apostrophes side-by-side `''` (this is a general rule for all special characters - have two of the character) or escape it with `\`.
+			- Example: Select the salary for the employee with surname O'Grady.
+				- ```SQL
+				  SELECT salary
+				  FROM employee
+				  WHERE lname = 'O''Grady';
+				  ```
+			- We must also take care when inserting string data using `INSERT INTO`.
+	- ## Working with Strings & Pattern Matching #card
+	  card-last-interval:: 4.14
+	  card-repeats:: 2
+	  card-ease-factor:: 2.56
+	  card-next-schedule:: 2022-11-22T21:33:52.858Z
+	  card-last-reviewed:: 2022-11-18T18:33:52.859Z
+	  card-last-score:: 5
+		- SQL is case insensitive (apart from table names if on a Linux server).
+		- Case insensitivity generally applies to string searching.
+		- However, *often* when working with strings we do not look for an exact match (i.e., an exact match using `=`).
+		- To support partial matching, we often use **pattern-matching characters** and `LIKE` with wildcard characters `%` and `_`.
+			- `%` represents 0 or more characters.
+			- `_` Represents a single character.
+		- ### Regexp
+			- We can use regex for more complicated string matching.
+			- ```sql
+			  SELECT <attribute>
+			  FROM <relation>
+			  WHERE <attribute> REGEXP <regexp>
+			  ```
+			- `^` Matches position at the **beginning** of the searched string.
+			- `$` Matches position at the **end** of the searched string.
+			- `[]` Matches any character inside the square brackets.
+			- `[^]` Matches any character **not** inside the square brackets.
+			- `*` Matches preceeding character 0 or more times.
+			- `+` Matches preceeding character 1 or more times.
+			- `|` OR.
+			- `{n}` Matches preceeding character n number of times.
+- # Accessing Data Across Multiple Tables
+  card-last-score:: 5
+  card-repeats:: 2
+  card-next-schedule:: 2022-10-11T03:36:21.816Z
+  card-last-interval:: 3.71
+  card-ease-factor:: 2.46
+  card-last-reviewed:: 2022-10-07T10:36:21.817Z
+	- What methods can you use for accessing data across multiple tables? #card
+	  card-last-interval:: 4
+	  card-repeats:: 2
+	  card-ease-factor:: 2.7
+	  card-next-schedule:: 2022-11-18T20:10:10.085Z
+	  card-last-reviewed:: 2022-11-14T20:10:10.085Z
+	  card-last-score:: 5
+		- There are 3 potential approaches:
+			- Joins.
+			- Subqueries.
+			- Union queries.
+	- ## Subqueries #card
+	  card-last-interval:: 11.2
+	  card-repeats:: 3
+	  card-ease-factor:: 2.8
+	  card-next-schedule:: 2022-11-25T20:36:08.786Z
+	  card-last-reviewed:: 2022-11-14T16:36:08.786Z
+	  card-last-score:: 5
+		- A **subquery** (also called a **nested** query)is a query with another query.
+		- The subquery *usually* returns data that will be used in the main query.
+		- Data returned from the subquery may be a **set of values** or a **single value**.
+		- Subqueries can be used with the `SELECT`, `INSERT`, `UPDATE`, and `DELETE` statements.
+		- ![image.png](../assets/image_1664275471660_0.png)
+		- The `SELECT` statement that contains a subquery is called an **outer query**.
+		- ### Connecting Inner & Outer Queries #card
+		  card-last-interval:: -1
+		  card-repeats:: 1
+		  card-ease-factor:: 2.08
+		  card-next-schedule:: 2022-11-15T00:00:00.000Z
+		  card-last-reviewed:: 2022-11-14T20:19:14.578Z
+		  card-last-score:: 1
+			- If a subquery returns only **one value** then we can use operators such as `=`, `!=`. `>`, `>=`, `<`, `<=`.
+			- If a subquery *could* return **more than one value** (i.e., a list of values), then we need connectors such as `IN`, `ANY`, `ALL` to check through the values of the subquery.
+				- The keyword `NOT` can also be used where appropriate.
+				- These connectors are generally used with basic algebraic operators: `=`, `!=`. `>`, `>=`, `<`, `<=`.
+				- `ALL` - the condition is true if the comparison is true for **every** (all) values returned by the subquery.
+				- `ANY` - the condition is true if the comparison is true for **at least one** (any) value returned by the subquery.
+				- `IN` - the condition is true if the comparison is true for **at least one** value returned by the subquery, i.e., a value IN the subquery.
+					- `IN` checks for equality - it can be used for a list of values or a single value - it does not require any additional algebraic operator.
+			- In addition, we can have a more general condition using:
+				- `EXISTS` -  True if there exists at least one value in the result from a subquery.
+				- `NOT EXISTS` - True if there is nothing in the result from a subquery (i.e., it is empty).
+				-
+-

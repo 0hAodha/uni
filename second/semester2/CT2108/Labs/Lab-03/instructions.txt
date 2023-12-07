@@ -1,0 +1,7 @@
+The attached instructions are for Windows PCs only, some of the command line options are different for Linux / MAC computers.
+If you have a Mac or Linux computer use the following command instead to run a ping with a large payload: ping -s 3500 www.rte.ie
+Due to firewall restrictions inside the University network, pings to www.rte.ie may fail.
+If this happens run the pings instead to the ip address of your local router.
+You can find out the ip address of your local router by doing a trace route to ww.rte.ie - your local router is the first hop shown in the result.
+The previous lab work has details on how to run a trace route on different platforms.
+On the eduroam wifi network in the lab the ip address of the local router will be something like 140.203.224.3

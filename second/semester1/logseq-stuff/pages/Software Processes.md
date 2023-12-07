@@ -1,0 +1,85 @@
+- #[[CT216 - Software Engineering I]]
+- **Previous Topic:** [[Cloud Computing]]
+- **Next Topic:** [[Introduction to Agile Methods]]
+- **Relevant Slides:** ![Week 2 - Software Processes.pdf](../assets/Week_2_-_Software_Processes_1663178767479_0.pdf)
+-
+- # The Software Process
+	- What is the **Software Process**?
+	  card-last-interval:: 12.36
+	  card-repeats:: 3
+	  card-ease-factor:: 2.7
+	  card-next-schedule:: 2022-10-19T18:39:50.523Z
+	  card-last-reviewed:: 2022-10-07T10:39:50.524Z
+	  card-last-score:: 5
+		- The **Software Process** is a structured set of activities required to develop a software system.
+	- What are the 4 fundamental activities in the Software Process? #card
+	  card-last-interval:: 3.45
+	  card-repeats:: 2
+	  card-ease-factor:: 2.46
+	  card-next-schedule:: 2022-11-18T02:27:50.775Z
+	  card-last-reviewed:: 2022-11-14T16:27:50.775Z
+	  card-last-score:: 5
+		- **Specification**
+			- Talk to the customer
+			- Understand the problems
+			- Talk to any relevant stakeholders
+		- **Development**
+			- Map out the tasks
+			- Design the software
+			- Develop the solution
+		- **Validation**
+			- Does the software meet the requirements?
+			- Is it what the customer wanted?
+		- **Evolution** (maintenance)
+			- Modified to adapt
+			- Changes in requirements
+			- Customer & Market conditions
+	- The foundation of software engineering is the **process**.
+	- The **goal** of software engineering is to efficiently & predictably deliver a product that meets the requirements.
+	-
+- # Software Engineering Practice
+	- ### **1) Understand the problem** (*Communication & Analysis*)
+		- Who are the stakeholders?
+		- What are the unknowns?
+	- ### **2) Plan the solution** (*Modelling & Software Design*)
+		- Have we seen this problem before?
+		- Has a similar problem already been solved?
+		- Can sub-problems be found?
+	- ### **3) Carry out the plan** (*Write the Code*)
+		- Does the solution conform to the plan?
+		- Has the code been reviewed for correctness?
+	- ### **4) Examine the result** (*Test It*)
+		- Is each component testable?
+		- Does the solution produce results as defined originally?
+		-
+- # General Software Engineering Questions
+	- **What** is the problem to be solved?
+		- Requirements definition
+	- **What** are the characteristics of the software (system) used to solve the problem?
+		- Analysis
+	- **How** will the system be realised / constructed?
+		- Design
+	- **How** will the system be supported long-term?
+		- Maintenance
+-
+- # Overview of Software Engineering
+	- There are 3 generic phrases, regardless of paradigm:
+		- **Definition** - a focus on the *What*
+			- System Analysis, Software Project Planning, Requirements Analysis
+		- **Development** - a focus on the *How*
+			- Software Design, Coding, Software Testing
+		- **Maintenance** - a focus on *Change*
+			- Correction, Adaption, Enhancement
+		-
+-
+- # Software Engineering Should...
+	- Provide a clear statement of the project **mandate** & objectives
+	- Create effective means of **communication**
+	- Increase user **involvement** & **ownership**
+	- Provide an effective **management framework** to support **productivity** & pragmatism
+	- Establish **quality assurance** procedures
+	- Provide sound resource **estimation** & **allocation** procedures
+	- Ensure the **effectiveness** and **durability** of systems produced
+	- Encourage the **re-usability** of code and / or solutions
+	- Reduce the organisation's **vulnerability** to the loss of software development personnel
+	- Reduce & support post implementation **maintenance** of system
