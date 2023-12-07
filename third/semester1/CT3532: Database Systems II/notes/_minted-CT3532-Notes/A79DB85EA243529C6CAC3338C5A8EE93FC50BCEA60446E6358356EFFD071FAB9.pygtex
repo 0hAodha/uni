@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+for each block B\PYGZus{}r in r do:
+    for each block B\PYGZus{}s in s do:
+        for each tuple t\PYGZus{}r in B\PYGZus{}r do:
+            for each tuple t\PYGZus{}s in B\PYGZus{}s do:
+                if t\PYGZus{}r and t\PYGZus{}s satisfy join condition:
+                    add (t\PYGZus{}r, t\PYGZus{}s) to result
+            end
+        end
+    end
+end
+\end{Verbatim}

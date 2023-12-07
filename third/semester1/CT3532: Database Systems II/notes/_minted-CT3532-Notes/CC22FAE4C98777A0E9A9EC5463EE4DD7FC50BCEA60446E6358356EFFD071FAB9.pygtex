@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+for each tuple t\PYGZus{}r in r do:
+    for each tuple t\PYGZus{}s in s do:
+        if t\PYGZus{}r and t\PYGZus{} satisfy join condition:
+            add(t\PYGZus{}r, t\PYGZus{}s) to result
+    end
+end
+\end{Verbatim}

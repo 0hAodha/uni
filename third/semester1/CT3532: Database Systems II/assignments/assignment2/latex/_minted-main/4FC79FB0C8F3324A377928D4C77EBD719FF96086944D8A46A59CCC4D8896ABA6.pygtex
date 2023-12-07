@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} input: a pair of (x,y) co-ordinates}
+\PYG{c+c1}{\PYGZsh{} output: a string that identifies the grid}
+\PYG{k}{def} \PYG{n+nf}{determine\PYGZus{}grid}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+    \PYG{n}{grid\PYGZus{}width} \PYG{o}{=} \PYG{l+m+mi}{29}      \PYG{c+c1}{\PYGZsh{} width of each grid in metres}
+    \PYG{n}{grid\PYGZus{}height} \PYG{o}{=} \PYG{l+m+mi}{15}     \PYG{c+c1}{\PYGZsh{} height of each grid in metres}
+
+    \PYG{c+c1}{\PYGZsh{} determining the location of the grid using floor division}
+    \PYG{n}{grid\PYGZus{}x} \PYG{o}{=} \PYG{n}{x} \PYG{o}{//} \PYG{n}{grid\PYGZus{}width}
+    \PYG{n}{grid\PYGZus{}y} \PYG{o}{=} \PYG{n}{y} \PYG{o}{//} \PYG{n}{grid\PYGZus{}height}
+
+    \PYG{c+c1}{\PYGZsh{} return the grid identifier in the format `x.y`}
+    \PYG{k}{return} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{grid\PYGZus{}x}\PYG{p}{)} \PYG{o}{+} \PYG{l+s+s2}{\PYGZdq{}.\PYGZdq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{grid\PYGZus{}y}\PYG{p}{)}
+\end{Verbatim}

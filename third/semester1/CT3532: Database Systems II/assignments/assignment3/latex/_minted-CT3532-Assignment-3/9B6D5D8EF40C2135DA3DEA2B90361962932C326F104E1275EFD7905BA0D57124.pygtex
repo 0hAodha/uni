@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{HashMap}\PYG{o}{\PYGZlt{}}\PYG{n}{Player}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Integer}\PYG{o}{\PYGZgt{}}
+\end{Verbatim}

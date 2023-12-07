@@ -1,0 +1,35 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// Note that in Java, there can be only one `public` class per file}
+\PYG{c+c1}{// Therefore, if this code were to be actually used, each class must be in its own `*.java` file}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{Game}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// potential data fields that could be contained within the Game class}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{gameId}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{homeTeam}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{awayTeam}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// HashMap of Graph objects encapsulated within the Game object}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{HashMap}\PYG{o}{\PYGZlt{}}\PYG{n}{LocalDateTime}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Graph}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{graphs}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{Graph}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{LocalDateTime}\PYG{+w}{ }\PYG{n}{timeGenerated}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// need to import java.time.LocalDateTime for this to work}
+
+\PYG{+w}{    }\PYG{c+c1}{// set of Edge objects encapsulated within the Graph object}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{Set}\PYG{o}{\PYGZlt{}}\PYG{n}{Edge}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{edges}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{Edge}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{distance}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// set of Player objects encapsulated within the Edge object - there should be no more than 2}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{Set}\PYG{o}{\PYGZlt{}}\PYG{n}{Player}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{nodes}\PYG{p}{;}
+
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{Player}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// potential data fields that would be contained within the Player class}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{name}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{playerId}\PYG{p}{;}\PYG{+w}{    }\PYG{c+c1}{// assuming each player in the league has a unique ID}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

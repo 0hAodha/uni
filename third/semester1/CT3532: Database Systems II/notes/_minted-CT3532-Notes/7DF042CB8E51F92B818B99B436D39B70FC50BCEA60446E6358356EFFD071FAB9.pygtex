@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+i := 0;
+M = number of page frames in main memory buffer
+
+repeat
+    read M blocks of the relation
+    sort M blocks in memory
+    write sorted data to file R\PYGZus{}i
+until end of relation
+
+read first block of each R\PYGZus{}i into memory
+repeat
+    choose first (in sort order) from pages
+    write tuple to output
+    remove tuple from buffer
+    if any buffer R\PYGZus{}i empty and not eof(R\PYGZus{}i)
+        read next block from R\PYGZus{}i into memory
+    until all pages empty
+\end{Verbatim}

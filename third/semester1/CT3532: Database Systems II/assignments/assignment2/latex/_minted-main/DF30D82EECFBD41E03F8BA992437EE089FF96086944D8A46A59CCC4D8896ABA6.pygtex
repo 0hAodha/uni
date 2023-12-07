@@ -1,0 +1,27 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} function to determine the number of times a given player was in a given grid}
+\PYG{c+c1}{\PYGZsh{} input: player ID, grid identifier}
+\PYG{c+c1}{\PYGZsh{} output: count of the number of times that player ID was recorded in that grid}
+\PYG{k}{def} \PYG{n+nf}{player\PYGZus{}grid\PYGZus{}values}\PYG{p}{(}\PYG{n}{player\PYGZus{}id}\PYG{p}{,} \PYG{n}{grid\PYGZus{}id}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{} get table location on disk}
+    \PYG{n}{table\PYGZus{}location} \PYG{o}{=} \PYG{n+nb}{hash}\PYG{p}{(}\PYG{n}{player\PYGZus{}id}\PYG{p}{,} \PYG{n}{grid\PYGZus{}id}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} query the number of rows in that table using some pseudo-SQL nonsense}
+    \PYG{n}{count} \PYG{o}{=} \PYG{n}{select}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}count(*) from table @ \PYGZdq{}} \PYG{o}{+} \PYG{n}{table\PYGZus{}location}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{count}
+
+\PYG{c+c1}{\PYGZsh{} function to generate a an array of heatmap values for every location on the pitch}
+\PYG{c+c1}{\PYGZsh{} input: an array of locations on the pitch, an array of the player IDs in the game}
+\PYG{c+c1}{\PYGZsh{} output: an array numbers indicating the number of times a player was in each location}
+\PYG{k}{def} \PYG{n+nf}{generate\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{locations}\PYG{p}{,} \PYG{n}{players}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{} output array will hold the number of times a player was in each location, in the same order as the locations array}
+    \PYG{n}{heatmap\PYGZus{}values} \PYG{o}{=} \PYG{p}{[]} \PYG{c+c1}{\PYGZsh{} assume each index initialises to 0}
+
+    \PYG{c+c1}{\PYGZsh{} iterate over each location}
+    \PYG{k}{for} \PYG{p}{(}\PYG{n+nb}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{locations}\PYG{o}{.}\PYG{n}{length}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} iterate over each player for each location}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n+nb}{int} \PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{players}\PYG{o}{.}\PYG{n}{length}\PYG{p}{;} \PYG{n}{j}\PYG{o}{++}\PYG{p}{):}
+                \PYG{n}{player\PYGZus{}id} \PYG{o}{=} \PYG{n}{players}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+                \PYG{n}{heatmap\PYGZus{}values}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{player\PYGZus{}grid\PYGZus{}values}\PYG{p}{(}\PYG{n}{player\PYGZus{}id}\PYG{p}{,} \PYG{n}{location}\PYG{p}{)}
+\end{Verbatim}
