@@ -1,0 +1,14 @@
+Types of conflicts:
+    - rw
+    - wr
+    - ww
+
+Conflicts in timestamping are directed: the second of the transactions is said to conflict with the first, not vice-versa.
+When a cycle is formed in the transaction graph, the transaction is killed.
+
+
+BCNF: all determinants (left-hand sides of FDs) are candidate keys
+    AB -> C
+     C -> B 
+     C+ = {C, B} != R
+
