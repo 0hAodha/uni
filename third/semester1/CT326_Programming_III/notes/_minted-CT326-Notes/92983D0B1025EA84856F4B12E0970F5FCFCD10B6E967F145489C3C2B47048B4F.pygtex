@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{Double}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{myDoubles}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Double}\PYG{o}{[}\PYG{l+m+mi}{10}\PYG{o}{]}\PYG{p}{;}
+\PYG{n}{myDoubles}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{22.7}\PYG{p}{;}\PYG{+w}{                    }\PYG{c+c1}{// autoboxed to a Double Object}
+\PYG{k+kt}{double}\PYG{+w}{ }\PYG{n}{firstDoubleValue}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{myDoubles}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// auto-unboxed to a double primitive}
+\end{Verbatim}

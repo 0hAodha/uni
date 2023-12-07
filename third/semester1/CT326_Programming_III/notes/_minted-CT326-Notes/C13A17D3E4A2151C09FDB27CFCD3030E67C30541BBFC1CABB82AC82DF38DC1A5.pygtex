@@ -1,0 +1,75 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// Fig. 10.20: TokenTest.java}
+\PYG{c+c1}{// Testing the StringTokenizer class of the java.util package}
+
+\PYG{c+c1}{// Java core packages}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{java.util.*}\PYG{p}{;}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{java.awt.*}\PYG{p}{;}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{java.awt.event.*}\PYG{p}{;}
+
+\PYG{c+c1}{// Java extension packages}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{javax.swing.*}\PYG{p}{;}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{TokenTest}\PYG{+w}{ }\PYG{k+kd}{extends}\PYG{+w}{ }\PYG{n}{JFrame}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{private}\PYG{+w}{ }\PYG{n}{JLabel}\PYG{+w}{ }\PYG{n}{promptLabel}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kd}{private}\PYG{+w}{ }\PYG{n}{JTextField}\PYG{+w}{ }\PYG{n}{inputField}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kd}{private}\PYG{+w}{ }\PYG{n}{JTextArea}\PYG{+w}{ }\PYG{n}{outputArea}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// set up GUI and event handling}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n+nf}{TokenTest}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kd}{super}\PYG{p}{(}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Testing Class StringTokenizer\PYGZdq{}}\PYG{+w}{ }\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{Container}\PYG{+w}{ }\PYG{n}{container}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{getContentPane}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{container}\PYG{p}{.}\PYG{n+na}{setLayout}\PYG{p}{(}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{FlowLayout}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{promptLabel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{JLabel}\PYG{p}{(}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Enter a sentence and press Enter\PYGZdq{}}\PYG{+w}{ }\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{container}\PYG{p}{.}\PYG{n+na}{add}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{promptLabel}\PYG{+w}{ }\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{inputField}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{JTextField}\PYG{p}{(}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{+w}{ }\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// inputField contains String to be parsed by StringTokenizer}
+
+\PYG{+w}{        }\PYG{n}{inputField}\PYG{p}{.}\PYG{n+na}{addActionListener}\PYG{p}{(}
+\PYG{+w}{            }\PYG{c+c1}{// anonymous inner class}
+\PYG{+w}{            }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ActionListener}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// handle text field event}
+\PYG{+w}{                }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{n}{coid}\PYG{+w}{ }\PYG{n+nf}{actionPerformed}\PYG{p}{(}\PYG{n}{ActionEvent}\PYG{+w}{ }\PYG{n}{event}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{stringToTokenize}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{event}\PYG{p}{.}\PYG{n+na}{getActionCommand}\PYG{p}{();}
+\PYG{+w}{                    }\PYG{n}{StringTokenizer}\PYG{+w}{ }\PYG{n}{tokens}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{StringTokenizer}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{stringToTokenize}\PYG{+w}{ }\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// Use StringTokenizer to parse String stringToTokenize with default delimiters "{\textbackslash}n{\textbackslash}t{\textbackslash}r"}
+
+\PYG{+w}{                    }\PYG{n}{outputArea}\PYG{p}{.}\PYG{n+na}{setText}\PYG{p}{(}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Number of elements: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{tokens}\PYG{p}{.}\PYG{n+na}{countTokens}\PYG{p}{()}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZbs{}nThe tokens are:\PYGZbs{}n\PYGZdq{}}\PYG{+w}{ }\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// count number of tokens}
+
+\PYG{+w}{                    }\PYG{c+c1}{// apend next token to outputArea as long as tokens exist}
+\PYG{+w}{                    }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{+w}{ }\PYG{n}{tokens}\PYG{p}{.}\PYG{n+na}{hasMoreTokens}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{)}
+\PYG{+w}{                        }\PYG{n}{outputArea}\PYG{p}{.}\PYG{n+na}{append}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{tokens}\PYG{p}{.}\PYG{n+na}{nextToken}\PYG{p}{()}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZbs{}n\PYGZdq{}}\PYG{+w}{ }\PYG{p}{);}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}\PYG{+w}{   }\PYG{c+c1}{// end anonymous inner class}
+\PYG{+w}{        }\PYG{p}{);}\PYG{+w}{  }\PYG{c+c1}{// end call to addActionListener}
+
+\PYG{+w}{        }\PYG{n}{container}\PYG{p}{.}\PYG{n+na}{add}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{inputField}\PYG{+w}{ }\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{outputArea}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{JTextArea}\PYG{p}{(}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{+w}{ }\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{outputArea}\PYG{p}{.}\PYG{n+na}{setEditable}\PYG{p}{(}\PYG{+w}{ }\PYG{k+kc}{false}\PYG{+w}{ }\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{container}\PYG{p}{.}\PYG{n+na}{add}\PYG{p}{(}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{JScrollPane}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{outputArea}\PYG{+w}{ }\PYG{p}{)}\PYG{+w}{ }\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{setSize}\PYG{p}{(}\PYG{+w}{ }\PYG{l+m+mi}{275}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{260}\PYG{+w}{ }\PYG{p}{);}\PYG{+w}{  }\PYG{c+c1}{// set the window size}
+\PYG{+w}{        }\PYG{n}{show}\PYG{p}{();}\PYG{+w}{               }\PYG{c+c1}{// show the window}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// execute application}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{main}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{args}\PYG{o}{[]}\PYG{+w}{ }\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{TokenTest}\PYG{+w}{ }\PYG{n}{application}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{TokenTest}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{application}\PYG{p}{.}\PYG{n+na}{addWindowListener}\PYG{p}{(}
+\PYG{+w}{            }\PYG{c+c1}{// anonymous inner class}
+\PYG{+w}{            }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{WindowAdapter}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// handle event when user closes window}
+\PYG{+w}{                }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{windowClosing}\PYG{p}{(}\PYG{+w}{ }\PYG{n}{WindowEvent}\PYG{+w}{ }\PYG{n}{windowEvent}\PYG{+w}{ }\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{exit}\PYG{p}{(}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{p}{);}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}\PYG{+w}{  }\PYG{c+c1}{// end anonymous inner class}
+\PYG{+w}{        }\PYG{p}{);}\PYG{+w}{ }\PYG{c+c1}{// end call to addWindowListener}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{  }\PYG{c+c1}{// end method main}
+\PYG{p}{\PYGZcb{}}\PYG{+w}{  }\PYG{c+c1}{// end class TokenTest}
+\end{Verbatim}

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RandomAccessFile}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}farrago.txt\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}rw\PYGZdq{}}\PYG{p}{);}
+\end{Verbatim}

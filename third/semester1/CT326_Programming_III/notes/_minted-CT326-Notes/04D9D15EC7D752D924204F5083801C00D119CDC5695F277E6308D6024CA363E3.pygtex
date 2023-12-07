@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{compareTo}\PYG{p}{(}\PYG{n}{String}\PYG{+w}{ }\PYG{n}{anotherString}\PYG{p}{)}
+\end{Verbatim}

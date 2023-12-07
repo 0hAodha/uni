@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{try}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// statements that may throw an exception}
+\PYG{p}{\PYGZcb{}}
+\PYG{k}{catch}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ExceptionType}\PYG{+w}{ }\PYG{n}{exceptionReference}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// statemetns to process the exception}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+c1}{// a `try` is followed by any number of `catch` blocks}
+\PYG{k}{catch}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ExceptionType}\PYG{+w}{ }\PYG{n}{exceptionReference}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// statemetns to process the exception}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

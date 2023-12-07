@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{interface} \PYG{n+nc}{Collection}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// Basic Operations}
+\PYG{+w}{    }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{size}\PYG{p}{();}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{isEmpty}\PYG{p}{();}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{contains}\PYG{p}{(}\PYG{n}{Object}\PYG{+w}{ }\PYG{n}{element}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{add}\PYG{p}{(}\PYG{n}{Object}\PYG{+w}{ }\PYG{n}{element}\PYG{p}{);}\PYG{+w}{        }\PYG{c+c1}{// Optional}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{remove}\PYG{p}{(}\PYG{n}{Object}\PYG{+w}{ }\PYG{n}{element}\PYG{p}{);}\PYG{+w}{     }\PYG{c+c1}{// Optional}
+\PYG{+w}{    }\PYG{n}{Iterator}\PYG{+w}{ }\PYG{n+nf}{iterator}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{c+c1}{// Bulk Operations}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{containsAll}\PYG{p}{(}\PYG{n}{Collection}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{addAll}\PYG{p}{(}\PYG{n}{Collection}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{);}\PYG{+w}{       }\PYG{c+c1}{// Optional}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{removeAll}\PYG{p}{(}\PYG{n}{Collection}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{);}\PYG{+w}{    }\PYG{c+c1}{// Optional}
+\PYG{+w}{    }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{retainAll}\PYG{p}{(}\PYG{n}{Collection}\PYG{+w}{ }\PYG{n}{c}\PYG{p}{);}\PYG{+w}{    }\PYG{c+c1}{// Optional}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{clear}\PYG{p}{();}\PYG{+w}{                       }\PYG{c+c1}{// Optional}
+
+\PYG{+w}{    }\PYG{c+c1}{// Array Operations}
+\PYG{+w}{    }\PYG{n}{Object}\PYG{o}{[]}\PYG{+w}{ }\PYG{n+nf}{toArray}\PYG{p}{();}
+\PYG{+w}{    }\PYG{n}{Object}\PYG{o}{[]}\PYG{+w}{ }\PYG{n+nf}{toArray}\PYG{p}{(}\PYG{n}{T}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

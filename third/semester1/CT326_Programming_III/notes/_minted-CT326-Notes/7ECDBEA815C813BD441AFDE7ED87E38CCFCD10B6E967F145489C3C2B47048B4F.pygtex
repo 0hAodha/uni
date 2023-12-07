@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{FileOutputStream}\PYG{+w}{ }\PYG{n}{out}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{FileOutputStream}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}theTime\PYGZdq{}}\PYG{p}{);}
+\PYG{n}{ObjectOutputStream}\PYG{+w}{ }\PYG{n}{s}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ObjectOutputStream}\PYG{p}{(}\PYG{n}{out}\PYG{p}{);}
+\PYG{n}{s}\PYG{p}{.}\PYG{n+na}{writeObject}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Today\PYGZdq{}}\PYG{p}{);}
+\PYG{n}{s}\PYG{p}{.}\PYG{n+na}{writeObject}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Date}\PYG{p}{());}
+\PYG{n}{s}\PYG{p}{.}\PYG{n+na}{flush}\PYG{p}{();}
+\end{Verbatim}

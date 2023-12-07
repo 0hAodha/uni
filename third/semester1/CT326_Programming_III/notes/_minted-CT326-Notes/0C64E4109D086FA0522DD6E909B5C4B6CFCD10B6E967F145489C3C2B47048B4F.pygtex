@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{package}\PYG{+w}{ }\PYG{n+nn}{java.io}\PYG{p}{;}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{interface} \PYG{n+nc}{Serializable}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// there's nothing in here!}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

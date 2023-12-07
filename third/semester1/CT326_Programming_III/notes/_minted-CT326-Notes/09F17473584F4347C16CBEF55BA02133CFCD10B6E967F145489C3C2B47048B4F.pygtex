@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{ptivate}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{writeObject}\PYG{p}{(}\PYG{n}{ObjectOutputStream}\PYG{+w}{ }\PYG{n}{s}\PYG{p}{)}\PYG{+w}{ }\PYG{k+kd}{throws}\PYG{+w}{ }\PYG{n}{IOException}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{s}\PYG{p}{.}\PYG{n+na}{defaultWriteObject}\PYG{p}{();}
+\PYG{+w}{    }\PYG{c+c1}{// customised serialization code}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,45 @@
+- most code for gui questions
+- not expected to include @Override annotations in code
+- static imports are necessary
+- imports are not necessary
+- unless asked to use floats, just use ints even for stuff like Salaries because it's simpler
+- talked a lot about comparators
+
+
+
+Intbuffer question answer:
+
+public class IntBufferImp {
+    private int values;
+    private boolean available = false;
+
+    public int consume() {
+        if (!available) {
+            try {
+                wait();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        available = false;
+        notifyAll();
+        return value;
+    }
+
+    public void produce(int i) {
+        if (available) {
+            try {
+                wait();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        value = i;
+        notifyAll();
+        available = true;
+    }
+}
