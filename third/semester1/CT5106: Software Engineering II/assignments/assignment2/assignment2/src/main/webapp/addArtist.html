@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Add Artist</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Add Artist</h1>
+        <form action="./AddArtistServlet" method="post">
+            <label for="firstname">First Name</label><br>
+            <input type="text" id="firstname" name="firstname"><br>
+            <label for="surname">Surname</label><br>
+            <input type="text" id="surname" name="surname"><br>
+            <label for="nationality">Nationality</label><br>
+            <input type="text" id="nationality" name="nationality"><br>
+            <label for="birthYear">Year of Birth</label><br>
+            <input type="text" id="birthYear" name="birthYear"><br>
+            <label for="deathYear">Year of Death</label><br>
+            <input type="text" id="deathYear" name="deathYear"><br>
+            <label for="biography">Biography</label><br>
+            <input type="text" id="biography" name="biography"><br>
+            <label for="photoUrl">Photo URL</label><br>
+            <input type="url" id="photoUrl" name="photoUrl"><br>
+            <input type="submit" value="Submit">
+        </form>
+</html>

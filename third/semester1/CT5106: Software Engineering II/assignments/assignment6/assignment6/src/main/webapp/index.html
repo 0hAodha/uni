@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Forum</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="websocket.js"></script>
+</head>
+
+<body>
+    <form id="forumForm">
+        <h1>Choose the Forum you want to join</h1>
+        <p>username</p>
+        <input type="text" id="username">
+
+        <select id="forum">
+            <option value="Politics">Politics</option>
+            <option value="Technology">Technology</option>
+            <option value="Sport">Sport</option>
+            <option value="Music">Music</option>
+            <option value="Films">Films</option>
+        </select>
+        <input type="button" value="Join" onclick="formSubmit()">
+    </form>
+
+    <!-- div to contain the content of the forum pages -->
+    <div id="content"></div>
+</body>
+</html>
