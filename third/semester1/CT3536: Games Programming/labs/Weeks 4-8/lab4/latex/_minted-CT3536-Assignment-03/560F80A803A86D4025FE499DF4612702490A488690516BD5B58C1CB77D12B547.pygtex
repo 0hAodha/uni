@@ -1,0 +1,59 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AsteroidScript}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{asteroid}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{maxSpeed}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{  }\PYG{l+m}{300}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{minSpeed}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m}{300}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// Start is called before the first frame update}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// adding force to the asteroid}
+\PYG{+w}{        }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{forceVector}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{n}{minSpeed}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{maxSpeed}\PYG{p}{),}\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{n}{minSpeed}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{maxSpeed}\PYG{p}{),}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{n}{minSpeed}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{maxSpeed}\PYG{p}{));}
+\PYG{+w}{        }\PYG{n}{asteroid}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{AddForce}\PYG{p}{(}\PYG{n}{forceVector}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{InvokeRepeating}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}CheckOffscreen\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.2f}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Update is called once per frame}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// method to check if asteroid has gone offscreen}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{CheckOffscreen}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{halfWidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{orthographicSize}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{aspect}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{halfHeight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{orthographicSize}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{padding}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{5}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// padding variable to account for size of asteroid}
+
+\PYG{+w}{        }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{minBounds}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{halfWidth}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{n}{halfHeight}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{maxBounds}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{halfWidth}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{halfHeight}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{c+c1}{// if asteroid goes offscreen, wrapping around}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{minBounds}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{padding}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{maxBounds}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{maxBounds}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{padding}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{minBounds}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{minBounds}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{padding}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{maxBounds}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{maxBounds}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{padding}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{minBounds}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

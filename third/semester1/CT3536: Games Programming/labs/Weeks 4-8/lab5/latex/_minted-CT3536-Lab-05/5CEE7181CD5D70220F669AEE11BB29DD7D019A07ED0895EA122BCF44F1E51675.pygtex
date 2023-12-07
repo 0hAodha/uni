@@ -1,0 +1,57 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Spaceship}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{spaceship}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{speed}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{5.0f}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{rotationalSpeed}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.0f}\PYG{p}{;}
+\PYG{+w}{    }\PYG{c+c1}{// Start is called before the first frame update}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// start periodically checking for being off-screen }
+\PYG{+w}{        }\PYG{n}{InvokeRepeating}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s}{\PYGZdq{}CheckScreenEdges\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.2f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.2f}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// Update is called once per frame}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// move spaceship according to arrow keys}
+\PYG{+w}{        }\PYG{c+c1}{// applying just a force to the spaceship object creates some unusual handling, but i feel that this is correct as in space there should be 0 drag, and if a force is applied in one direction, it should remain until it's cancelled out}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{LeftArrow}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{AddTorque}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{n}{rotationalSpeed}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{));}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{RightArrow}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{AddTorque}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{rotationalSpeed}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{));}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{UpArrow}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{AddRelativeForce}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{speed}\PYG{p}{));}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{DownArrow}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{AddRelativeForce}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{n}{speed}\PYG{p}{));}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{CheckScreenEdges}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{pos}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{;}\PYG{+w}{   }
+\PYG{+w}{        }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{vel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{spaceship}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{().}\PYG{n}{velocity}\PYG{p}{;}\PYG{+w}{   }
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{xTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{zTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pos}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vel}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{// velocity check as sanity test }
+\PYG{+w}{            }\PYG{n}{xTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenWidth}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pos}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vel}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{xTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenWidth}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pos}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vel}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{zTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenHeight}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pos}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{vel}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{zTeleport}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{screenHeight}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{xTeleport}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{zTeleport}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{pos}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{xTeleport}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{pos}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{zTeleport}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

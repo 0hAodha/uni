@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// local space to global}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{TransformPoint}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{position}\PYG{p}{);}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{TransformDirection}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{direction}\PYG{p}{);}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{TransformVector}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{vector}\PYG{p}{);}
+\PYG{c+c1}{// global to local}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{InverseTransformPoint}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{position}\PYG{p}{);}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{InverseTransformDirection}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{direction}\PYG{p}{);}
+\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n+nf}{InverseTransformVector}\PYG{p}{(}\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{vector}\PYG{p}{);}
+\end{Verbatim}

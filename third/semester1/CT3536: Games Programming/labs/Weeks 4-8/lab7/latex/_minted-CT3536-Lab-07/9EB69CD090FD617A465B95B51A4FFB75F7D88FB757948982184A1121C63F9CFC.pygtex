@@ -1,0 +1,86 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Spaceship}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// inspector settings }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Rigidbody}\PYG{+w}{ }\PYG{n}{rigidBody}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{bulletPrefab}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GUIScript}\PYG{+w}{ }\PYG{n}{guiScript}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// public member data }
+\PYG{+w}{    }\PYG{n+na}{[HideInInspector]}\PYG{+w}{ }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{isInvulnerable}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// private member data }
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{lastFiredTime}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{Invoke}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s}{\PYGZdq{}MakeVulnerable\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2f}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{MakeVulnerable}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{isInvulnerable}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// Update is called once per frame }
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{FixedUpdate}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{UpArrow}\PYG{p}{))}\PYG{+w}{  }
+\PYG{+w}{        }
+\PYG{+w}{        }\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{AddForce}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{forward}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{mass}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{fixedDeltaTime}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{500f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{LeftArrow}\PYG{p}{))}\PYG{+w}{  }
+\PYG{+w}{            }\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{AddTorque}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{up}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{mass}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{deltaTime}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{500f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n+nf}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{RightArrow}\PYG{p}{))}\PYG{+w}{  }
+\PYG{+w}{            }\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{AddTorque}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{up}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{rigidBody}\PYG{p}{.}\PYG{n}{mass}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{deltaTime}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{500f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }
+\PYG{+w}{        }\PYG{c+c1}{// firing is only allowed at most once per 0.25 seconds }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{Space}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{lastFiredTime}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m}{0.25f}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{time}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{lastFiredTime}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{time}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{FireBullet}\PYG{+w}{ }\PYG{p}{();}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+
+\PYG{+w}{        }\PYG{c+c1}{// methods for testing, should be removed for actual gameplay}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKeyDown}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{Escape}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{gameObject}\PYG{p}{);}\PYG{+w}{    }\PYG{c+c1}{// destroy spaceship}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKeyDown}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{Return}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// destroy all asteroids and start next level}
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{asteroid}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{p}{.}\PYG{n}{FindGameObjectsWithTag}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}asteroid\PYGZdq{}}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{asteroid}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{StartNextLevel}\PYG{p}{();}
+
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{OnDestroy}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{numLives}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{c+c1}{// if the spaceship has more lives, respawn}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{numLives}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{CreatePlayerSpaceship}\PYG{p}{();}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{c+c1}{// else destroy all asteroids and go to menu}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{highScore}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{currentScore}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{highScore}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{currentScore}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{highScore}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{asteroid}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{p}{.}\PYG{n}{FindGameObjectsWithTag}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}asteroid\PYGZdq{}}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{asteroid}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{n}{guiScript}\PYG{p}{.}\PYG{n}{SwitchToMenu}\PYG{p}{();}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{FireBullet}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Instantiate}\PYG{p}{(}\PYG{n}{bulletPrefab}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{go}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{forward}\PYG{o}{*}\PYG{l+m}{3f}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{go}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{rotation}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{transform}\PYG{p}{.}\PYG{n}{rotation}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{p}{\PYGZcb{}}\PYG{+w}{  }
+\end{Verbatim}

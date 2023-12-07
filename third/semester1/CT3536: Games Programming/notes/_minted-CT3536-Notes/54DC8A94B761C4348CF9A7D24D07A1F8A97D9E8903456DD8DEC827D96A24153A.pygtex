@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// these happen for Collider-to-Collider collisions}
+\PYG{n}{OnCollisionEnter}\PYG{p}{(}\PYG{n}{Collision}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+\PYG{n}{OnCollisionExit}\PYG{p}{(}\PYG{n}{Collision}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+\PYG{n}{OnCollisionStay}\PYG{p}{(}\PYG{n}{Collision}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+
+\PYG{c+c1}{// these happen for Trigger-to-Trigger collisions}
+\PYG{n}{OnTriggerEnter}\PYG{p}{(}\PYG{n}{Collider}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+\PYG{n}{OnTriggerExit}\PYG{p}{(}\PYG{n}{Collider}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+\PYG{n}{OnTriggerStay}\PYG{p}{(}\PYG{n}{Collider}\PYG{+w}{ }\PYG{n}{coll}\PYG{p}{);}
+\end{Verbatim}

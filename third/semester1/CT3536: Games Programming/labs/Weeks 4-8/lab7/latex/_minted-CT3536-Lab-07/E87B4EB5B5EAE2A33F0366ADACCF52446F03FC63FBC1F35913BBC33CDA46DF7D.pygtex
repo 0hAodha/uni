@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{SpeedLimiter}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// inspector settings }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Rigidbody}\PYG{+w}{ }\PYG{n}{rigid}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{speedLimit}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{5f}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// }
+\PYG{+w}{     }
+\PYG{+w}{    }\PYG{c+c1}{// Update is called once per frame }
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{FixedUpdate}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{spd}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{rigid}\PYG{p}{.}\PYG{n}{velocity}\PYG{p}{.}\PYG{n}{magnitude}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{spd}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{speedLimit}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{rigid}\PYG{p}{.}\PYG{n}{velocity}\PYG{+w}{ }\PYG{o}{*=}\PYG{+w}{ }\PYG{n}{speedLimit}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{spd}\PYG{p}{;}\PYG{+w}{  }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Area}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// inspector settings}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Transform}\PYG{+w}{ }\PYG{n}{innerWallsGroup}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{wallsPos}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{GameObject}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{innerWalls}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{GameObject}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{p}{[]}\PYG{+w}{ }\PYG{n}{wallIsRaised}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Transform}\PYG{+w}{ }\PYG{n}{t}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{innerWallsGroup}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{innerWalls}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{t}\PYG{p}{.}\PYG{n}{gameObject}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{wallIsRaised}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{p}{[}\PYG{n}{innerWalls}\PYG{p}{.}\PYG{n}{Count}\PYG{p}{];}
+
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{innerWalls}\PYG{p}{.}\PYG{n}{Coutn}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{innerWalls}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{wallsPos}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{innerWalls}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{SetActive}\PYG{p}{(}\PYG{k}{false}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{wallIsRaised}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

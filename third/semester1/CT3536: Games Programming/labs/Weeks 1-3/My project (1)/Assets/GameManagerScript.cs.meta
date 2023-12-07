@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b2ca6ffba7316325b81d032cd68582c5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mars: {fileID: 919132149155446097, guid: 729994df3d65fea10a3e168d5469e639, type: 3}
+  - phobos: {fileID: 8158671706834929829, guid: 18b7cfdb18fd74b40a6a893bf804f7a4, type: 3}
+  - deimos: {fileID: 474245857029531064, guid: 519c8392cfe9249b0a0c17b1d45fef5f, type: 3}
+  - asteroid: {fileID: 7403127104882189301, guid: cb351f6d8db33aa3bb61da43dcdd2635, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

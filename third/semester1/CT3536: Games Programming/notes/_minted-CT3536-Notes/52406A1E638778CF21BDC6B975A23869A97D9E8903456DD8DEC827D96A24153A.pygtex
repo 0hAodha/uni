@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{go2}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// it's assumed that these are not nulls!}
+
+\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{difference}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{direction}\PYG{p}{;}
+\PYG{n}{difference}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{go2}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{go1}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{p}{;}
+\PYG{n}{direction}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{difference}\PYG{p}{.}\PYG{n}{normalized}\PYG{p}{;}
+\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{distance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{difference}\PYG{p}{.}\PYG{n}{magnitude}\PYG{p}{;}
+\end{Verbatim}

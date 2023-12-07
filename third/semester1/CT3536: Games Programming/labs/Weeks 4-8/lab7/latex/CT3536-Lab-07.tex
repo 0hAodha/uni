@@ -1,0 +1,104 @@
+%! TeX program = lualatex
+\documentclass[a4paper, 11pt]{article} 
+
+
+% packages
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage[final, colorlinks = false, urlcolor = cyan]{hyperref} 
+\usepackage{changepage}     % adjust margins on the fly
+\usepackage{fontspec}
+
+\usepackage{minted}
+\usepackage{xcolor}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing, skip=0pt}}{}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{-}
+\setmainfont{EB Garamond}
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage{titlesec}
+% \titleformat{\section}{\LARGE\bfseries}{}{}{}[\titlerule]
+% \titleformat{\subsection}{\Large\bfseries}{}{0em}{}
+% \titlespacing{\subsection}{0em}{-0.7em}{0em}
+%
+% \titleformat{\subsubsection}{\large\bfseries}{}{0em}{$\bullet$ }
+% \titlespacing{\subsubsection}{1em}{-0.7em}{0em}
+
+% margins
+\addtolength{\hoffset}{-2.25cm}
+\addtolength{\textwidth}{4.5cm}
+\addtolength{\voffset}{-3.25cm}
+\addtolength{\textheight}{5cm}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0in}
+% \setcounter{secnumdepth}{0}
+
+\begin{document}
+\hrule \medskip
+\begin{minipage}{0.295\textwidth} 
+    \raggedright
+    \footnotesize 
+    \textbf{Name:} Andrew Hayes \\
+    \textbf{E-mail:} \href{mailto://a.hayes18@universityofgalway.ie}{a.hayes18@universityofgalway.ie}  \hfill\\   
+    \textbf{ID:} 21321503 \hfill
+\end{minipage}
+\begin{minipage}{0.4\textwidth} 
+    \centering 
+    \vspace{0.4em}
+    \Large 
+    \textbf{CT3536} \\ 
+\end{minipage}
+\begin{minipage}{0.295\textwidth} 
+    \raggedleft
+    \today
+\end{minipage}
+\medskip\hrule 
+\begin{center}
+    \normalsize
+    \textbf{Lab Assignment 07}
+\end{center}
+\hrule
+
+\begin{code}
+    \inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/GameManager.cs}
+\caption{\texttt{GameManager.cs}}
+\end{code}
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/Resources/Asteroid.cs}
+\caption{\texttt{Asteroid.cs}}
+\end{code}
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/GUIScript.cs}
+\caption{\texttt{GUIScript.cs}}
+\end{code}
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/ScreenEdgeChecker.cs}
+\caption{\texttt{ScreenEdgeChecker.cs}}
+\end{code}
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/Spaceship.cs}
+\caption{\texttt{Spaceship.cs}}
+\end{code}
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/SpeedLimiter.cs}
+\caption{\texttt{SpeedLimiter.cs}}
+\end{code}
+
+
+\begin{code}
+\inputminted[texcl, mathescape, breaklines, frame=single, linenos]{csharp}{/home/andrew/code/Unity/Asteroids/Assets/Resources/Bullet.cs}
+\caption{\texttt{Bullet.cs}}
+\end{code}
+\end{document}

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{camera}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{RotateAround}\PYG{p}{(}\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{zero}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{camera}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{up}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{50f}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{deltaTime}\PYG{p}{);}
+\end{Verbatim}

@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{GameManager}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{currentGameLevel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{asteroid}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// Start is called before the first frame update}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{30}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{LookAt}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{),}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{1f}\PYG{p}{));}
+
+\PYG{+w}{        }\PYG{n}{StartNextLevel}\PYG{p}{();}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+
+\PYG{+w}{    }\PYG{c+c1}{// Update is called once per frame}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{StartNextLevel}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// assuming we want to spawn 3 asteroids plus 5 more per level}
+\PYG{+w}{        }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{numberAsteroids}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{3}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{5}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{currentGameLevel}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{c+c1}{// get dimensions of screen}
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{halfWidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{orthographicSize}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{aspect}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{halfHeight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{orthographicSize}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{numberAsteroids}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{randomX}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{randomZ}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{do}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{randomX}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{halfWidth}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{halfWidth}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{randomZ}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{halfHeight}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{halfHeight}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k}{while}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{randomX}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m}{5}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{randomX}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m}{5}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{randomZ}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m}{5}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{randomZ}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m}{5}\PYG{p}{));}
+
+\PYG{+w}{            }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{spawnPosition}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{randomX}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{randomZ}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{Instantiate}\PYG{p}{(}\PYG{n}{asteroid}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{spawnPosition}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Quaternion}\PYG{p}{.}\PYG{n}{identity}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

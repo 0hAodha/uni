@@ -1,0 +1,79 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Collections.Generic}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{UnityEngine.UI}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{TMPro}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{GameManager}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// inspector settings }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{asteroidPrefab}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{spaceshipPrefab}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{TextMeshProUGUI}\PYG{+w}{ }\PYG{n}{scoreText}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// class-level statics }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{GameManager}\PYG{+w}{ }\PYG{n}{instance}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{currentGameLevel}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{screenBottomLeft}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{screenTopRight}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{screenWidth}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{screenHeight}\PYG{p}{;}\PYG{+w}{ }
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{inMenuState}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{highScore}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{numLives}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{3}\PYG{p}{;}\PYG{+w}{    }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{currentScore}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{c+c1}{// Use this for initialization }
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Start}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{instance}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{this}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{30f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{LookAt}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{zero}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{1f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{currentGameLevel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+
+\PYG{+w}{    }\PYG{c+c1}{// probably inefficient to update it so often but this works and i'm lazy}
+\PYG{+w}{    }\PYG{c+c1}{// would be better to only update the text when the values are updated, via a method that updates both}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{scoreText}\PYG{p}{.}\PYG{n}{text}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}High Score: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{highScore}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} Score: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{currentScore}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} Lives: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{numLives}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{StartNewGame}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{numLives}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{3}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{StartNextLevel}\PYG{+w}{ }\PYG{p}{();}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{CreatePlayerSpaceship}\PYG{+w}{ }\PYG{p}{();}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{StartNextLevel}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{currentGameLevel}\PYG{o}{++}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{        }\PYG{c+c1}{// find screen corners and size, in world coordinates }
+\PYG{+w}{        }\PYG{c+c1}{// for ViewportToWorldPoint, the z value specified is in world units from the camera }
+\PYG{+w}{        }\PYG{n}{screenBottomLeft}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{ViewportToWorldPoint}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{l+m}{0f}\PYG{p}{,}\PYG{l+m}{30f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{screenTopRight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{ViewportToWorldPoint}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{l+m}{1f}\PYG{p}{,}\PYG{l+m}{1f}\PYG{p}{,}\PYG{l+m}{30f}\PYG{p}{));}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{screenWidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{screenHeight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{z}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{        }\PYG{c+c1}{// instantiate some asteroids near the edges of the screen }
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{currentGameLevel}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m}{3}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Instantiate}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{instance}\PYG{p}{.}\PYG{n}{asteroidPrefab}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{z}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{1f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m}{0.5f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{                }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.15f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{screenWidth}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// near the left edge }
+\PYG{+w}{            }\PYG{k}{else}\PYG{+w}{ }
+\PYG{+w}{                }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.15f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{screenWidth}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// near the right edge }
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{1f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m}{0.5f}\PYG{p}{)}\PYG{+w}{ }
+\PYG{+w}{                }\PYG{n}{z}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenBottomLeft}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.15f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{screenHeight}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// near the bottom edge }
+\PYG{+w}{            }\PYG{k}{else}\PYG{+w}{ }
+\PYG{+w}{                }\PYG{n}{z}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{screenTopRight}\PYG{p}{.}\PYG{n}{z}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{Random}\PYG{p}{.}\PYG{n}{Range}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.15f}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{screenHeight}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// near the top edge }
+\PYG{+w}{            }\PYG{n}{go}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0f}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{z}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{go}\PYG{p}{.}\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Asteroid}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{p}{().}\PYG{n}{SetScale}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m}{0.08f}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{0.12f}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{+w}{ }
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{static}\PYG{+w}{ }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{CreatePlayerSpaceship}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{c+c1}{// instantiate the player's spaceship }
+\PYG{+w}{        }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Instantiate}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{instance}\PYG{p}{.}\PYG{n}{spaceshipPrefab}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n}{GameObject}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{        }\PYG{n}{go}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{.}\PYG{n}{zero}\PYG{p}{;}\PYG{+w}{ }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

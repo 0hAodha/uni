@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// Here, we find the 3D position that's just above the enemy's head, and convert this to a vieweort position when viewed through the player's camera.}
+\PYG{c+c1}{// Finally, this viewport position is converted to a pixel position as required by the GUI sprite.}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MonsterManager}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{MonoBehaviour}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{void}\PYG{+w}{ }\PYG{n+nf}{Update}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GameManager}\PYG{p}{.}\PYG{n}{gameState}\PYG{o}{==}\PYG{n}{GameStates}\PYG{p}{.}\PYG{n}{Playing}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{numMonstersAlive}\PYG{o}{==}\PYG{l+m}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// put the final enemy indicator (GUI object) above the final monster}
+\PYG{+w}{                }\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GUIManager}\PYG{p}{.}\PYG{n}{instance}\PYG{p}{.}\PYG{n}{finalEnemyIndicator}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{Monster}\PYG{+w}{ }\PYG{n}{m}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{allActiveMonsters}\PYG{p}{[}\PYG{l+m}{0}\PYG{p}{];}
+\PYG{+w}{                }\PYG{n}{Bounds}\PYG{+w}{ }\PYG{n}{b}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{m}\PYG{p}{.}\PYG{n}{mycollider}\PYG{p}{.}\PYG{n}{bounds}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{pos}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector3}\PYG{p}{(}\PYG{n}{b}\PYG{p}{.}\PYG{n}{center}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{b}\PYG{p}{.}\PYG{n}{max}\PYG{p}{.}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m}{1f}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{b}\PYG{p}{.}\PYG{n}{center}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Player}\PYG{p}{.}\PYG{n}{myPlayer}\PYG{p}{.}\PYG{n}{fpsCamera}\PYG{p}{.}\PYG{n}{WorldToViewportPoint}\PYG{p}{(}\PYG{n}{pos}\PYG{p}{);}
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{x}\PYG{o}{\PYGZlt{}}\PYG{l+m}{0f}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{x}\PYG{o}{\PYGZgt{}}\PYG{l+m}{1f}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{y}\PYG{o}{\PYGZlt{}}\PYG{l+m}{0f}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{y}\PYG{o}{\PYGZgt{}}\PYG{l+m}{1f}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{z}\PYG{o}{\PYGZlt{}}\PYG{l+m}{0f}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{n}{go}\PYG{p}{.}\PYG{n}{SetActive}\PYG{p}{(}\PYG{k}{false}\PYG{p}{);}
+\PYG{+w}{                }\PYG{k}{else}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{go}\PYG{p}{.}\PYG{n}{SetActive}\PYG{p}{(}\PYG{k}{true}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{n}{go}\PYG{p}{.}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Vector2}\PYG{p}{(}\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{x}\PYG{o}{*}\PYG{n}{Screen}\PYG{p}{.}\PYG{n}{width}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{viewPos}\PYG{p}{.}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Screen}\PYG{p}{.}\PYG{n}{height}\PYG{p}{);}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
