@@ -1,0 +1,17 @@
+11: Verify that the internet is reachable from all devices and explain the meaning of each entry in the routing table of the CoreRouter.
+
+12: Explain what would happen if each router was not setup to redistribute connected networks, this was done in Step 7.
+
+13: Do a trace (using ICMP) from PC1-VLAN101 to PC2-VLAN202 and explain the route that is taken.
+
+14: Run a long ping (for 30 seconds) from the PC1-VLAN101 to PC2-VLAN202 and while this is running suspend the link (right click on the link to see this option) from the EngBuilding router to the ITBuilding router.
+
+15: Are any pings dropped after the link is suspended? How long does it take for the ping to work again? Redo the trace, done in Step 13, and explain the results.
+
+16: Run a packet capture on the link from the EngBuilding router to the CoreRouter, this should launch Wireshark on your computer.
+
+17: Resume the link from the EngBuilding router to the ITBuilding router and wait about 30 seconds to ensure that OSPF has detected the topology change and reconverged.
+
+18: Stop the packet capture and apply a display filter in Wireshark to only display OSPF packets. Explain the contents of any Link State Announcement (LSA) packets captured
+
+Submit your work in a single zip file using the name format assignment2_firstname_lastname.zip - other file formats will NOT be accepted and email submission will NOT be accepted. Include related screen shots of your GNS3 simulation, the router configurations, as well as screen shots of your testing, results and related answers into a single document, this document (in Word or PDF format) can then be included in the zip file for submission. Please note that you do not need to submit the GNS3 project files. If you submit more than one attempt then only the last attempt will be marked.

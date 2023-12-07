@@ -1,0 +1,7 @@
+- answer 4 out of 5 questions
+- "the questions never change, only the answers do"
+- trickiest bits are design elements 
+- need to be able to do subnetting
+- won't be doing IPv6 subnetting
+
+- 300 words is about page, should take about 12-15 minutes
