@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+cp}{\PYGZsh{}include}\PYG{+w}{ }\PYG{c+cpf}{\PYGZlt{}string.h>}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{generic\PYGZus{}swap}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{vp1}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{vp2}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{char}\PYG{+w}{ }\PYG{n}{temp\PYGZus{}buff}\PYG{p}{[}\PYG{n}{size}\PYG{p}{];}\PYG{+w}{   }\PYG{c+c1}{// need malloc?}
+\PYG{+w}{    }\PYG{n}{memcpy}\PYG{p}{(}\PYG{n}{temp\PYGZus{}buff}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{vp1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{);}
+\PYG{+w}{    }\PYG{n}{memcpy}\PYG{p}{(}\PYG{n}{vp1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{vp2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{);}
+\PYG{+w}{    }\PYG{n}{memcpy}\PYG{p}{(}\PYG{n}{vp2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{temp\PYGZus{}buff}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

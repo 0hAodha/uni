@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n+nb}{\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cons}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}banana\PYGZdq{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}split\PYGZdq{}}\PYG{p}{)}
+\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}banana\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}split\PYGZdq{}}\PYG{p}{)}\PYG{o}{\PYGZsq{}}
+\end{Verbatim}

@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZpc{} base case: any element is not in an empty list}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{k}{\PYGZus{}}\PYG{p}{,} \PYG{p}{[]).}
+
+\PYG{c+c1}{\PYGZpc{} return true if Element is not the Head of the list and it\PYGZsq{}s not found recursively searching the rest of the list}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{n+nv}{Element}\PYG{p}{,} \PYG{p}{[}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{Tail}\PYG{p}{])} \PYG{p}{:\PYGZhy{}} \PYG{n+nv}{Element} \PYG{l+s+sAtom}{\PYGZbs{}=} \PYG{n+nv}{Head}\PYG{p}{,} \PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{n+nv}{Element}\PYG{p}{,} \PYG{n+nv}{Tail}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} testing}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{[]).}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]).}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]).}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{]).}
+\PYG{n+nf}{isNotElementInList}\PYG{p}{(}\PYG{l+m+mi}{7}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{]).}
+\end{Verbatim}

@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{// class to implement Method 3 }
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{ReverseVSOriginal}\PYG{+w}{ }\PYG{k+kd}{implements}\PYG{+w}{ }\PYG{n}{PalindromeChecker}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// method 1 - reversed order String vs original String }
+\PYG{+w}{    }\PYG{n+nd}{@Override}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{checkPalindrome}\PYG{p}{(}\PYG{n}{String}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{reversedStr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{;}\PYG{+w}{    }\PYG{n}{NewPalindrome}\PYG{p}{.}\PYG{n+na}{operations}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]++}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{c+c1}{// looping through each character in the String, backwards}
+\PYG{+w}{        }\PYG{c+c1}{// incrementing operations counter by 2, 1 for initialisating i, 1 for getting str.length()}
+\PYG{+w}{        }\PYG{n}{NewPalindrome}\PYG{p}{.}\PYG{n+na}{operations}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{.}\PYG{n+na}{length}\PYG{p}{();}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{NewPalindrome}\PYG{p}{.}\PYG{n+na}{operations}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{           }\PYG{c+c1}{// for loop condition check & incrementing i}
+
+\PYG{+w}{            }\PYG{n}{reversedStr}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{.}\PYG{n+na}{charAt}\PYG{p}{(}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{);}\PYG{+w}{ }\PYG{n}{NewPalindrome}\PYG{p}{.}\PYG{n+na}{operations}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{c+c1}{// returning true if the Strings are equal, false if not}
+\PYG{+w}{        }\PYG{n}{NewPalindrome}\PYG{p}{.}\PYG{n+na}{operations}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{.}\PYG{n+na}{length}\PYG{p}{();}\PYG{+w}{    }\PYG{c+c1}{// the equals method must loop through each character of the String to check that they are equal so it is O(n)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{.}\PYG{n+na}{equals}\PYG{p}{(}\PYG{n}{reversedStr}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

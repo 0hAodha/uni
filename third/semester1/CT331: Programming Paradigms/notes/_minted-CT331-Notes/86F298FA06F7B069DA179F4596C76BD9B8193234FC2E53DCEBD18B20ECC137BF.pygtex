@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{;;;; these two are equivalent}
+\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{  }\PYG{n+nv}{lis}\PYG{p}{))))}
+\PYG{n+nb}{cadddr}\PYG{p}{(}\PYG{n+nv}{lis}\PYG{p}{)}
+\end{Verbatim}

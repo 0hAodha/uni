@@ -1,0 +1,95 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{\PYGZsh{}lang }\PYG{n+nn}{racket}
+
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{ins\PYGZus{}beg}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{ins\PYGZus{}end}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{count\PYGZus{}top\PYGZus{}level}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{count\PYGZus{}instances}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{count\PYGZus{}instances\PYGZus{}tr}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{provide}\PYG{+w}{ }\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{p}{)}
+
+\PYG{c+c1}{;; function to insert an element at the beginning of a list}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ins\PYGZus{}beg}\PYG{+w}{ }\PYG{n}{el}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{c+c1}{;; assuming that the second element is always a list}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{cons}\PYG{+w}{ }\PYG{n}{el}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; function to insert an element at the end of a list}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ins\PYGZus{}end}\PYG{+w}{ }\PYG{n}{el}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{c+c1}{;; making el into a list if it isn\PYGZsq{}t already}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{append}\PYG{+w}{ }\PYG{n}{lst}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cons}\PYG{+w}{ }\PYG{n}{el}\PYG{+w}{ }\PYG{n+nb}{empty}\PYG{p}{))}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; function to count the number of top\PYGZhy{}level items in a list}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}top\PYGZus{}level}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{null?}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{        }\PYG{l+m+mi}{0}\PYG{+w}{                                   }\PYG{c+c1}{;; return 0 if we\PYGZsq{}ve reached the end of the list}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}top\PYGZus{}level}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)))}\PYG{+w}{   }\PYG{c+c1}{;; return 1 plus the count\PYGZus{}top\PYGZus{}level of the second element of the cons pair (the rest of the list)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; non\PYGZhy{}tail recursive function to count the number of times a given item occurs in a list (assuming items are atomic)}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{null?}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{        }\PYG{l+m+mi}{0}\PYG{+w}{   }\PYG{c+c1}{;; return 0 if at the end of the list}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nb}{+}
+\PYG{+w}{            }\PYG{p}{(}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{equal?}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}
+\PYG{+w}{                }\PYG{l+m+mi}{1}\PYG{+w}{   }\PYG{c+c1}{;; if the item is equal to the first element of the list, add 1}
+\PYG{+w}{                }\PYG{l+m+mi}{0}\PYG{+w}{   }\PYG{c+c1}{;; if the item is not equal to the first element of the list, add 0}
+\PYG{+w}{            }\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}\PYG{+w}{    }\PYG{c+c1}{;; recurse with the remainder of the list}
+\PYG{+w}{        }\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; helper function for count\PYGZus{}instances\PYGZus{}tr}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}tr\PYGZus{}helper}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{n}{lst}\PYG{+w}{ }\PYG{n}{cnt}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{cond}
+\PYG{+w}{        }\PYG{c+c1}{;; return the count if the end of the list is reached (0 for empty list)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{p}{(}\PYG{n+nb}{null?}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{            }\PYG{n}{cnt}
+\PYG{+w}{        }\PYG{p}{)}
+\PYG{+w}{        }\PYG{c+c1}{;; if the first element of the list is equal to the item }
+\PYG{+w}{        }\PYG{p}{(}\PYG{p}{(}\PYG{n+nb}{eq?}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{item}\PYG{p}{)}
+\PYG{+w}{            }\PYG{c+c1}{;; recurse with the remainder of the list and an incremented count}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}tr\PYGZus{}helper}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{n}{cnt}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{)}
+\PYG{+w}{        }\PYG{c+c1}{;; if the first element of the list is not equal to the item}
+\PYG{+w}{        }\PYG{p}{(}\PYG{k}{else}
+\PYG{+w}{            }\PYG{c+c1}{;; recurse with the remainder of the list and an unchanged count}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}tr\PYGZus{}helper}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{cnt}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; tail recursive function to count the number of times a given item occurs in a list (assuming items are atomic)}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}tr}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{c+c1}{;; calling helper function with the list and the count so far (0)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}tr\PYGZus{}helper}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{n}{lst}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{c+c1}{;; function to count the number of times an item occurs in a list and its sub\PYGZhy{}lists}
+\PYG{p}{(}\PYG{k}{define}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{cond}
+\PYG{+w}{        }\PYG{c+c1}{;; return nothing if we\PYGZsq{}ve reached the end of the list}
+\PYG{+w}{        }\PYG{p}{(}\PYG{p}{(}\PYG{n+nb}{null?}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)}
+\PYG{+w}{            }\PYG{l+m+mi}{0}
+\PYG{+w}{        }\PYG{p}{)}
+
+\PYG{+w}{        }\PYG{c+c1}{;; if the first item is a list, recurse through the first element and then the rest and return the sum of the two results}
+\PYG{+w}{        }\PYG{p}{(}\PYG{p}{(}\PYG{n+nb}{pair?}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)))}
+\PYG{+w}{        }\PYG{p}{)}
+
+\PYG{+w}{        }\PYG{c+c1}{;; if the first element is equal to the item, add 1 to the count and recurse with the rest of the list}
+\PYG{+w}{        }\PYG{p}{(}\PYG{p}{(}\PYG{n+nb}{eq?}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{car}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{; If the first element is equal to the item, increment count}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{)))}
+\PYG{+w}{        }\PYG{p}{)}
+
+\PYG{+w}{        }\PYG{c+c1}{;; else if the first element is not equal to the item, recurse with the rest of the list}
+\PYG{+w}{        }\PYG{p}{(}\PYG{k}{else}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n}{count\PYGZus{}instances\PYGZus{}deep}\PYG{+w}{ }\PYG{n}{item}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{cdr}\PYG{+w}{ }\PYG{n}{lst}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{)}
+\end{Verbatim}

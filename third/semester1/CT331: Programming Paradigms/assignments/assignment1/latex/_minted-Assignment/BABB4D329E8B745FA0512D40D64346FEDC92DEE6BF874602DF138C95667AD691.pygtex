@@ -1,0 +1,95 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{java.io.*}\PYG{p}{;}
+
+\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{class} \PYG{n+nc}{NewPalindrome}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{operations}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// array to contain the global operations count for each method }
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[]}\PYG{+w}{  }\PYG{n}{decCount}\PYG{+w}{   }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{   }\PYG{c+c1}{// array to hold the count of decimal palindromes found using each method}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[]}\PYG{+w}{  }\PYG{n}{binCount}\PYG{+w}{   }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{   }\PYG{c+c1}{// array to hold the count of binary  palindromes found using each method}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[]}\PYG{+w}{  }\PYG{n}{bothCount}\PYG{+w}{  }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{   }\PYG{c+c1}{// array to hold the count of numbers that are palindromes in both decimal & binary found using each method}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{startTime}\PYG{+w}{  }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// array to hold the start time of each method's test loop}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{totalTime}\PYG{+w}{  }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{k+kt}{long}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// array to hold the total time of each method's test loop}
+
+\PYG{+w}{    }\PYG{c+c1}{// array to hold all the String versions of the numbers so that they don't have to be generated for each method}
+\PYG{+w}{    }\PYG{c+c1}{// 0th column will be decimal, 1st column will be binary}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{n}{String}\PYG{o}{[][]}\PYG{+w}{ }\PYG{n}{strings}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{String}\PYG{o}{[}\PYG{l+m+mi}{1\PYGZus{}000\PYGZus{}001}\PYG{o}{][}\PYG{l+m+mi}{2}\PYG{o}{]}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// array of StringBuilder objects used to hold the csv data (size of problem, number of operations) for each method}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{n}{StringBuilder}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{StringBuilder}\PYG{o}{[}\PYG{l+m+mi}{4}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{ }
+
+\PYG{+w}{    }\PYG{c+c1}{// array of the four classes that will be tested}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{n}{PalindromeChecker}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{palindromeCheckers}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ReverseVSOriginal}\PYG{p}{(),}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{IVersusNMinusI}\PYG{p}{(),}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{StackVSQueue}\PYG{p}{(),}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RecursiveReverse}\PYG{p}{()\PYGZcb{};}\PYG{+w}{ }
+
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{main}\PYG{p}{(}\PYG{n}{String}\PYG{+w}{ }\PYG{n}{args}\PYG{o}{[]}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// initialising the data array to StringBuilder objects}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mi}{4}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{data}\PYG{o}{[}\PYG{n}{i}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{StringBuilder}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}operations,size\PYGZbs{}n\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{c+c1}{// filling up the strings array}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{l+m+mi}{1\PYGZus{}000\PYGZus{}000}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{strings}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Integer}\PYG{p}{.}\PYG{n+na}{toString}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{);}\PYG{+w}{        }\PYG{c+c1}{// converting i to a String base 10}
+\PYG{+w}{            }\PYG{n}{strings}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{l+m+mi}{1}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{binary2string}\PYG{p}{(}\PYG{n}{strings}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{   }\PYG{c+c1}{// converting the decimal String to a binary String}
+
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{c+c1}{// looping through each PalindromeChecker object in the palindromeCheckers array}
+\PYG{+w}{        }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{l+m+mi}{4}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{j}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// getting start time }
+\PYG{+w}{            }\PYG{n}{startTime}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{currentTimeMillis}\PYG{p}{();}\PYG{+w}{  }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]++}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{c+c1}{// looping through the numbers 0 to 1,000,000 and checking if their binary & decimal representations are palindromic}
+\PYG{+w}{            }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]++}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{l+m+mi}{1\PYGZus{}000\PYGZus{}000}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// incrementing the operations count by 2, 1 for the loop condition check and 1 for incrementing i}
+\PYG{+w}{                }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{c+c1}{// converting the number to a decimal or binary String and checking if is a palindrome}
+\PYG{+w}{                }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n}{isDecPalindrome}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{palindromeCheckers}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{.}\PYG{n+na}{checkPalindrome}\PYG{p}{(}\PYG{n}{strings}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{ }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]++}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n}{isBinPalindrome}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{palindromeCheckers}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{.}\PYG{n+na}{checkPalindrome}\PYG{p}{(}\PYG{n}{strings}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{l+m+mi}{1}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{ }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]++}\PYG{p}{;}\PYG{+w}{ }
+
+\PYG{+w}{                }\PYG{c+c1}{// incrementing the appropriate counter if the number is a palindrome in that base}
+\PYG{+w}{                }\PYG{n}{decCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{   }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{isDecPalindrome}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{n}{decCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{decCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{                      }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{       }\PYG{c+c1}{// incremnting by 2, 1 for assignment, 1 for condition check}
+\PYG{+w}{                }\PYG{n}{binCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{   }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{isBinPalindrome}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{n}{binCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{binCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{                      }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{bothCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{  }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{isDecPalindrome}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{isBinPalindrome}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{n}{bothCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{bothCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{    }\PYG{c+c1}{// 2 condition checks and one assignment, so incrementing by 3}
+
+\PYG{+w}{                }\PYG{c+c1}{// appending to the data StringBuilder at intervals of 50,000 }
+\PYG{+w}{                }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{i}\PYG{+w}{ }\PYG{o}{\PYGZpc{}}\PYG{+w}{ }\PYG{l+m+mi}{50\PYGZus{}000}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{data}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{.}\PYG{n+na}{append}\PYG{p}{(}\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{},\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{i}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZbs{}n\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{c+c1}{// calculating total time taken for method 1 and printing out the results}
+\PYG{+w}{            }\PYG{n}{totalTime}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{currentTimeMillis}\PYG{p}{()}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{startTime}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{;}\PYG{+w}{  }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{+w}{   }\PYG{c+c1}{// incrementing by 2, 1 for getting current time and subtracting start time, 1 for assignment}
+
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Number of decimal palindromes found using Method \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{decCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Number of binary  palindromes found using Method \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{binCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Number of palindromes in both decimal \PYGZam{} binary found using Method \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{bothCount}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{);}\PYG{+w}{ }
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Number of primitive operations taken in Method \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{operations}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Time taken for Method \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{totalTime}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} milliseconds\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{();}
+
+\PYG{+w}{            }\PYG{c+c1}{// outputting the data to separate csv files}
+\PYG{+w}{            }\PYG{k}{try}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{String}\PYG{+w}{ }\PYG{n}{filename}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}method\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{j}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.csv\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                }\PYG{n}{File}\PYG{+w}{ }\PYG{n}{csv}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{File}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{);}
+\PYG{+w}{                }
+\PYG{+w}{                }\PYG{c+c1}{// creating file if it doesn't already exist}
+\PYG{+w}{                }\PYG{n}{csv}\PYG{p}{.}\PYG{n+na}{createNewFile}\PYG{p}{();}
+
+\PYG{+w}{                }\PYG{n}{FileWriter}\PYG{+w}{ }\PYG{n}{writer}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{FileWriter}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{writer}\PYG{p}{.}\PYG{n+na}{write}\PYG{p}{(}\PYG{n}{data}\PYG{o}{[}\PYG{n}{j}\PYG{o}{]}\PYG{p}{.}\PYG{n+na}{toString}\PYG{p}{());}
+\PYG{+w}{                }\PYG{n}{writer}\PYG{p}{.}\PYG{n+na}{close}\PYG{p}{();}
+
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k}{catch}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{IOException}\PYG{+w}{ }\PYG{n}{e}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}IO Error occurred\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{e}\PYG{p}{.}\PYG{n+na}{printStackTrace}\PYG{p}{();}
+\PYG{+w}{                }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{exit}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{c+c1}{// utility method to convert a decimal String to its equivalent binary String}
+\PYG{+w}{    }\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{n}{String}\PYG{+w}{ }\PYG{n+nf}{binary2string}\PYG{p}{(}\PYG{n}{String}\PYG{+w}{ }\PYG{n}{decimalStr}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{Integer}\PYG{p}{.}\PYG{n+na}{toString}\PYG{p}{(}\PYG{n}{Integer}\PYG{p}{.}\PYG{n+na}{parseInt}\PYG{p}{(}\PYG{n}{decimalStr}\PYG{p}{),}\PYG{+w}{  }\PYG{l+m+mi}{2}\PYG{p}{);}\PYG{+w}{  }\PYG{c+c1}{// parsing the String to an int and then parsing that int to a binary String }
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

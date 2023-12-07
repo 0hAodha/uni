@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{swap}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{temp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{*}\PYG{n}{x}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// won't work!}
+\PYG{+w}{    }\PYG{c+c1}{// we don't know what size data *x points to, so void temp can't work}
+\PYG{+w}{    }\PYG{c+c1}{// it is impossible to have a variable of type void for this reason}
+\PYG{+w}{    }\PYG{c+c1}{// but we can have a pointer of type void*}
+
+\PYG{+w}{    }\PYG{o}{*}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{*}\PYG{n}{y}\PYG{p}{;}
+\PYG{+w}{    }\PYG{o}{*}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{temp}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

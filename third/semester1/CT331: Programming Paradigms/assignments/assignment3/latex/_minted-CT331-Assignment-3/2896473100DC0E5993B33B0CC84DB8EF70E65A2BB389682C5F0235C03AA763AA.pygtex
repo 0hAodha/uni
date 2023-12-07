@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZpc{} predicate to merge two lists}
+\PYG{c+c1}{\PYGZpc{} base case: if the first list is empty, just return the second}
+\PYG{n+nf}{mergeTwoLists}\PYG{p}{([],} \PYG{n+nv}{List}\PYG{p}{,} \PYG{n+nv}{List}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} recursive predicate to merge two lists}
+\PYG{c+c1}{\PYGZpc{} split the first list into head and tail, and recurse with its tail and the second list until the first list is empty (base case)}
+\PYG{c+c1}{\PYGZpc{} then merge the original head of the first list with the resulting tail}
+\PYG{n+nf}{mergeTwoLists}\PYG{p}{([}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{Tail}\PYG{p}{],} \PYG{n+nv}{List2}\PYG{p}{,} \PYG{p}{[}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{ResultTail}\PYG{p}{])} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{mergeTwoLists}\PYG{p}{(}\PYG{n+nv}{Tail}\PYG{p}{,} \PYG{n+nv}{List2}\PYG{p}{,} \PYG{n+nv}{ResultTail}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} predicate to merge 3 lists}
+\PYG{c+c1}{\PYGZpc{} base case: merging an empty list and two others is the same as merging two lists}
+\PYG{n+nf}{mergeLists}\PYG{p}{([],} \PYG{n+nv}{List2}\PYG{p}{,} \PYG{n+nv}{List3}\PYG{p}{,} \PYG{n+nv}{Merged}\PYG{p}{)} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{mergeTwoLists}\PYG{p}{(}\PYG{n+nv}{List2}\PYG{p}{,} \PYG{n+nv}{List3}\PYG{p}{,} \PYG{n+nv}{Merged}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} split the first list into head and tail, and recurse with its tail and the other two lists until the first list is empty (base case)}
+\PYG{n+nf}{mergeLists}\PYG{p}{([}\PYG{n+nv}{Head1} \PYG{p}{|} \PYG{n+nv}{Tail1}\PYG{p}{],} \PYG{n+nv}{List2}\PYG{p}{,} \PYG{n+nv}{List3}\PYG{p}{,} \PYG{p}{[}\PYG{n+nv}{Head1} \PYG{p}{|} \PYG{n+nv}{MergedTail}\PYG{p}{])} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{mergeLists}\PYG{p}{(}\PYG{n+nv}{Tail1}\PYG{p}{,} \PYG{n+nv}{List2}\PYG{p}{,} \PYG{n+nv}{List3}\PYG{p}{,} \PYG{n+nv}{MergedTail}\PYG{p}{).}
+
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{mergeLists}\PYG{p}{([}\PYG{l+m+mi}{7}\PYG{p}{],[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{],[}\PYG{l+m+mi}{6}\PYG{p}{,}\PYG{l+m+mi}{7}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{],} \PYG{n+nv}{X}\PYG{p}{).}
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{mergeLists}\PYG{p}{([}\PYG{l+m+mi}{2}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n+nv}{X}\PYG{p}{).}
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{mergeLists}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[],} \PYG{p}{[],} \PYG{n+nv}{X}\PYG{p}{).}
+\end{Verbatim}

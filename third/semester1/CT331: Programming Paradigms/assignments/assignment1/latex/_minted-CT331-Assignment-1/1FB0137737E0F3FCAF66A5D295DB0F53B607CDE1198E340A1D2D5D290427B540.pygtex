@@ -1,0 +1,37 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+cp}{\PYGZsh{}ifndef CT331_ASSIGNMENT_LINKED_LIST}
+\PYG{c+cp}{#define CT331_ASSIGNMENT_LINKED_LIST}
+
+\PYG{k}{typedef}\PYG{+w}{ }\PYG{k}{struct}\PYG{+w}{ }\PYG{n+nc}{listElementStruct}\PYG{+w}{ }\PYG{n}{listElement}\PYG{p}{;}
+
+\PYG{c+c1}{//Creates a new linked list element with given content of size}
+\PYG{c+c1}{//Returns a pointer to the element}
+\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{createEl}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{size\PYGZus{}t}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{*}\PYG{n}{printFunction}\PYG{p}{)(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{p}{));}
+
+\PYG{c+c1}{//Prints out each element in the list}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{traverse}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{start}\PYG{p}{);}
+
+\PYG{c+c1}{//Inserts a new element after the given el}
+\PYG{c+c1}{//Returns the pointer to the new element}
+\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{insertAfter}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{after}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{size\PYGZus{}t}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{*}\PYG{n}{printFunction}\PYG{p}{)(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{p}{));}
+
+\PYG{c+c1}{//Delete the element after the given el}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{deleteAfter}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{after}\PYG{p}{);}
+
+\PYG{c+c1}{// returns the number of elements in the list}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{length}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{list}\PYG{p}{);}
+
+\PYG{c+c1}{// push a new element onto the head of a list and update the list reference using side effects}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{push}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{**}\PYG{+w}{ }\PYG{n}{list}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{size\PYGZus{}t}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{*}\PYG{n}{printFunction}\PYG{p}{)(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{p}{));}
+
+\PYG{c+c1}{// pop an element from the head of a list and update the list reference using side effects}
+\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{pop}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{**}\PYG{+w}{ }\PYG{n}{list}\PYG{p}{);}
+
+\PYG{c+c1}{// enque a new element onto the head of the list and update the list reference using side effects}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{enqueue}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{**}\PYG{+w}{ }\PYG{n}{list}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{size\PYGZus{}t}\PYG{+w}{ }\PYG{n}{size}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{*}\PYG{n}{printFunction}\PYG{p}{)(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{p}{));}\PYG{+w}{  }
+
+\PYG{c+c1}{// dequeue an element from the tail of the list  }
+\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n+nf}{dequeue}\PYG{p}{(}\PYG{n}{listElement}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{list}\PYG{p}{);}\PYG{+w}{  }
+
+\PYG{c+cp}{\PYGZsh{}endif}
+\end{Verbatim}

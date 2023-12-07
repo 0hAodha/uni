@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{intArr}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{];}\PYG{+w}{  }\PYG{c+c1}{// an integer array of size 5}
+\PYG{c+c1}{// intArr is a pointer to the 0th element of the array - the same as &intArr[0]}
+
+\PYG{n}{intArr}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{3}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// same as *(intArr+2) = 3;}
+\PYG{c+c1}{// (intArr + 2) is of type (int*) while intArr[2] is of type int}
+\PYG{c+c1}{// in the latter case, the pointer is dereferenced}
+\PYG{c+c1}{// (intArr + 2) is the same as (&(intArr[2]))}
+\PYG{c+c1}{// note that the + operator here is not simple addition - it moves the pointer by the size of the type}
+\end{Verbatim}

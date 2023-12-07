@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kt}{int}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// variable p is a pointer to an integer value}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{i}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// integer value}
+\end{Verbatim}

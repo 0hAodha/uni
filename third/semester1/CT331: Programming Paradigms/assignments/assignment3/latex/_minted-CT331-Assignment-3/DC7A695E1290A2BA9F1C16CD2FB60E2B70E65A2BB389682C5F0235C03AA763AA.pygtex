@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZpc{} call the helper predicate with the list to be reversed and an empty Accumulator to build up}
+\PYG{n+nf}{reverseList}\PYG{p}{(}\PYG{n+nv}{List}\PYG{p}{,} \PYG{n+nv}{Reversed}\PYG{p}{)} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{reverseListHelper}\PYG{p}{(}\PYG{n+nv}{List}\PYG{p}{,} \PYG{p}{[],} \PYG{n+nv}{Reversed}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} base case fact: when the list to reverse is empty, the accumulator is the reversed list}
+\PYG{n+nf}{reverseListHelper}\PYG{p}{([],} \PYG{n+nv}{Accumulator}\PYG{p}{,} \PYG{n+nv}{Accumulator}\PYG{p}{).}
+
+\PYG{c+c1}{\PYGZpc{} recurse with the tail after prepending the head to the accumulator}
+\PYG{n+nf}{reverseListHelper}\PYG{p}{([}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{Tail}\PYG{p}{],} \PYG{n+nv}{Accumulator}\PYG{p}{,} \PYG{n+nv}{Reversed}\PYG{p}{)} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{reverseListHelper}\PYG{p}{(}\PYG{n+nv}{Tail}\PYG{p}{,} \PYG{p}{[}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{Accumulator}\PYG{p}{],} \PYG{n+nv}{Reversed}\PYG{p}{).}
+
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{reverseList}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{],} \PYG{n+nv}{X}\PYG{p}{).}
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{reverseList}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n+nv}{X}\PYG{p}{).}
+\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{reverseList}\PYG{p}{([],} \PYG{n+nv}{X}\PYG{p}{).}
+\end{Verbatim}
