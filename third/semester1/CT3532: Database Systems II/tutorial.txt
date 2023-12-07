@@ -19,3 +19,6 @@ Minimal cover set:
     2. minimal LHS
         i.e XYZ -> W and YZ -> W then XYZ->W is redundant and should just be replaced with YZ->W
     3. No redundant FDs
+
+in general, use an example of your own rather than given 
+    - "as far as he knows", it's all examples from your own imagination"
