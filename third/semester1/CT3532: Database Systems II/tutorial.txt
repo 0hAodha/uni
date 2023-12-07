@@ -12,3 +12,10 @@ BCNF: all determinants (left-hand sides of FDs) are candidate keys
      C -> B 
      C+ = {C, B} != R
 
+
+Minimal cover set:
+    1. RHS should be singletons
+        i.e. X -> YZ becomes X->Y X->Z
+    2. minimal LHS
+        i.e XYZ -> W and YZ -> W then XYZ->W is redundant and should just be replaced with YZ->W
+    3. No redundant FDs
