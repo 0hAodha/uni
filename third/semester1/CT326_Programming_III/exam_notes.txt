@@ -5,8 +5,6 @@
 - unless asked to use floats, just use ints even for stuff like Salaries because it's simpler
 - talked a lot about comparators
 
-
-
 Intbuffer question answer:
 
 public class IntBufferImp {
