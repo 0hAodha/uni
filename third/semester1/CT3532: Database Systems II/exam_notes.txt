@@ -3,10 +3,10 @@
 - overlap in terms of style with exercise sheets
 - most questions have 3 parts with different marks
 
-- question 1 is on design (first topic covered)
+1. question 1: design (first topic covered)
     a) functional dependencies minimal cover sets (problem based)
-    b) normalisation to BCNF (decursive/descriptive)
-    c) denormalisation (decursive/descriptive)
+    b) normalisation to BCNF (discursive/descriptive)
+    c) denormalisation (discursive/descriptive)
     
     - key things to know in general:
         - functional dependency
@@ -15,7 +15,7 @@
         - normal forms
             - redundancy / denormalisation
 
-- question 2: transactions
+2. question 2: transactions
     a) discuss one of problems (only 3 (think lost update problem etc not sure)) (supposedly easy)
     b) concurrency control protocol to apply to above problem, such as timestamping, two phase locking etc.
     c) distributed databases, how do we manage recovery or two phase locking or something
@@ -25,7 +25,7 @@
     - recovery, system log
     - distributive databases
 
-- question 3: indexing
+3. question 3: indexing
     a) b trees
     b) dynamic indexes
     c) multiattribute indexes / joint attribute indexes
@@ -38,7 +38,7 @@
     - operators
 
 
-- question 4: database models
+4. question 4: database models
     a) parallelism
     b) deductive / logic databases (not covered on past papers) (not too hard because we didn't spend long on it)
         - store facts and relations 
@@ -47,5 +47,4 @@
 
 - old course was called ct332
     - will get deductive / logic databases on old papers
-
 - no more exam material after ./slides/DatabaseSecurity.pdf
