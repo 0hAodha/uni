@@ -43,7 +43,7 @@
     b) deductive / logic databases (not covered on past papers) (not too hard because we didn't spend long on it)
         - store facts and relations 
     c) security (one of the models touched on 2023-11-14) (not covered on past papers)
-        - bell lepageol model or something of security
+        - Bell-LaPadula model or some other model touched on
 
 - old course was called ct332
     - will get deductive / logic databases on old papers
