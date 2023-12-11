@@ -1,8 +1,0 @@
-- # 目 #card
-	- **目** (め、チク) -> eye(s).
-	- **科目** (かもく) -> subject.
-	- **注目** (ちゅうまく) -> attention.
-- # 見 #card
-	- **見る** (みーる) -> look, see.
-	- **花見** (はなみ) -> flower, viewing.
-	-
