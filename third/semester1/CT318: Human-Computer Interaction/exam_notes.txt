@@ -1,6 +1,0 @@
-- question 1 is compulsory: pact & interactive system design
-- answer 2 out of the other 3 questions
-
-- evaluation plan   
-    - could use DECIDE framework, don't have to
-    - could do who what when where why how
