@@ -25,19 +25,6 @@
     - recovery, system log
     - distributive databases
 
-3. question 3: indexing
-    a) b trees
-    b) dynamic indexes
-    c) multiattribute indexes / joint attribute indexes
-
-    - B tree, B+ tree  (will be asked on b trees)
-    - hashing
-        - extendible / dynamic
-        - linear
-    - multi-attribute
-    - operators
-
-
 4. question 4: database models
     a) parallelism
     b) deductive / logic databases (not covered on past papers) (not too hard because we didn't spend long on it)
