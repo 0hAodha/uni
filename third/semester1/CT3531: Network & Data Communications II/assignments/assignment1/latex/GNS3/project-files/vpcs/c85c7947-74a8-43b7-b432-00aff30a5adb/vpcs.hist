@@ -1,0 +1,5 @@
+ip dhcp
+ping 8.8.8.8
+trace 8.8.8.8
+?
+quit
