@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{takesSameCourse}\PYG{p}{(}\PYG{l+s+sAtom}{tom}\PYG{p}{,}\PYG{l+s+sAtom}{mary}\PYG{p}{).}
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{takesSameCourse}\PYG{p}{(}\PYG{l+s+sAtom}{joe}\PYG{p}{,}\PYG{l+s+sAtom}{mary}\PYG{p}{).}
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{takesSameCourse}\PYG{p}{(}\PYG{l+s+sAtom}{joe}\PYG{p}{,}\PYG{l+s+sAtom}{tom}\PYG{p}{).}
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{takesSameCourse}\PYG{p}{(}\PYG{l+s+sAtom}{bob}\PYG{p}{,} \PYG{l+s+sAtom}{mary}\PYG{p}{).}
-\end{Verbatim}

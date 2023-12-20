@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{String}\PYG{+w}{ }\PYG{n+nf}{substring}\PYG{p}{(}\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{beginIndex}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{endIndex}\PYG{p}{)}
-\end{Verbatim}

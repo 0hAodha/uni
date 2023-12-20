@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{c+c1}{// note that Input.mousePosition gives a Vector4 where the $z$ component is 0}
-\PYG{c+c1}{// the screen is 2D of course; the $z$ component of the Vector3 supplied to ScreenToWorldPoint is a world-coordinate distance into the world.}
-\PYG{n}{Vector3}\PYG{+w}{ }\PYG{n}{mousePosInWorld}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Camera}\PYG{p}{.}\PYG{n}{main}\PYG{p}{.}\PYG{n}{ScreenToWorldPoint}\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{mousePosition}\PYG{p}{);}
-\end{Verbatim}

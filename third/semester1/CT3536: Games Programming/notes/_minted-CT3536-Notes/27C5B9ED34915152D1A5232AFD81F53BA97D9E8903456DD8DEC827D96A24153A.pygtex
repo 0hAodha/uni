@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{GetKey}\PYG{p}{(}\PYG{n}{KeyCode}\PYG{p}{.}\PYG{n}{LeftArrow}\PYG{p}{))}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
-\PYG{+w}{    }\PYG{n}{RotateCameraAroundMarsSomehow}\PYG{p}{();}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

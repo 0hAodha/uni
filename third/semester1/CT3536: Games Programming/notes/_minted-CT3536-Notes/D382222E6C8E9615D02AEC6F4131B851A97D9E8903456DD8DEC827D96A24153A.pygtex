@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{n}{Rigidbody}\PYG{+w}{ }\PYG{n}{rigid}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GetComponent}\PYG{o}{\PYGZlt{}}\PYG{n}{Rigidbody}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
-\PYG{n}{rigid}\PYG{p}{.}\PYG{n}{AddForce}\PYG{p}{(}\PYG{n}{transform}\PYG{p}{.}\PYG{n}{forward}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{200f}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{Time}\PYG{p}{.}\PYG{n}{fixedDeltaTime}\PYG{p}{);}
-\end{Verbatim}

@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{contains2}\PYG{p}{(}\PYG{n+nv}{Sublist}\PYG{p}{,} \PYG{p}{[}\PYG{n+nv}{Head} \PYG{p}{|} \PYG{n+nv}{Sublist}\PYG{p}{]).}
-
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{contains2}\PYG{p}{([}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{]).}
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{contains2}\PYG{p}{([}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{]).}
-\end{Verbatim}

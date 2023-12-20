@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k+kt}{boolean}\PYG{+w}{ }\PYG{n+nf}{equalsIgnoreCase}\PYG{p}{(}\PYG{n}{String}\PYG{+w}{ }\PYG{n}{anotherString}\PYG{p}{)}
-\end{Verbatim}

@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k+kd}{public}\PYG{+w}{ }\PYG{k+kd}{static}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{main}\PYG{p}{(}\PYG{n}{String}\PYG{o}{[]}\PYG{+w}{ }\PYG{n}{args}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
-\PYG{+w}{    }\PYG{k+kt}{double}\PYG{+w}{ }\PYG{n}{earthWeight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Double}\PYG{p}{.}\PYG{n+na}{parseDouble}\PYG{p}{(}\PYG{n}{args}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]}\PYG{p}{);}
-\PYG{+w}{    }\PYG{k+kt}{double}\PYG{+w}{ }\PYG{n}{mass}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{earthWeight}\PYG{o}{/}\PYG{n}{EARTH}\PYG{p}{.}\PYG{n+na}{surfaceGravity}\PYG{p}{();}
-
-\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{Planet}\PYG{+w}{ }\PYG{n}{p}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{Planet}\PYG{p}{.}\PYG{n+na}{values}\PYG{p}{())}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
-\PYG{+w}{        }\PYG{n}{System}\PYG{p}{.}\PYG{n+na}{out}\PYG{p}{.}\PYG{n+na}{printf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Your weight on \PYGZpc{}s is \PYGZpc{}f\PYGZpc{}n\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{.}\PYG{n+na}{surfaceWeight}\PYG{p}{(}\PYG{n}{mass}\PYG{p}{));}
-\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

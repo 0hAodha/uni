@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k+kd}{private}\PYG{+w}{ }\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{readObject}\PYG{p}{(}\PYG{n}{ObjectInputStream}\PYG{+w}{ }\PYG{n}{s}\PYG{p}{)}\PYG{+w}{ }\PYG{k+kd}{throws}\PYG{+w}{ }\PYG{n}{IOException}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
-\PYG{+w}{    }\PYG{n}{s}\PYG{p}{.}\PYG{n+na}{defaultReadObject}\PYG{p}{();}
-\PYG{+w}{    }\PYG{c+c1}{// customised deserialization code}
-\PYG{+w}{    }\PYG{c+c1}{// followed by code to update the object if necessary}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

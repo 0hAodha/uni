@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{l+s+sAtom}{?\PYGZhy{}} \PYG{n+nf}{findall}\PYG{p}{(}\PYG{n+nv}{Student}\PYG{p}{,} \PYG{n+nf}{teaches}\PYG{p}{(}\PYG{l+s+sAtom}{bob}\PYG{p}{,} \PYG{n+nv}{Student}\PYG{p}{),} \PYG{n+nv}{Students}\PYG{p}{).}
-\end{Verbatim}

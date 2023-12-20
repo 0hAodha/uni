@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{n}{GameObject}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Instantiate}\PYG{p}{(}\PYG{n}{Resources}\PYG{p}{.}\PYG{n}{Load}\PYG{p}{(}\PYG{n}{prefabName}\PYG{p}{));}
-
-\PYG{c+c1}{// later on, assuming we  still have a reference to the object:}
-\PYG{n}{GameObject}\PYG{p}{.}\PYG{n}{Destroy}\PYG{p}{(}\PYG{n}{go}\PYG{p}{);}
-\PYG{c+c1}{// or}
-\PYG{n}{GameObject}\PYG{p}{.}\PYG{n}{DestroyImmediate}\PYG{p}{(}\PYG{n}{go}\PYG{p}{);}
-\end{Verbatim}

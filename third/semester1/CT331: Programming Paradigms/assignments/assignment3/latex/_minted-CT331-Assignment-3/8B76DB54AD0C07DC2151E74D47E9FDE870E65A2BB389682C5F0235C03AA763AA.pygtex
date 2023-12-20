@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{teaches}\PYG{p}{(}\PYG{n+nv}{Instructor}\PYG{p}{,} \PYG{n+nv}{Student}\PYG{p}{)} \PYG{p}{:\PYGZhy{}} \PYG{n+nf}{instructs}\PYG{p}{(}\PYG{n+nv}{Instructor}\PYG{p}{,} \PYG{n+nv}{Course}\PYG{p}{),} \PYG{n+nf}{takes}\PYG{p}{(}\PYG{n+nv}{Student}\PYG{p}{,} \PYG{n+nv}{Course}\PYG{p}{).}
-\end{Verbatim}
