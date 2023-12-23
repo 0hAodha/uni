@@ -301,3 +301,6 @@ TSWLatexianTemp*
 #*Notes.bib
 
 year3/semester2/CT3534: Professional Experience
+
+# byte code files
+*.class
