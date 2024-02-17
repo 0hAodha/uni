@@ -1,0 +1,40 @@
+%! TeX program = lualatex
+\documentclass[]{beamer} 
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamertemplate{navigation symbols}{}
+
+% packages
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+\usefonttheme{serif}
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+\usepackage{xcolor}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing, skip=0pt}}{}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{titlesec}
+
+\author{Andrew Hayes (ID: 21321503)}
+\title{CT3112 Professional Skills: Assignment 01}
+\subtitle{Overview of My Second Year Software Engineering Project}
+\institute{University of Galway}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\end{document}
