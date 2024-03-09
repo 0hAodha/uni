@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c2a42135277e3c2378aadf72d42645df
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerCar: {fileID: 3690529078886796132, guid: b22df5deffb1a6b53833b042641e85da, type: 3}
+  - buzzer: {fileID: 8300000, guid: e0a3844d6a041e596b8db57900a34a7f, type: 3}
+  - airHorn: {fileID: 8300000, guid: 2424989f9a0cdef2e92caa452fff0676, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
