@@ -1,0 +1,688 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Working with Git &amp; GitHub</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="cdfd0434-04e7-4363-b7b4-9fe88c57d1df" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">👩🏽‍💻</span></div><h1 class="page-title">Working with Git &amp; GitHub</h1><p class="page-description"></p></header><div class="page-body"><h3 id="7c3e23a0-0289-4a77-be00-911ef4881790" class=""><strong> Introduction to Git and GitHub</strong></h3><ul id="24b4871e-e279-415c-b46b-0589905ecbb5" class="bulleted-list"><li style="list-style-type:disc"><strong>Git</strong>:<ul id="fec7ec5e-8b42-4125-80dd-5c18e95468b6" class="bulleted-list"><li style="list-style-type:circle">A distributed version control system to track changes in your code.</li></ul><ul id="3909d6b0-749c-4384-b56e-c7808a19b537" class="bulleted-list"><li style="list-style-type:circle">Allows collaboration with multiple developers and maintains a history of changes.</li></ul></li></ul><ul id="c94918df-9e09-45bd-b55b-8d99aa45cf89" class="bulleted-list"><li style="list-style-type:disc"><strong>GitHub</strong>:<ul id="24807d16-f7e7-4f43-a2fc-74bac42f8e80" class="bulleted-list"><li style="list-style-type:circle">A cloud-based platform for hosting Git repositories.</li></ul><ul id="a9a8c22a-f623-407b-b6e8-8fbbc1873402" class="bulleted-list"><li style="list-style-type:circle">Provides collaboration tools like pull requests and issue tracking.</li></ul></li></ul><hr id="3860810d-aa4a-4f6f-a594-4fc6acd424d0"/><h3 id="a816025e-c93e-480b-8263-a0b3ef1aa657" class=""><strong>Step 2: Signing Up for GitHub Student Pack</strong></h3><ul id="aefabcba-8397-4ad1-b02d-04cca4cdd632" class="bulleted-list"><li style="list-style-type:disc"><strong>Why GitHub Student Pack?</strong><ul id="c14f042c-21b9-4671-9382-dec231dee68e" class="bulleted-list"><li style="list-style-type:circle">Access to premium tools for free (e.g., GitHub Pro, cloud credits, etc.).</li></ul><ul id="991117f9-14e6-4c22-86df-a5e417248e2f" class="bulleted-list"><li style="list-style-type:circle">Helps you explore professional-grade developer tools.</li></ul></li></ul><ul id="edb6d564-4f5a-45c9-b63a-4d3922206ee1" class="bulleted-list"><li style="list-style-type:disc"><strong>Steps to Sign Up</strong>:<ol type="1" id="7948d0e3-4e3c-4903-8f9c-d3b773dde9e5" class="numbered-list" start="1"><li>Visit the <a href="https://education.github.com/pack">GitHub Student Pack</a> page.</li></ol><ol type="1" id="60418d6f-ef3a-48df-afc6-c9bbf63f9199" class="numbered-list" start="2"><li>Click <strong>Get Your Pack</strong>.</li></ol><ol type="1" id="b38fcb34-c1dc-4dbb-a963-15dfafa0386c" class="numbered-list" start="3"><li>Sign in or create a GitHub account.</li></ol><ol type="1" id="a0f9eab6-b688-452a-b7a3-5c81c73b010d" class="numbered-list" start="4"><li>Verify your student status by uploading proof (student ID, transcript, etc.).</li></ol><ol type="1" id="35009ed4-87c6-4c2b-9d26-4907517060c8" class="numbered-list" start="5"><li>Once verified, explore the available offers (e.g., <code>CoPilot</code>)</li></ol></li></ul><hr id="6e3a20a5-f8a0-463e-9f21-d7be402e6f99"/><h3 id="11350963-2df6-4a73-bb81-89efb897107a" class=""><strong>Step 3: Setting Up Git</strong></h3><ul id="12a7e75f-0e0f-423d-8d22-1e2845a73f75" class="bulleted-list"><li style="list-style-type:disc"><strong>Installing Git</strong>:<ol type="1" id="093acd04-98f4-445c-912d-b5b605ec6d14" class="numbered-list" start="1"><li>Check if Git is installed:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f6c2949c-ced4-4297-9936-14d0388e5afb" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git --version</code></pre></li></ol><ol type="1" id="961507ba-13b0-4c6f-a95c-74e4c6c70138" class="numbered-list" start="2"><li>If not installed, download it from <a href="https://git-scm.com/downloads">git-scm.com</a> for your operating system.</li></ol><ol type="1" id="438da820-1f6e-4db8-898c-79bd33a6ab38" class="numbered-list" start="3"><li>Install Git by following the installer instructions.</li></ol></li></ul><ul id="16aa5a33-b914-4553-ba2a-ad3aeff1c0c7" class="bulleted-list"><li style="list-style-type:disc"><strong>Set Global Git Configuration</strong>:<ul id="1d659667-6de7-4709-80a0-dde39c89e99a" class="bulleted-list"><li style="list-style-type:circle">Set your username and email (these will appear in your commits):<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2222af02-9299-4b18-abdf-ba479dcd750d" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;your-email@example.com&quot;</code></pre></li></ul></li></ul><hr id="24a875f2-9c13-4955-a6d7-c31a2e2359d9"/><h3 id="6cd44e80-8ce0-4e4f-99e6-20613fc28a78" class=""><strong>Step 4: Initialise a Local Repository</strong></h3><ul id="86113cd3-6b15-48d2-9f0c-d3af841f32fa" class="bulleted-list"><li style="list-style-type:disc"><strong>Create a Git Repository Locally</strong>:<ol type="1" id="ba8b0155-ece0-43e7-983a-465e14beb3e9" class="numbered-list" start="1"><li>Open your terminal or command prompt.</li></ol><ol type="1" id="4039d67f-3d89-4681-a978-25a230495b2c" class="numbered-list" start="2"><li>Navigate to the folder where you want to store your project:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7e53f394-0708-4283-bf45-bb53d999401c" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">cd path/to/your/folder</code></pre></li></ol><ol type="1" id="8bb70412-4c86-4134-a847-267313818b50" class="numbered-list" start="3"><li>Initialise the Git repository:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="23633cd9-fa1b-4a1a-87d4-8023c188e7e0" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git init</code></pre></li></ol><ol type="1" id="580445b3-b4ff-4050-8c53-159c3790e148" class="numbered-list" start="4"><li>Add a <code>README.md</code> file and commit it:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b3255050-5a2c-4a15-b8e6-e4944dbf03db" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">echo &quot;# My Project&quot; &gt;&gt; README.md
+git add README.md
+git commit -m &quot;Initial commit with README&quot;</code></pre></li></ol></li></ul><hr id="bd815e83-9cf2-422b-97ee-d6b4228d9ebb"/><h3 id="6a339aac-dd08-4fbd-94d1-c195aeb657c0" class=""><strong>Step 5: Creating a GitHub Repository</strong></h3><ul id="84b157f4-68dd-4780-b9fb-2af48e9abb3f" class="bulleted-list"><li style="list-style-type:disc"><strong>Steps to Create a New Repository on GitHub</strong>:<ol type="1" id="518f3ecc-7216-4732-975b-07626e52297e" class="numbered-list" start="1"><li>Log in to GitHub and click the <strong>+</strong> sign in the top-right corner.</li></ol><ol type="1" id="aad277c7-9477-47f5-96d3-44b25052fd64" class="numbered-list" start="2"><li>Select <strong>New Repository</strong>.</li></ol><ol type="1" id="5821070c-9c37-4702-935c-9a13592087fa" class="numbered-list" start="3"><li>Name your repository, provide a description, and choose the visibility (public or private).</li></ol><ol type="1" id="ba90574e-8d1a-49d1-a16f-e6c880bed679" class="numbered-list" start="4"><li>Click <strong>Create Repository</strong>.</li></ol></li></ul><ul id="4b42854c-285c-4275-8a98-ad53049ace76" class="bulleted-list"><li style="list-style-type:disc"><strong>Push Local Repo to GitHub</strong>:<ol type="1" id="2da63e43-35ff-4e4b-bf56-df45c6bf12fb" class="numbered-list" start="1"><li>Add the GitHub repository as a remote:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="20c30da3-dca7-4bf7-945b-3988555af97e" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git remote add origin https://github.com/yourusername/your-repo.git</code></pre></li></ol><ol type="1" id="cbdda335-e09e-4d13-bad6-598c55adeb3d" class="numbered-list" start="2"><li>Push your local commits to GitHub:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4d84947f-c425-4168-a4cc-a86f60ebcebc" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git push -u origin main</code></pre></li></ol></li></ul><hr id="a7098402-a9d3-4cb6-b236-0bb3ba3a50fc"/><h3 id="a805bb8d-70cd-4519-a1f1-db4477a4e513" class=""><strong>Step 6: Cloning a GitHub Repository</strong></h3><ul id="fc97e856-849a-4e50-b4bf-910dfaf332fb" class="bulleted-list"><li style="list-style-type:disc"><strong>What is Cloning?</strong><ul id="80892a58-1ba6-4a85-9beb-2b75411d10eb" class="bulleted-list"><li style="list-style-type:circle">Cloning creates a local copy of a GitHub repository on your machine.</li></ul></li></ul><ul id="d90a383b-235b-420e-94f4-dffc8dc700d0" class="bulleted-list"><li style="list-style-type:disc"><strong>Steps to Clone a Repository</strong>:<ol type="1" id="cfc4c0cd-f234-47b5-a83b-0877f030c54b" class="numbered-list" start="1"><li>In your GitHub repository, click the <strong>Code</strong> button and copy the repository URL.</li></ol><ol type="1" id="df4edbc9-43f8-4be4-a4be-04053f8c3e2a" class="numbered-list" start="2"><li>In your terminal, run:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b5354c1a-4f10-4fd1-bdb2-ac86063f95f9" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git clone https://github.com/yourusername/your-repo.git</code></pre></li></ol><ol type="1" id="07d42ad8-703f-4b52-8393-22ef77819f15" class="numbered-list" start="3"><li>Change into the repository directory:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6195d446-924c-4b3b-a66f-ea5b8b3dac66" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">cd your-repo</code></pre></li></ol></li></ul><hr id="31023d2e-8f9f-4edc-8393-1b531bb08707"/><h3 id="d8ba52a3-b365-446f-bcae-f3adf0200fe8" class=""><strong>Step 7: Basic Git Commands</strong></h3><ul id="5ed52f94-637a-4449-ba9e-20cb6d85da60" class="bulleted-list"><li style="list-style-type:disc"><strong>Adding and Committing Changes</strong>:<ol type="1" id="bc2d4c6f-5fac-479d-be01-4048191bb0c4" class="numbered-list" start="1"><li>Modify or create new files in your repository.</li></ol><ol type="1" id="64a9d6a7-0df0-456b-9a49-ebbf7cd5711b" class="numbered-list" start="2"><li>Stage the changes:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="9e165ea5-80ac-46a8-85ff-ffc520deee17" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git add .</code></pre></li></ol><ol type="1" id="8927e502-34e8-473a-83a7-f3cd2a48bcc6" class="numbered-list" start="3"><li>Commit the changes with a message:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="519207b3-8a2f-4c32-abe3-2883cc00c4b0" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git commit -m &quot;Added new features&quot;</code></pre></li></ol></li></ul><ul id="df7e75e3-01c3-43ce-b82e-cecd25a1a2ec" class="bulleted-list"><li style="list-style-type:disc"><strong>Pushing Changes to GitHub</strong>:<ul id="6632b12c-1e42-4c3d-987a-79779e085e07" class="bulleted-list"><li style="list-style-type:circle">Push your changes to the remote repository:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="0ed149ca-9610-4dbe-84fb-4c22975fefe8" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git push origin main</code></pre></li></ul></li></ul><hr id="db2dde44-a1da-4c2f-8b5c-077bf29cba47"/><h3 id="e490af4e-cbd2-4b22-b44a-e21a4dc7f6bf" class=""><strong>Step 8: Branching in Git</strong></h3><ul id="ec2f7107-9bd6-4f1f-9146-b3ea17cc176e" class="bulleted-list"><li style="list-style-type:disc"><strong>What is Branching?</strong><ul id="39df1da9-00cb-4b82-9bfc-8a3b8dc91df3" class="bulleted-list"><li style="list-style-type:circle">A branch allows you to work on new features without affecting the main codebase.</li></ul></li></ul><ul id="fa7d7fbc-b7f5-4d97-97e2-ca838ce83f1f" class="bulleted-list"><li style="list-style-type:disc"><strong>Steps to Create a Branch</strong>:<ol type="1" id="4cb9cb0b-792b-42c6-af3b-9cb44dc88502" class="numbered-list" start="1"><li>Create a new branch:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6a3e08b8-4b57-4df0-bea9-f8a2490f95a8" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git checkout -b feature-branch</code></pre></li></ol><ol type="1" id="d45bc726-e69f-4eb0-9a13-6b81aaa77c48" class="numbered-list" start="2"><li>Work on your feature in this branch.</li></ol><ol type="1" id="67535579-1543-410c-876f-7f1089074782" class="numbered-list" start="3"><li>Commit the changes and push the branch to GitHub:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="400b7de6-3a59-4e8e-898e-25c931469bf7" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git push -u origin feature-branch</code></pre></li></ol></li></ul><hr id="cb280cb8-4724-4361-a6e4-affe8f2beb46"/><h3 id="85ffd881-df0b-4ae1-a3f2-4b36336e0df2" class=""><strong>Step 9: Merging Branches</strong></h3><ul id="72c9f56a-d867-4687-84ec-57a9845ffae8" class="bulleted-list"><li style="list-style-type:disc"><strong>Merging a Branch to Main</strong>:<ol type="1" id="aba3686f-67b9-4d8b-beaa-6e6335651b2f" class="numbered-list" start="1"><li>Switch back to the main branch:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cd648cb5-2eba-4f4b-8b61-6b4a1bec0d47" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git checkout main</code></pre></li></ol><ol type="1" id="932eb490-d0c6-48d1-a1c2-65634ac3b4c4" class="numbered-list" start="2"><li>Merge the feature branch into main:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ecd9e773-edd7-448b-9d34-523c1705cd38" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git merge feature-branch</code></pre></li></ol><ol type="1" id="8d622da2-60ae-4544-b7c9-35dbe739243c" class="numbered-list" start="3"><li>Push the updated main branch to GitHub:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="dd2c6419-7942-4493-9a50-af9342ec7301" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">git push origin main</code></pre></li></ol></li></ul><hr id="2bda04ca-5499-430c-b0c6-d47de9bba03f"/><h3 id="cc559be3-963d-44c8-b05a-ac0e2b087caf" class=""><strong>Step 10: Collaboration with Pull Requests</strong></h3><ul id="2b7ae19a-3eb9-42f8-92dd-595445e39fa9" class="bulleted-list"><li style="list-style-type:disc"><strong>What is a Pull Request?</strong><ul id="30f94ffd-74df-4f8c-a4e2-2874819ba661" class="bulleted-list"><li style="list-style-type:circle">A pull request lets you propose changes to someone’s repository and have them review and merge your changes.</li></ul></li></ul><ul id="ca208bc1-d964-4f5a-bb1a-9da6ebe35a39" class="bulleted-list"><li style="list-style-type:disc"><strong>Creating a Pull Request</strong>:<ol type="1" id="167754eb-74db-457b-be25-fb3ffefd3183" class="numbered-list" start="1"><li>Fork another repository on GitHub.</li></ol><ol type="1" id="0f1233c7-1624-46d6-84cb-ac66d974fb7c" class="numbered-list" start="2"><li>Make changes in your forked version and push the changes.</li></ol><ol type="1" id="954b9619-8cb3-466a-b349-98a1ae033eba" class="numbered-list" start="3"><li>Go to the original repository and click <strong>New Pull Request</strong>.</li></ol><ol type="1" id="1ce4cd27-bf35-41b2-957f-2d8fd066cfe7" class="numbered-list" start="4"><li>The repository owner reviews and merges your changes.</li></ol></li></ul><hr id="68a3a563-7c81-4cb9-88be-7b28b88af497"/><h3 id="b6e81145-e41a-439e-915a-90d8b359832e" class=""><strong> Further Reading and Resources</strong></h3><figure id="fbff792c-93c2-4a89-b277-d98fc49e977c"><a href="https://git-scm.com/doc" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git - Documentation</div><div class="bookmark-description">The official and comprehensive man pages that are included in the Git package itself.</div></div><div class="bookmark-href"><img src="https://git-scm.com/favicon.ico" class="icon bookmark-icon"/>https://git-scm.com/doc</div></div></a></figure><figure id="fdc35628-0633-42d9-a9f6-db89a4b67d16"><a href="https://guides.github.com/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">GitHub.com Help Documentation</div><div class="bookmark-description">Get started, troubleshoot, and make the most of GitHub. Documentation for new users, developers, administrators, and all of GitHub&#x27;s products.</div></div><div class="bookmark-href"><img src="https://docs.github.com/assets/cb-345/images/site/favicon.png" class="icon bookmark-icon"/>https://guides.github.com/</div></div><img src="https://github.githubassets.com/images/modules/open_graph/github-logo.png" class="bookmark-image"/></a></figure><figure id="4962ed69-023c-45a6-805c-b45a585a9ef7"><a href="https://www.atlassian.com/git/tutorials" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Git Tutorials and Training | Atlassian Git Tutorial</div><div class="bookmark-description">Learn the basics of Git through this comprehensive Git training. Branching, pull requests, merging and more are covered in the Atlassian Git tutorial.</div></div><div class="bookmark-href"><img src="https://www.atlassian.com/apple-touch-icon.png" class="icon bookmark-icon"/>https://www.atlassian.com/git/tutorials</div></div></a></figure><hr id="63ee9d57-bd19-4419-99de-53dfd44f436a"/><p id="1672a278-f7c2-421a-bc7e-975c5a316563" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
