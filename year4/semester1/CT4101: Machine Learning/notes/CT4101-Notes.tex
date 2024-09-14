@@ -97,5 +97,160 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
+\subsection{Lecturer Contact Details}
+\begin{itemize}
+    \item   Dr. Frank Glavin.
+    \item   \href{mailto://frank.glavin@universityofgalway.ie}{\texttt{frank.glavin@universityofgalway.ie}}
+\end{itemize}
+
+\subsection{Grading}
+\begin{itemize}
+    \item   Continuous Assessment: 30\% (2 assignments, worth 15\% each).
+    \item   Written Exam: 70\% (Last 2 year's exam papers most relevant).
+\end{itemize}
+
+\subsection{Module Overview}
+\textbf{Machine Learning (ML)} allows computer programs to improve their performance with experience (i.e., data).
+This module is targeted at learners with no prior ML experience, but with university experience of mathematics \& 
+statistics and \textbf{strong} programming skills.
+The focus of this module is on practical applications of commonly used ML algorithms, including deep learning 
+applied to computer vision.
+Students will learn to use modern ML frameworks (e.g., scikit-learn, Tensorflow / Keras) to train \& evaluate 
+models for common categories of ML task including classification, clustering, \& regression.
+
+\subsubsection{Learning Objectives}
+On successful completion, a student should be able to:
+\begin{enumerate}
+    \item   Explain the details of commonly used Machine Learning algorithms.
+    \item   Apply modern frameworks to develop models for common categories of Machine Learning task, including
+            classification, clustering, \& regression.
+    \item   Understand how Deep Learning can be applied to computer vision tasks.
+    \item   Pre-process datasets for Machine Learning tasks using techniques such as normalisation \& feature 
+            selection.
+    \item   Select appropriate algorithms \& evaluation metrics for a given dataset \& task.
+    \item   Choose appropriate hyperparameters for a range of Machine Learning algorithms.
+    \item   Evaluate \& interpret the results produced by Machine Learning models.
+    \item   Diagnose \& address commonly encountered problems with Machine Learning models.
+    \item   Discuss ethical issues \& emerging trends in Machine Learning.
+\end{enumerate}
+
+\section{What is Machine Learning?}
+There are many possible definitions for ``machine learning'':
+\begin{itemize}
+    \item   Samuel, 1959: ``Field of study that gives computers the ability to learn without being explicitly 
+            programmed''.
+    \item   Witten \& Frank, 1999: ``Learning is changing behaviour in a way that makes \textit{performance} better
+            in the future''.
+    \item   Mitchelll, 1997: ``Improvement with experience at some task''. 
+            A well-defined ML problem will improve over task $T$ with regards to \textbf{performance} measure $P$,
+            based on experience $E$.
+    \item   Artificial Intelligence $\neq$ Machine Learning $\neq$ Deep Learning.
+    \item   Artificial Intelligence $\not \supseteq$ Machine Learning $\not \supseteq$ Deep Learning.
+\end{itemize}
+
+Machine Learning techniques include:
+\begin{itemize}
+    \item   Supervised learning.
+    \item   Unsupervised learning.
+    \item   Semi-Supervised learning.
+    \item   Reinforcement learning.
+\end{itemize}
+
+Major types of ML task include:
+\begin{enumerate}
+    \item   Classification.
+    \item   Regression.
+    \item   Clustering.
+    \item   Co-Training.
+    \item   Relationship discovery.
+    \item   Reinforcement learning.
+\end{enumerate}
+
+Techniques for these tasks include:
+\begin{enumerate}
+    \item   \textbf{Supervised learning:}
+            \begin{itemize}
+                \item   \textbf{Classification:} decision trees, SVMs.
+                \item   \textbf{Regression:} linear regression, neural nets, $k$-NN (good for classification too).
+            \end{itemize}
+
+    \item   \textbf{Unsupervised learning:}
+            \begin{itemize}
+                \item   \textbf{Clustering:} $k$-Means, EM-clustering.
+                \item   \textbf{Relationship discovery:} association rules, bayesian nets.
+            \end{itemize}
+
+    \item   \textbf{Semi-Supervised learning:}
+            \begin{itemize}
+                \item   \textbf{Learning from part-labelled data:} co-training, transductive learning (combines ideas
+                        from clustering \& classification).
+            \end{itemize}
+
+    \item   \textbf{Reward-Based:}
+            \begin{itemize}
+                \item   \textbf{Reinforcement learning:} Q-learning, SARSA.
+            \end{itemize}
+\end{enumerate}
+
+In all cases, the machine searches for a \textbf{hypothesis} that best describes the data presented to it.
+Choices to be made include:
+\begin{itemize}
+    \item   How is the hypothesis expressed? e.g., mathematical equation, logic rules, diagrammatic form, table, 
+            parameters of a model (e.g. weights of an ANN), etc.
+    \item   How is search carried out? e.g., systematic (breadth-first or depth-first) or heuristic (most promising
+            first).
+    \item   How do we measure the quality of a hypothesis?
+    \item   What is an appropriate format for the data?
+    \item   How much data is required?
+\end{itemize}
+
+To apply ML, we need to know:
+\begin{itemize}
+    \item   How to formulate a problem.
+    \item   How to prepare the data.
+    \item   How to select an appropriate algorithm.
+    \item   How to interpret the results.
+\end{itemize}
+
+To evaluate results \& compare methods, we need to know:
+\begin{itemize}
+    \item   The separation between training, testing, \& validation.
+    \item   Performance measures such as simple metrics, statistical tests, \& graphical methods.
+    \item   How to improve performance.
+    \item   Ensemble methods.
+    \item   Theoretical bounds on performance.
+\end{itemize}
+
+\subsection{Data Mining}
+\textbf{Data Mining} is the process of extracting interesting knowledge from large, unstructured datasets.
+This knowledge is typically non-obvious, comprehensible, meaningful, \& useful.
+\\\\
+The storage ``law'' states that storage capacity doubles every year, faster than Moore's ``law'', which may results 
+in write-only ``data tombs''. 
+Therefore, developments in ML may be essential to be able to process \& exploit this lost data.
+
+\subsection{Big Data}
+\textbf{Big Data} consists of datasets of scale \& complexity such that they can be difficult to process using 
+current standard methods.
+The data scale dimensions are affected by one or more of the ``3 Vs'':
+\begin{itemize}
+    \item   \textbf{Volume:} terabytes \& up.
+    \item   \textbf{Velocity:} from batch to streaming data.
+    \item   \textbf{Variety:} numeric, video, sensor, unstructured text, etc.
+\end{itemize}
+
+It is also fashionable to add more ``Vs'' that are not key:
+\begin{itemize}
+    \item   \textbf{Veracity:} quality \& uncertainty associated with items.
+    \item   \textbf{Variability:} change / inconsistency over time.
+    \item   \textbf{Value:} for the organisation.
+\end{itemize}
+
+Key techniques for handling big data include: sampling, inductive learning, clustering, associations, \& distributed 
+programming methods.
+
+
+
+
 
 \end{document}
