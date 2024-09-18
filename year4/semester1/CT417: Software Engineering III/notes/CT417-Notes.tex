@@ -125,6 +125,7 @@
             \begin{itemize}
                 \item   Typical 2-hour exam paper covering materials from Week 1 to Week 12, with nothing out of the ordinary --
                         ``You can be sure of that''.
+                    \item   ``There is a question on Agile on your final'' -- key differences between agile \& DevOps table.
             \end{itemize}
 \end{itemize}
 
@@ -382,6 +383,131 @@ It is a publishing tool, a version control system, \& a collaboration platform.
 A \textbf{pull request} is when you ask another developer to merge your feature branch into their repository.
 Everyone can review the code \& decide whether or not it should be included in the master branch.
 The pull request is an invitation to discuss pulling your code into the master branch, i.e. it is a forum for discussing changes.
+
+\section{Build Tools}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/example_cd.png}
+    \caption{Example of a Continuous Software Development System}
+\end{figure}
+
+The \textbf{build} is a process which covers all the steps required to create a deliverable of your software.
+E.g., in Java:
+\begin{enumerate}
+    \item   Generating sources.
+    \item   Compiling sources.
+    \item   Compiling test sources.
+    \item   Executing tests.
+    \item   Packaging (\verb|.JAR|, \verb|.WAR|, \verb|EJB|).
+    \item   Running health checks.
+    \item   Generating reports.
+\end{enumerate}
+
+\textbf{Code Libraries} are convenient ways to package functionality \& reuse components.
+E.g., \verb|JAR| files in Java or \verb|.DLL| files in Windows / \verb|.NET|.
+
+\subsection{Maven}
+\textbf{Maven} is a software build tool which can manage the project build, reporting, \& documentation.
+All modern IDEs support Maven.
+\begin{enumerate}
+    \item   Compile source code.
+    \item   Copy resources.
+    \item   Compile \& run tests.
+    \item   Package projects.
+    \item   Deploy project.
+    \item   Cleanup files.
+\end{enumerate}
+
+Developers wanted:
+\begin{itemize}
+    \item   to make the build process easy.
+    \item   a standard way to build projects.
+    \item   a clear definition of what the project consists of.
+    \item   an easy way to publish project information and a way to share JARs across several projects.
+\end{itemize}
+
+The result is a tool that developers can use to build \& manage any Java-based project.
+It embraces the idea of ``convention over configurations''.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/mvn_dir_structure.png}
+    \caption{Maven Default Directory Structure}
+\end{figure}
+
+The command \mintinline{shell}{mvn package} compiles all the Java files, runs any tests, and packages the 
+deliverable code \& resources into \verb|target/my-app-1.0.jar**|.
+\\\\
+The \verb|pom.xml| file is an XML document that contains all the information that Maven requires to automate 
+a build of your software.
+The \verb|pom.xml| is automatically updated on demand, but can be manually configured as well.
+The POM provides all the configuration for a single project:
+\begin{itemize}
+    \item   General configuration covers the project's name, its owner, \& its dependencies to other projects.
+    \item   One can also configure individual phases of the build process, which are implemented as plugins.
+            E.g., one can configure the \verb|compiler-plugin| to use Java 1.5 for compilation, or specify
+            packaging the project even if some unit tests fail.
+\end{itemize}
+
+Larger projects should be divided into several modules, or sub-projects each with its own POM.
+All root POM can compile all the modules with a single command.
+POMs can also inherit configuration from other POMs; all POMs inherit from the super-POM by default.
+The super-POM provides default configuration, such as default source, default directories, default plugins,
+etc.
+
+\subsubsection{Plugins}
+Maven build projects based on convention; it expects files to be in a certain place, which is very useful 
+when developing in teams.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/mvn_conv_dir_structure.png}
+    \caption{Maven Conventional Directory Structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/mvn_pom.png}
+    \caption{Maven \texttt{pom.xml}}
+\end{figure}
+
+A Maven \textbf{plugin} is an extension or add-on module that enhances the functionality of Apache Maven.
+Maven plugins provide additional capabilities \& tasks that can be executed during the build process or as part of 
+project lifecycle management.
+These plugins are typically packages as JAR (Java Archive) files and can be easily added to a Maven project's
+configuration.
+\\\\
+The \textbf{core plugins} are plugins corresponding to default core phases (e.g., clean, compile).
+They may also have multiple goals.
+
+\subsubsection{Build Lifecycle}
+The process for building \& distributing a particular project is clearly defined. 
+It comprises a list of named phases that can be used to give order to goal execution.
+Goals provided by plugins can be associated with different phases of the lifecycle.
+e.g., by default, the goal \verb|compiler:compile| is associated with the compile phase, while the goal
+\verb|surefire:test| is associated with the test phase.
+\mintinline{shell}{mvn test} will cause Maven to run all goals associated with each of the phases up to \& including
+the test phase.
+
+\subsubsection{Dependency Management}
+\textbf{Dependency management} is a central feature in Maven.
+The dependency mechanism is organised around a co-ordinate system identifying individual artefacts such as software 
+libraries or modules (e.g., JUnit).
+If your project depends on a JAR file, Maven will automatically retrieve it for you, and store it in the user's local
+repository.
+If the JAR file depends on other libraries, Maven will ensure these are also included: these are known as 
+\textbf{transitive dependencies}.
+This wasn't always a part of Maven, so it's a huge benefit.
+\\\\
+Dependency management features supported include:
+\begin{itemize}
+    \item   Management: you can specify library version that transitive dependencies should use.
+    \item   Scope: include dependencies appropriate for the current stage of the build, i.e., compile, test, run, etc.
+    \item   Exclude dependencies: if project X depends on Project Y, and Project Y depends on Project Z, you can choose
+            to exclude Project Z from your build.
+\end{itemize}
+
+
 
 
 
