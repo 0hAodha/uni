@@ -249,7 +249,137 @@ It is also fashionable to add more ``Vs'' that are not key:
 Key techniques for handling big data include: sampling, inductive learning, clustering, associations, \& distributed 
 programming methods.
 
+\section{Introduction to Python}
+\textbf{Python} is a general-purpose high-level programming language, first created by Guido van Rossum in 1991.
+Python programs are interpreted by an \textit{interpreter}, e.g. \textbf{CPython} -- the reference implementation
+supported by the Python Software Foundation.
+CPython is both a compiler and an interpreter as it first compiles Python code into bytecode before interpreting it.
+\\\\
+Python interpreters are available for a wide variety of operating systems \& platforms.
+Python supports multiple programming paradigms, including procedural programming, object-oriented programming, \& 
+functional programming.
+Python is \textbf{dynamically typed}, unlike languages such as C, C++, \& Java which are \textit{statically typed},
+meaning that many common error checks are deferred until runtime in Python, whereas in a statically typed language like Java
+these checks are performed during compilation.
+\\\\
+Python uses \textbf{garbage collection}, meaning that memory management is handled automatically and there is no need for 
+the programmer to manually allocate \& de-allocate chunks of memory.
+\\\\
+Python is used for all kinds of computational tasks, including:
+\begin{itemize}
+    \item   Scientific computing.
+    \item   Data analytics.
+    \item   Artificial Intelligence \& Machine Learning.
+    \item   Computer vision.
+    \item   Web development / web apps.
+    \item   Mobile applications.
+    \item   Desktop GUI applications.
+\end{itemize}
 
+While having relatively simple syntax and being easy to learn for beginners, Python also has very advanced 
+functionality.
+It is one of the most widely used programming languages, being both open source \& freely available.
+Python programs will run almost anywhere that there is an installation of the Python interpreter.
+In contrast, many languages such as C or C++ have separate binaries that must be compiled for each specific platform
+\& operating system.
+\\\\
+Python has a wide array of libraries available, most of which are free \& open source.
+Python programs are usually much shorter than the equivalent Java or C++ code, meaning less code to write and 
+faster development times for experienced Python developers.
+Its brevity also means that the code is easier to maintain, debug, \& refactor as much less source code is required 
+to be read for these tasks.
+Python code can also be run without the need for ahead-of-time compilation (as in C or C++), allowing for faster
+iterations over code versions \& faster testing.
+Python can also be easily extended \& integrated with software written in many other programming languages.
+\\\\
+Drawbacks of using Python include:
+\begin{itemize}
+    \item   \textbf{Efficiency:} Program execution speed in Python is typically a lot slower than more low-level
+            languages such as C or C++.
+            The relative execution speed of Python compared to C or C++ depends a lot on coding practices and the 
+            specific application being considered.
+
+    \item   \textbf{Memory Management} in Python is less efficient than well-written C  or C++
+            code although these efficiency concerns are not usually a major issues, as compute power \& memory are now 
+            relatively cheap on desktop, laptop, \& server systems.
+            Python is used in the backend of large web services such as Spotify \& Instagram, and performs 
+            adequately.
+            However, these performance concerns may mean that Python is unsuitable for some performance-critical 
+            applications, e.g. resource-intensive scientific computing, embedded devices, automotive, etc.
+            Faster alternative Python implementations such as \textbf{PyPy} are also available, with PyPy
+            providing an average of a four-fold speedup by implementing advanced compilation techniques.
+            It's also possible to call code that is implemented in C within Python to speed up performance-critical
+            sections of your program.
+
+    \item   \textbf{Dynamic typing} can make code more difficult to write \& debug compared to statically-typed 
+            languages, wherein the compiler checks that all variable types match before the code is executed.
+    
+    \item   \textbf{Python2 vs Python3:} There are two major version of Python in widespread use that are not 
+            compatible with each other due to several changes that were made when Python3 was introduced.
+            This means that some libraries that were originally written in Python2 have not been ported over to 
+            Python3.
+            Python2 is now mostly used only in legacy business applications, while most new development is in 
+            Python3.
+            Python2 is no longer supported or receives updates as of 2020.
+\end{itemize}
+
+\subsection{Running Python Programs}
+Python programs can be executed in a variety of different ways:
+\begin{itemize}
+    \item   through the Python interactive shell on your local machine.
+    \item   through remote Python interactive shells that are accessible through web browsers.
+    \item   by using the console of your operating system to launch a standalone Python script (\verb|.py| file).
+    \item   by using an IDE to launch a \verb|.py| file.
+    \item   as GUI applications using libraries such as Tkinter PyQt.
+    \item   as web applications that provide services to other computers, e.g. by using the Flask framework to create
+            a web server with content that can be accessed using web browsers.
+    \item   through Jupyter / JupyterLab notebooks, either hosted locally on your machine or cloud-based Jupyter
+            notebook execution environments such as Google Colab, Microsoft Azure Notebooks, Binder, etc.
+\end{itemize}
+
+\subsection{Hello World}
+The following programs writes ``Hello World!'' to the screen.
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{python}
+print("Hello World!")
+\end{minted}
+\caption{\texttt{helloworld.py}}
+\end{code}
+
+\subsection{PEP 8 Style Guide}
+\textbf{PEPs (Python Enhancement Proposals)} describe \& document the way in which the Python language evolves over time, e.g. addition of new features.
+Backwards compatibility policy etc. PEPSs can be proposed, then accepted or rejected.
+The full list is available at \url{https://www.python.org/dev/peps/}.
+\textbf{PEP 8} gives coding conventions for the Python code comprising the standard library in the main Python 
+distribution. See: \url{https://www.python.org/dev/peps/pep-0008/}.
+It contains conventions for the user-defined names (e.g., variables, functions, packages), as well as code layout,
+line length, use of blank lines, style of comments, etc.
+\\\\
+Many professional Python developers \& companies adhere to (at least some of) the PEP8 conventions.
+It is important to learn to follow these conventions from the start, especially if you want to work with other 
+programmers, as experienced Python developers will often flag violations of the PEP 8 conventions during code
+reviews.
+Of course, many companies \& open-source software projects have defined their own internal coding style guidelines
+which take precedence over PEP 8 in the case of conflicts.
+Following PEP 8 conventions is relatively easy if you are using a good IDE, e.g. PyCharm automatically finds \& 
+alerts you to violations of the PEP 8 conventions.
+
+\subsubsection{Variable Naming Conventions}
+According to PEP 8, variable names ``should be lowercase, with words separated by underscores as necessary to 
+improve readability'', i.e. \mintinline{python}{snake_case}.
+``Never use the characters \verb|l|, \verb|O|, or \verb|I| as single-character variable names.
+In some fonts, these characters are indistinguishable from the numerals one \& zero. 
+When tempted to use \verb|l|, use \verb|L| instead''.
+According to PEP 8, different naming conventions are used for different identifiers, e.g.:
+``Class names should normally use the CapWords convention''.
+This helps programmers to quickly \& easily distinguish which category an identifier name represents.
+
+\subsection{Dynamic Typing}
+In Python, variable names can point to objects of any type.
+Built-in data types in python include \mintinline{python}{str}, \mintinline{python}{int}, \mintinline{python}{float}, 
+etc.
+Each type can hold a different type of data.
+As we saw, \mintinline{python}{str} can hold any combination of characters.
 
 
 
