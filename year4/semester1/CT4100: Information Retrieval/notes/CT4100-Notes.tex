@@ -22,6 +22,7 @@
 \pagestyle{fancy}
 
 \usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage{amsmath}
 \usepackage[english]{babel} % Language hyphenation and typographical rules
 \usepackage{xcolor}
 \definecolor{linkblue}{RGB}{0, 64, 128}
@@ -139,6 +140,206 @@ There will be exercise sheets posted for most lecturers; these are not mandatory
 web search engines, digital libraries, \& recommender systems. 
 It is finding material (usually documents) of an unstructured nature that satisfies an information need within large
 collections (usually stored on computers).
+
+\section{Information Retrieval Models}
+\subsection{Introduction to Information Retrieval Models}
+\textbf{Data collections} are well-structured collections of related items; items are usually atomic with a 
+well-defined interpretation.
+Data retrieval involves the selection of a fixed set of data based on a well-defined query (e.g., SQL, OQL).
+\\\\
+\textbf{Information collections} are usually semi-structured or unstructured.
+Information Retrieval (IR) involves the retrieval of documents of natural language which is typically not 
+structured and may be semantically ambiguous.
+
+\subsubsection{Information Retrieval vs Information Filtering}
+The main differences between information retrieval \& information filtering are:
+\begin{itemize}
+    \item   The nature of the information need.
+    \item   The nature of the document set.
+\end{itemize}
+
+Other than these two differences, the same models are used.
+Documents \& queries are represented using the same set of techniques and similar comparison algorithms are also
+used.
+
+\subsubsection{User Role}
+In traditional IR, the user role was reasonably well-defined in that a user:
+\begin{itemize}
+    \item   Formulated a query.
+    \item   Viewed the results.
+    \item   Potentially offered feedback.
+    \item   Potentially reformulated their query and repeated steps.
+\end{itemize}
+
+In more recent systems, with the increasing popularity of the hypertext paradigm, users usually intersperse 
+browsing with the traditional querying.
+This raises many new difficulties \& challenges.
+
+\subsection{Pre-Processing}
+\textbf{Document pre-processing} is the application of a set of well-known techniques to the documents \& queries 
+prior to any comparison.
+This includes, among others:
+\begin{itemize}
+    \item   \textbf{Stemming:} the reduction of words to a potentially common root.
+            The most common stemming algorithms are Lovin's \& Porter's algorithms.
+            E.g. \textit{computerisation},
+            \textit{computing}, \textit{computers} could all be stemmed to the common form \textit{comput}.
+    \item   \textbf{Stop-word removal:} the removal of very frequent terms from documents, which add little to the 
+            semantics of meaning of the document.
+    \item   \textbf{Thesaurus construction:} the manual or automatic creation of thesauri used to try to identify 
+            synonyms within the documents.
+\end{itemize}
+
+\textbf{Representation} \& comparison technique depends on the information retrieval model chosen.
+The choice of feedback techniques is also dependent on the model chosen.
+
+\subsection{Models}
+Retrieval models can be broadly categorised as:
+\begin{itemize}
+    \item   Boolean:
+            \begin{itemize}
+                \item   Classical Boolean.
+                \item   Fuzzy Set approach.
+                \item   Extended Boolean.
+            \end{itemize}
+
+    \item   Vector:
+            \begin{itemize}
+                \item   Vector Space approach.
+                \item   Latent Semantic indexing.
+                \item   Neural Networks.
+            \end{itemize}
+
+    \item   Probabilistic:
+            \begin{itemize}
+                \item   Inference Network.
+                \item   Belief Network.
+            \end{itemize}
+\end{itemize}
+
+We can view any IR model as being comprised of:
+\begin{itemize}
+    \item   $D$ is the set of logical representations within the documents.
+    \item   $Q$ is the set of logical representations of the user information needs (queries).
+    \item   $F$ is a framework for modelling representations ($D$ \& $Q$) and the relationship between $D$ \& $Q$.
+    \item   $R$ is a ranking function which defines an ordering among the documents with regard to any query $q$.
+\end{itemize}
+
+We have a set of index terms:
+$$
+t_1, \dots , t_n
+$$
+
+A \textbf{weight} $w_{i,j}$ is assigned to each term $t_i$ occurring in the $d_j$.
+We can view a document or query as a vector of weights:
+$$
+\vec{d_j} = (w_1, w_2, w_3, \dots)
+$$
+
+\subsection{Boolean Model}
+The \textbf{Boolean model} of information retrieval is based on set theory \& Boolean algebra.
+A query is viewed as a Boolean expression.
+The model also assumes terms are present or absent, hence term weights $w_{i,j}$ are binary \& discrete, i.e., 
+$w_{i,j}$ is an element of $\{0, 1\}$.
+\\\\
+Advantages of the Boolean model include:
+\begin{itemize}
+    \item   Clean formalism.
+    \item   Widespread \& popular.
+    \item   Relatively simple
+\end{itemize}
+
+Disadvantages of the Boolean model include:
+\begin{itemize}
+    \item   People often have difficulty formulating expressions, harbours some difficulty in use.
+    \item   Documents are considered either relevant or irrelevant; no partial matching allowed.
+    \item   Poor performance.
+    \item   Suffers badly from natural language effects of synonymy etc.
+    \item   No ranking of results.
+    \item   Terms in a document are considered independent of each other.
+\end{itemize}
+
+\subsubsection{Example}
+$$
+q = t_1 \land (t_2 \lor (\neg t_3))
+$$
+
+\begin{minted}[linenos, breaklines, frame=single]{sql}
+q = t1 AND (t2 OR (NOT t3))
+\end{minted}
+
+This can be mapped to what is termed \textbf{disjunctive normal form}, where we have a series of disjunctions 
+(or logical ORs) of conjunctions.
+
+$$
+q = 100 \lor 110 \lor 111
+$$
+
+If a document satisfies any of the components, the document is deemed relevant and returned.
+
+\subsection{Vector Space Model}
+The \textbf{vector space model} attempts to improve upon the Boolean model by removing the limitation of binary 
+weights for index terms.
+Terms can have non-binary weights in both queries \& documents.
+Hence, we can represent the documents \& the query as $n$-dimensional vectors.
+
+$$
+\vec{d_j} = (w_{1,j}, w_{2,j}, \dots, w_{n,j})
+$$
+$$
+\vec{q} = (w_{1,q}, w_{2,q}, \dots, w_{n,q})
+$$
+
+We can calculate the similarity between a document \& a query by calculating the similarity between the vector 
+representations of the document \& query by measuring the cosine of the angle between the two vectors.
+$$
+\vec{a} \cdot \vec{b} = \mid \vec{a} \mid \mid \vec{b} \mid \cos (\vec{a}, \vec{b})
+$$
+$$
+\Rightarrow \cos (\vec{a}, \vec{b}) = \frac{\vec{a} \cdot \vec{b}}{\mid \vec{a} \mid \mid \vec{b} \mid}
+$$
+
+We can therefore calculate the similarity between a document and a query as:
+$$
+\text{sim}(q,d) = \cos (\vec{q}, \vec{d}) = \frac{\vec{q} \cdot \vec{d}}{\mid \vec{q} \mid \mid \vec{d} \mid}
+$$
+
+Considering term weights on the query and documents, we can calculate similarity between the document \& query as:
+$$
+\text{sim}(q,d) =
+\frac
+{\sum^N_{i=1} (w_{i,q} \times w_{i,d})}
+{\sqrt{\sum^N_{i=1} (w_{i,q})^2} \times \sqrt{\sum^N_{i=1} (w_{i,d})^2} }
+$$
+
+Advantages of the vector space model over the Boolean model include:
+\begin{itemize}
+    \item   Improved performance due to weighting schemes.
+    \item   Partial matching is allowed which gives a natural ranking.
+\end{itemize}
+
+The primary disadvantage of the vector space model is that terms are considered to be mutually independent.
+
+\subsubsection{Weighting Schemes}
+We need a means to calculate the term weights in the document and query vector representations.
+A term's frequency within a document quantifies how well a term describes a document;
+the more frequently a term occurs in a document, the better it is at describing that document and vice-versa.
+This frequency is known as the \textbf{term frequency} or \textbf{tf factor}.
+\\\\
+If a term occurs frequently across all the documents, that term does little to distinguish one document from another.
+This factor is known as the \textbf{inverse document frequency} or \textbf{idf-frequency}.
+Traditionally, the most commonly-used weighting schemes are know as \textbf{tf-idf} weighting schemes.
+\\\\
+For all terms in a document, the weight assigned can be calculated as:
+$$
+w_{i,j} = f_{i,j} \times \log \left( \frac{N}{N_i} \right)
+$$
+where
+\begin{itemize}
+    \item   $f_{i,j}$ is the (possibly normalised) frequency of term $t_i$ in document $d_j$.
+    \item   $N$ is the number of documents in the collection.
+    \item   $N_i$ is the number of documents that contain term $t_i$.
+\end{itemize}
 
 
 
