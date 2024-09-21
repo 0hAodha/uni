@@ -403,12 +403,75 @@ E.g., in Java:
     \item   Generating reports.
 \end{enumerate}
 
-\textbf{Code Libraries} are convenient ways to package functionality \& reuse components.
-E.g., \verb|JAR| files in Java or \verb|.DLL| files in Windows / \verb|.NET|.
+\textbf{Build tools} are software utilities that automate the tasks of compiling, linking, \& packaging source code into 
+executable application or libraries.
+Build tools help with:
+\begin{itemize}
+    \item   \textbf{Automation:} build tools help to automate repetitive tasks such as compiling code, running tests, 
+            packaging binaries, \& even deploying applications.
+    \item   \textbf{Consistency:} build tools ensure that every build process (e.g., dev, test, prod) is identical, 
+            minimising human error.
+    \item   \textbf{Efficiency:} build tools speed up development by automating builds whenever code is pushed or merged 
+            into a repository.
+\end{itemize}
+
+Popular build tools include:
+\begin{itemize}
+    \item   \textbf{Maven} is a software build tool which can manage the project build, reporting, \& documentation,
+            primarily used for Java development and supported by most Java IDEs.
+            It features dependency management, project structure standardisation, \& automatic builds.
+    \item   \textbf{Gradle} is a build tool that supports multiple languages including Java, Kotlin, \& Groovy.
+            Its features include being highly customisable and being faster than Maven due to its incremental builds \&
+            caching.
+            It's preferred for modern Java-based CI/CD pipelines and supports both Android \& general Java applications.
+    \item   \textbf{Node Package Manager (NPM)} is a build tool for JavaScript / Node.js that features dependency 
+            management \& building for JavaScript applications.
+            It is used to build web-based frontend applications or backend applications in a CI/CD pipeline.
+\end{itemize}
+
+Other popular build tools include Yarn for JavaScript, PyBuilder or tox for Python, MSBuild for C\#/.NET, \& Rake for Ruby.
+
+\subsection{Build Tools in CI/CD Pipelines}
+\textbf{Continuous Integration (CI)} automatically integrates \& tests code on each commit.
+\textbf{Continuous Deployment/Delivery (CD)} automatically deploys tested code to production or staging.
+Build tools serve many roles in CI/CD pipelines:
+\begin{itemize}
+    \item   \textbf{Integration:} when changes are pushed to the repository, the CI tool (e.g., GitHub Actions) triggers the
+            build tool to compile \& package the application.
+    \item   \textbf{Build Automation:} the build tool automatically handles downloading dependencies, compiling the code, 
+            \& running tests.
+            It ensures that the same version of the application is built every time.
+    \item   \textbf{Testing:} many build tools, such as Maven, integrate with testing frameworks (e.g., JUnit, Selenium) to
+            run automated tests after the build.
+    \item   \textbf{Deployment:} the packaged application can be deployed to a server, containerised (e.g., with Docker),
+            or distributed using CD tools.
+\end{itemize}
+
+Build tools automate the process of building \& testing code with each integration to the repository, i.e.
+\textbf{Continuous Integration}.
+They ensure new changes don't break existing code by running automated tests as part of the build process and exhibit 
+\textit{fail-fast} behaviour: if a test or build fails, the developer is notified immediately.
+\\\\
+After a successful build \& testing, the build tools package the code, ready for deployment, i.e. 
+\textbf{Continuous Deployment}.
+\textbf{Artifact creation} is when the builds create deployable artifacts (e.g., JAR files, WAR files, Docker images).
+The pipeline can then engage in \textbf{automated deployment} by deploying the artifact to a server, cloud, or container.
+\\\\
+An example build tool workflow in a CI/CD pipeline with GitHub Actions may look like the following:
+\begin{enumerate}
+    \item   \textbf{Code Push:} a developer pushes new code to the GitHub repository.
+    \item   \textbf{CI Tool Trigger:} GitHub Actions detects the change and triggers the pipeline.
+    \item   \textbf{Dependency Resolution:} the build tool (e.g., Maven) fetches dependencies from repositories.
+    \item   \textbf{Compile \& Build:} the build tool compiles \& packages the code into executable binaries (e.g., JAR, WAR).
+    \item   \textbf{Testing:} run unit \& integration tests automatically.
+    \item   \textbf{Package \& Deploy:} the build tool creates the package, and the CI/CD pipeline deploys it to staging or 
+            production.
+\end{enumerate}
 
 \subsection{Maven}
-\textbf{Maven} is a software build tool which can manage the project build, reporting, \& documentation.
-All modern IDEs support Maven.
+\textbf{Maven} is a software build tool which can manage the project build, reporting, \& documentation, primarily used for
+Java development and supported by most Java IDEs.
+It is widely used in Spring Boot projects.
 \begin{enumerate}
     \item   Compile source code.
     \item   Copy resources.
@@ -506,6 +569,101 @@ Dependency management features supported include:
     \item   Exclude dependencies: if project X depends on Project Y, and Project Y depends on Project Z, you can choose
             to exclude Project Z from your build.
 \end{itemize}
+
+\subsubsection{Local \& Remote Repository}
+The remote repository \url{https://mvnrepository.com/} contains libraries for almost everything: cloud computing,
+date \& time utilities, HTML parsers, mail clients, etc.
+Once you specify the correct details in the POM file, Maven will automatically fetch the library for you on build.
+\\\\
+The local Maven repository can be found at \verb|~/.m2/|.
+Maven will search the local repository first and then search third-party repositories if it does not find what it's looking
+for.
+You can create your own repository and share it within your organisation.
+
+\subsection{Spring Boot}
+\textbf{Spring Boot} is a framework for building standalone Java applications with embedded servers that streamlines Java
+application development.
+It provides pre-configured, out-of-the-box functionality to avoid boilerplate code.
+It reduces configuration \& setup, focuses on \textit{convention over configuration}, and is compatible with microservices
+architecture, REST APIs, \& monolithic apps.
+
+\subsubsection{Spring vs Spring Boot}
+\textbf{Spring} is a comprehensive framework for building any Java application requiring more manual configuration \& 
+management of dependencies \& application context.
+Spring Boot is an extension of the Spring framework aimed at simplifying development, configuration, \& deployment, 
+especially for microservices \& cloud-based applications.
+
+\begin{table}[h!]
+    \centering
+
+    \begin{tabular}{|>{\arraybackslash}p{0.5\textwidth}|>{\arraybackslash}p{0.5\textwidth}|}
+        \hline
+        \textbf{Spring}                                                 & \textbf{Spring Boot} \\
+        \hline
+        Requires an external embedded server (e.g, Tomcat, Jetty, etc.) & Comes with an embedded server (Tomcat/Jetty)\\
+        \hline
+        Highly flexible but requires more setup effort                  & Simplifies Spring projects, reducing setup time \\
+        \hline
+        Best for complex, large-scale applications                      & Ideal for microservices \& fast prototypes \\
+        \hline
+        Requires WAR file and deployment on external server             & Packaged as JAR with an embedded server for easy deployment \\
+        \hline
+    \end{tabular}
+    \caption{Technical Differences between Spring \& Spring Boot}
+\end{table}
+
+Choose Spring when:
+\begin{itemize}
+    \item   Your project requires extensive customisations.
+    \item   You're building a complex enterprise application where flexibility \& modularity are necessary.
+    \item   You have a team experiences in managing detailed configurations.
+\end{itemize}
+
+Choose Spring Boot when:
+\begin{itemize}
+    \item   You're building microservices or need quick iterations in development.
+    \item   You want an all-in-one solution with auto-configuration.
+    \item   Your focus is on simplicity \& speed without worrying about configuration details.
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+
+    \begin{tabular}{|>{\arraybackslash}p{0.5\textwidth}|>{\arraybackslash}p{0.5\textwidth}|}
+        \hline
+        \textbf{Spring}                                                     & \textbf{Spring Boot} \\
+        \hline
+        Framework for building complex enterprise-level Java applications   & Simplified framework to quickly build microservices or standalone apps \\
+        \hline
+        Slower to set up due to configuration                               & Faster development with minimal setup \\
+        \hline
+        Provides maximum flexibility \& customisation                       & Less flexibility, focuses on ease of use \\
+        \hline
+        Suitable for large-scale, complex, highly customised apps           & Suitable for small/medium projects, microservices, \& rapid development \\
+        \hline
+    \end{tabular}
+    \caption{High-Level Differences between Spring \& Spring Boot}
+\end{table}
+
+\subsection{GitHub Actions}
+\textbf{GitHub Actions} automates your workflow by triggering events such as \verb|push|, \verb|pull_request|, \&
+\verb|release|.
+It easily integrates with other tools like Docker, AWS, Heroku, etc.
+Key components of GitHub Actions include:
+\begin{itemize}
+    \item   \textbf{Workflows} are defined in YAML in the \verb|.github/workflows/| folder and are triggered by events such 
+            as \verb|push|, \verb|pull_request|, etc.
+    \item   \textbf{Jobs} define units of work that run on a \textbf{runner} (e.g., \verb|ubuntu_latest|,
+            \verb|macos-latest|).
+            They can be run sequentially or in parallel.
+    \item   Each job consists of a series of \textbf{steps}, e.g., checking out the code, building, testing, etc.
+    \item   \textbf{Runners} include GitHub-hosted runners (e.g., Ubuntu, macOS) but you can also have self-hosted runners 
+            to run on your own infrastructure.
+    \item   \textbf{GitHub Secrets} can be used to securely store sensitive information (e.g., API keys) and are accessible 
+            in workflows as \mintinline{yaml}{secrets.MY_SECRET_KEY}.
+\end{itemize}
+
+\textbf{Composite actions} can be used to define reusable workflows.
 
 
 
