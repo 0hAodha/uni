@@ -16,6 +16,8 @@
 \usepackage[a4paper,left=2cm,right=2cm,top=\dimexpr15mm+1.5\baselineskip,bottom=2cm]{geometry}
 \setlength{\parindent}{0pt}
 
+\usepackage{ulem}
+\usepackage{gensymb}
 \usepackage{fancyhdr}       % Headers and footers 
 \fancyhead[R]{\normalfont \leftmark}
 \fancyhead[L]{}
@@ -585,6 +587,460 @@ Colours can be specified by name (\mintinline{javascript}{red}), by a string of 
     \includegraphics[width=0.2\textwidth]{images/canvas2d_programmatic_graphics.png}
     \caption{Rendering of the Above JavaScript Code}
 \end{figure}
+
+\section{3D Co-Ordinate Systems}
+In a 3D co-ordinate system, a point $P$ is referred to by three real numbers (co-ordinates): $(x,y,z)$.
+The directions of $x$, $y$, \& $z$ are not universally defined but normally follow the \textbf{right-hand rule}
+for axes systems.
+In this case, $z$ defined the co-ordinate's distance ``out of'' the monitor and negative $z$ values go ``into''
+the monitor.
+
+\subsection{Nested Co-Ordinate Systems}
+A \textbf{nested co-ordinate system} is defined as a translation relative to the world co-ordinate system.
+For example, $-3.0$ units along the $x$ axis, $2.0$ units along the $y$ axis, and $2.0$ units along the $z$ axis.
+
+\subsection{3D Transformations}
+\subsubsection{Translation}
+To translate a 3D point, modify each dimension separately:
+$$
+x' = x + a_1
+$$
+$$
+y' = y + a_2
+$$
+$$
+z' = z + a_3
+$$
+
+$$
+\begin{bmatrix}
+    x' & y' & z' & 1
+\end{bmatrix}
+=
+\begin{bmatrix}
+    x & y & z & 1
+\end{bmatrix}
+\begin{bmatrix}
+    1   & 0 & 0 & 0 \\
+    0   & 1 & 0 & 0 \\
+    0   & 0 & 1 & 0 \\
+    a_1 & a_2 & a_3 & 1
+\end{bmatrix}
+$$
+
+\subsubsection{Rotation About Principal Axes}
+A \textbf{principal axis} is an imaginary line through the ``center of mass'' of a body around which the body 
+rotates.
+\begin{itemize}
+    \item   Rotation around the $x$-axis is referred to as \textbf{pitch}.
+    \item   Rotation around the $y$-axis is referred to as \textbf{yaw}.
+    \item   Rotation around the $z$-axis is referred to as \textbf{roll}.
+\end{itemize}
+
+\textbf{Rotation matrices} define rotations by angle $\alpha$ about the principal axes.
+$$
+R_x =
+\begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & \cos \alpha & \sin \alpha \\
+    0 & - \sin \alpha & \cos \alpha
+\end{bmatrix}
+$$
+
+To get new co-ordinates after rotation, multiply the point $\begin{bmatrix} x & y & z \end{bmatrix}$ by the
+rotation matrix:
+$$
+\begin{bmatrix}
+    x' & y' & z'
+\end{bmatrix}
+=
+\begin{bmatrix}
+    x & y & z
+\end{bmatrix}
+R_x
+$$
+
+For example, as a point rotates about the $x$-axis, its $x$ component remains unchanged.
+
+\subsubsection{Rotation About Arbitrary Axes}
+You can rotate about any axis, not just the principal axes.
+You specify a 3D point, and the axis of rotation is defined as the line that joins the origin to this point
+(e.g., a toy spinning top will rotate about the $y$-axis, defined as $(0, 1, 0)$).
+You must also specify the amount to rotate by, this is measured in radians (e.g., $2\pi$ radians is $360\degree$).
+
+\section{Graphics APIs}
+\textbf{Low-level} graphics APIs are libraries of graphics functions that can be accessed from a standard 
+programming language.
+They are typically procedural rather than descriptive, i.e. the programmer calls the graphics functions which 
+carry out operations immediately.
+The programmer also has to write all other application code: interface, etc.
+Procedural programming languages are typically faster than descriptive programming languages.
+Examples include OpenGL, DirectX, Vulkan, Java Media APIs.
+Examples that run in the browser include Canvas2D, WebGL, SVG.
+\\\\
+\textbf{High-level} graphics APIs are ones in which the programmer describes the required graphics, animations,
+interactivity, etc. and doesn't need to deal with how this will be displayed \& updated.
+They are typically descriptive rather than procedural and so are generally slower \& less flexible because it is 
+generally interpreted and rather general-purpose rather than task-specific.
+Examples include VRML/X3D.
+
+\subsection{Three.js}
+\textbf{WebGL (Web Graphics Library)} is a JavaScript API for rendering interactive 2D \& 3D graphics within any
+compatible web browser without the use of plug-ins.
+WebGL s fully integrated with other web standards, allowing GPU-accelerated usage of physics \& image processing
+and effects as part of the web page canvas.
+\\\\
+\textbf{Three.js} is a cross-browser JavaScript library and API used to create \& display animated 4D computer 
+graphics in a web browser.
+Three.js uses WebGL.
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{html}
+<html>
+ <head>
+  
+  <script src="three.js"></script>
+  <script>
+    'use strict'
+
+    function draw() {
+      // create renderer attached to HTML Canvas object
+      var c = document.getElementById("canvas");
+      var renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+
+      // create the scenegraph
+      var scene = new THREE.Scene();
+
+      // create a camera
+      var fov = 75;
+      var aspect = 600/600;
+      var near = 0.1;
+      var far = 1000;
+      var camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+      camera.position.z = 100;
+
+      // add a light to the scene
+      var light = new THREE.PointLight(0xFFFF00);
+      light.position.set(10, 30, 25);
+      scene.add(light);
+
+      // add a cube to the scene
+      var geometry = new THREE.BoxGeometry(20, 20, 20);
+      var material = new THREE.MeshLambertMaterial({color: 0xfd59d7});
+      var cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      // render the scene as seen by the camera
+      renderer.render(scene, camera);
+    }
+  </script>
+ </head>
+
+ <body onload="draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>
+\end{minted}
+\caption{``Hello World'' in Three.js}
+\end{code}
+
+In Three.js, a visible object is represented as a \textbf{mesh} and is constructed from a \textit{geometry} \& a
+\textit{material}.
+
+\subsubsection{3D Primitives}
+Three.js provides a range of primitive geometry as well as the functionality to implement more complex geometry at a lower 
+level.
+See \url{https://threejs.org/manual/?q=prim#en/primitives}.
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{html}
+<html>
+ <head>
+  
+  <script src="three.js"></script>
+  <script>
+    'use strict'
+
+    var scene;
+
+    function addGeometryAtPosition(geometry, x, y, z) {
+      var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+      var mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+      mesh.position.set(x,y,z);
+    }
+
+    function draw() {
+      // create renderer attached to HTML Canvas object
+      var c = document.getElementById("canvas");
+      var renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+
+      // create the scenegraph (global variable)
+      scene = new THREE.Scene();
+
+      // create a camera
+      var fov = 75;
+      var aspect = 400/600;
+      var near = 0.1;
+      var far = 1000;
+      var camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+      camera.position.z = 100;
+
+      // add a light to the scene
+      var light = new THREE.PointLight(0xFFFF00);
+      light.position.set(10, 0, 25);
+      scene.add(light);
+
+      // add a bunch of sample primitives to the scene
+      // see more here:  https://threejsfundamentals.org/threejs/lessons/threejs-primitives.html 
+
+      // args: width, height, depth
+      addGeometryAtPosition(new THREE.BoxGeometry(6,4,8), -50, 0, 0);
+
+      // args: radius, segments
+      addGeometryAtPosition(new THREE.CircleBufferGeometry(7, 24), -30, 0, 0);
+
+      // args: radius, height, segments
+      addGeometryAtPosition(new THREE.ConeBufferGeometry(6, 4, 24), -10, 0, 0);
+
+      // args: radiusTop, radiusBottom, height, radialSegments
+      addGeometryAtPosition(new THREE.CylinderBufferGeometry(4, 4, 8, 12), 20, 0, 0);
+
+      // arg: radius 
+      // Polyhedrons
+      // (Dodecahedron is a 12-sided polyhedron, Icosahedron is 20-sided, Octahedron is 8-sided, Tetrahedron is 4-sided)
+      addGeometryAtPosition(new THREE.DodecahedronBufferGeometry(7), 40, 0, 0);
+      addGeometryAtPosition(new THREE.IcosahedronBufferGeometry(7), -50, 20, 0);
+      addGeometryAtPosition(new THREE.OctahedronBufferGeometry(7), -30, 20, 0);
+      addGeometryAtPosition(new THREE.TetrahedronBufferGeometry(7), -10, 20, 0);
+
+      // args: radius, widthSegments, heightSegments
+      addGeometryAtPosition(new THREE.SphereBufferGeometry(7,12,8), 20, 20, 0);
+      
+      // args: radius, tubeRadius, radialSegments, tubularSegments
+      addGeometryAtPosition(new THREE.TorusBufferGeometry(5,2,8,24), 40, 20, 0);
+      
+      // render the scene as seen by the camera
+      renderer.render(scene, camera);
+    }
+  </script>
+ </head>
+
+ <body onload="draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>
+\end{minted}
+\caption{Code Illustrating Some Primitives Provided by Three.js}
+\end{code}
+
+\subsubsection{Cameras}
+3D graphics API cameras allow you to define:
+\begin{itemize}
+    \item   The camera location $(x,y,z)$.
+    \item   The camera orientation (\sout{straight, gay} $x$ rotation, $y$ rotation, $z$ rotation).
+    \item   The \textbf{viewing frustum} (the Field of View (FoV) \& clipping planes).
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\textwidth]{images/viewing_frustum.png}
+                \caption{The Viewing Frustum}
+            \end{figure}
+\end{itemize}
+
+In Three.js, the FoV can be set differently in the vertical and horizontal directions via the first \& second arguments
+to the constructor can be set differently in the vertical and horizontal directions via the first \& second arguments
+to the constructor \mintinline{javascript}{(fov, aspect)}.
+Generally speaking, the aspect ratio should match that of the canvas width \& height to avoid the scene appearing to be
+stretched.
+
+\subsubsection{Lighting}
+Six different types of lights are available in both Three.js \& WebGL:
+\begin{itemize}
+    \item   \textbf{Point lights:} rays emanate in all directions from a 3D point source (e.g., a lightbulb).
+    \item   \textbf{Directional lights:} rays emanate in one direction only from infinitely far away
+            (similar effect rays from the Sun, i.e. very far away).
+    \item   \textbf{Spotlights:} project a cone of light from a 3D point source aimed at a specific target point.
+    \item   \textbf{Ambient lights:} simulate in a simplified way the lighting of an entire scene due to complex 
+            light/surface interactions -- lights up everything in the scene regardless of position or occlusion.
+    \item   \textbf{Hemisphere lights:} ambient lights that affect the ``ceiling'' or ``floor'' hemisphere of objects
+            rather than affecting them in their entirety.
+    \item   \textbf{RectAreaLights:} emit rectangular areas of light (e.g., fluorescent light strip).
+\end{itemize}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{html}
+<html>
+  <head>
+  <script src="three.js"></script>
+  <script>
+    'use strict'
+
+    function draw() {
+      // create renderer attached to HTML Canvas object
+      var c = document.getElementById("canvas");
+      var renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+
+      // create the scenegraph
+      var scene = new THREE.Scene();
+
+      // create a camera
+      var fov = 75;
+      var aspect = 600/600;
+      var near = 0.1;
+      var far = 1000;
+      var camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+      camera.position.set(0, 10, 30);
+
+      // add a light to the scene
+      var light = new THREE.PointLight(0xFFFFFF);
+      light.position.set(0, 10, 30);
+      scene.add(light);
+
+      // add a cylinder 
+      // args: radiusTop, radiusBottom, height, radialSegments
+      var cyl = new THREE.Mesh(
+        new THREE.CylinderBufferGeometry(1, 1, 10, 12), 
+        new THREE.MeshLambertMaterial({color: 0xAAAAAA}) );
+      scene.add(cyl);
+
+      // clone the cylinder
+      var cyl2 = cyl.clone();
+     
+      // modify its rotation by 60 degrees around its z axis
+      cyl2.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI/3);
+      scene.add(cyl2);
+      // clone the cylinder again
+      var cyl3 = cyl.clone();
+      scene.add(cyl3);
+      // set its rotation directly using "Euler angles", to 120 degrees on z axis
+      cyl3.rotation.set(0,0,2*Math.PI/3);
+      
+      // render the scene as seen by the camera
+      renderer.render(scene, camera);
+    }
+  </script>
+ </head>
+
+ <body onload="draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>
+\end{minted}
+\caption{Rotation Around a Local Origin in Three.js}
+\end{code}
+
+\subsubsection{Nested Co-Ordinates}
+\textbf{Nested co-ordinates} help manage complexity as well as promote reusability \& simplify the transformations of
+objects composed of multiple primitive shapes.
+In Three.js, 3D objects have a \mintinline{javascript}{children} array;
+a child can be added to an object using the method \mintinline{javascript}{.add(childObject)}, i.e. nesting the child 
+object's transform within the parent object.
+Objects have a parent in the scene graph so when you set their transforms (translation, rotation) it's relative to that
+parent's local co-ordinate system.
+
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{html}
+<html>
+ <head>
+  
+  <script src="three.js"></script>
+  <script>
+    'use strict'
+
+    function draw() {
+      // create renderer attached to HTML Canvas object
+      var c = document.getElementById("canvas");
+      var renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+
+      // create the scenegraph 
+      var scene = new THREE.Scene();
+
+      // create a camera
+      var fov = 75;
+      var aspect = 600/600;
+      var near = 0.1;
+      var far = 1000;
+      var camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+      camera.position.set(0, 1.5, 6);
+
+      // add a light to the scene
+      var light = new THREE.PointLight(0xFFFFFF);
+      light.position.set(0, 10, 30);
+      scene.add(light);
+
+      // desk lamp base
+      // args: radiusTop, radiusBottom, height, radialSegments
+      var base = new THREE.Mesh(
+        new THREE.CylinderBufferGeometry(1, 1, 0.1, 12), 
+        new THREE.MeshLambertMaterial({color: 0xAAAAAA}) );
+      scene.add(base);
+
+      // desk lamp first arm piece
+      var arm = new THREE.Mesh(
+        new THREE.CylinderBufferGeometry(0.1, 0.1, 3, 12), 
+        new THREE.MeshLambertMaterial({color: 0xAAAAAA}) );
+
+      // since we want to rotate around a point other than the arm's centre,
+      // we can create a pivot point as the parent of the arm, position the
+      // arm relative to that pivot point, and apply rotation on the pivot point
+      var pivot = new THREE.Object3D();
+      // centre of rotation we want 
+      // (in world coordinates, since pivot is not yet a child of the base)
+      pivot.position.set(0, 0, 0); 
+      pivot.add(arm); // pivot is parent of arm
+      base.add(pivot); // base is parent of pivot
+
+      //  translate arm relative to its parent, i.e. 'pivot'
+      arm.position.set(0, 1.5, 0);
+      //  rotate pivot point relative to its parent, i.e. 'base'
+      pivot.rotateOnAxis(new THREE.Vector3(0,0,1), -Math.PI/6);
+
+      // clone a second arm piece (consisting of a pivot with a cylinder as its child)
+      var pivot2 = pivot.clone();
+      // add as a child of the 1st pivot
+      pivot.add(pivot2);
+      // rotate the 2nd pivot relative to the 1st pivot (since it's nested)
+      pivot2.rotation.z = Math.PI/3;
+      // translate the 2nd pivot relative to the 1st pivot
+      pivot2.position.set(0,3,0);
+
+      // TEST: we can rotate the 1st arm piece and the 2nd arm piece should stay correct
+      pivot.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI/12);
+
+      // TEST: we can also move the base, and everything stays correct
+      base.position.x -= 3;
+      
+      // render the scene as seen by the camera
+      renderer.render(scene, camera);
+    }
+  </script>
+ </head>
+
+ <body onload="draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>
+\end{minted}
+\caption{Partial Desk Lamp with Nested Objects}
+\end{code}
+
+The above code creates a correctly set-up hierarchy of nested objects, allowing us to:
+\begin{itemize}
+    \item   Translate the base while the two arms remain in the correct relative position.
+    \item   Rotate the first arm while keeping the second arm in the correct position.
+\end{itemize}
+
+\subsubsection{Geometry Beyond Primitives}
+In Three.js, the term ``low-level geometry'' is used to refer to geometry objects consisting of vertices, faces, \& 
+normal.
+
+
+
+
+
+
+
 
 
 \end{document}
