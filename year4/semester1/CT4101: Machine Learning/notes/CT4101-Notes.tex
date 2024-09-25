@@ -2,6 +2,7 @@
 \documentclass[a4paper,11pt]{article} 
 % packages
 \usepackage{censor}
+\usepackage{multicol}
 \StopCensoring
 \usepackage{fontspec}
 \setmainfont{EB Garamond}
@@ -374,12 +375,283 @@ According to PEP 8, different naming conventions are used for different identifi
 ``Class names should normally use the CapWords convention''.
 This helps programmers to quickly \& easily distinguish which category an identifier name represents.
 
+\subsubsection{Whitespace in Python}
+A key difference between Python and other languages such as C is that whitespace has meaning in Python.
+The PEP 8 style guidelines say to ``Use 4 spaces per indentation level'', not 2 spaces, and not a tab character.
+This applies to all indented code blocks.
+
 \subsection{Dynamic Typing}
 In Python, variable names can point to objects of any type.
 Built-in data types in python include \mintinline{python}{str}, \mintinline{python}{int}, \mintinline{python}{float}, 
 etc.
 Each type can hold a different type of data.
-As we saw, \mintinline{python}{str} can hold any combination of characters.
+Because variables in Python are simply pointers to objects, the variable names themselves do not have any attached
+type information.
+Types are linked not to the variable names but to the objects themselves.
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{python}
+x = 4
+print(type(x))  # prints "<class 'int'>" to the console
+x = "Hello World!"
+print(type(x))  # prints "<class 'str'>" to the console
+x = 3.14159
+print(type(x))  # prints "<class 'float'>" to the console
+\end{minted}
+\caption{Dynamic Typing Example}
+\end{code}
+
+Note that \mintinline{python}{type()} is a built-in function that returns the type of any object that is passed to 
+it as an argument.
+It returns a \textbf{type object}.
+\\\\
+Because the type of object referred to by a variable is not known until runtime, we say that Python is a 
+\textbf{dynamically typed language}.
+In \textbf{statically typed languages}, we must declare the type of a variable before it is used: the type of 
+every variable is known before runtime.
+\\\\
+Another important difference between Python and statically typed languages is that we do not need to declare 
+variables before we use them.
+Assigning a value to a previously undeclared variable name is fine in Python.
+
+\subsection{Modules, Packages, \& Virtual Environments}
+\subsubsection{Modules}
+A \textbf{module} is an object that serves as an organisational unit of Python code.
+Modules have a \textit{namespace} containing arbitrary Python objects and are loaded into Python by the process
+of \textit{importing}.
+A module is essentially a file containing Python definitions \& statements.
+\\\\
+Modules can be run either as standalone scripts or they can be \textbf{imported} into other modules so that their
+built-in variables, functions, classes, etc. can be used.
+Typically, modules group together statements, functions, classes, etc. with related functionality.
+When developing larger programs, it is convenient to split the source code up into separate modules.
+As well as creating our own modules to break up our source code into smaller units, we can also import built-in 
+modules that come with Python, as well as modules developed by third parties.
+\\\\
+Python provides a comprehensive set of built-in modules for commonly used functionality, e.g. mathematical 
+functions, date \& tie, error handling, random number generation, handling command-line arguments, parallel
+processing, networking, sending email messages, etc.
+Examples of modules that are built-in to Python include \mintinline{python}{math}, \mintinline{python}{string},
+\mintinline{python}{argparse}, \mintinline{python}{calendar}, etc.
+The \mintinline{python}{math} module is one of the most commonly used modules in Python, although the functions 
+in the \mintinline{python}{math} module do not support complex numbers; if you require complex number support,
+you can use the \mintinline{python}{cmath} module.
+A full list of built-in modules is available at \url{https://docs.python.org/3/py-modindex.html}.
+
+\subsubsection{Packages}
+\textbf{Packages} are a way of structuring Python's module namespace by using ``dotted module names'':
+for example, the module name \mintinline{python}{A.B} designates a submodule named \mintinline{python}{B} in a 
+package \mintinline{python}{A}.
+Just like the use of modules saves the authors of different modules from having to worry about each other's global
+variable names, the use of dotted module names saves the authors of multi-module packages like
+\mintinline{python}{NumPy} or \mintinline{python}{Pillow} from having to worry about each other's module names.
+Individual modules can be imported from a package: \mintinline{python}{import sound.effects.echo}.
+\\\\
+PEP 8 states that ``Modules should have short, all-lowercase names.
+Underscores can be used in the module name if it improves readability.
+Python packages should also have short, all-lowercase names, although the use of underscores is discouraged.''
+
+\subsubsection{Managing Packages with \mintinline{shell}{pip}}
+\textbf{\mintinline{shell}{pip}} can be used to install, upgrade, \& remove packages and is supplied by default with
+your Python installation.
+By default, \mintinline{shell}{pip} will install packages from the Python Package Index (PyPI) \url{https://pypi.org}.
+You can browse the Python Package Index by visiting it in your web browser.
+To install packages from PyPI:
+\begin{minted}[linenos, breaklines, frame=single]{shell}
+python -m pip install projectname
+\end{minted}
+
+To upgrade a package to the latest version:
+\begin{minted}[linenos, breaklines, frame=single]{shell}
+python -m pip install --upgrade projectname
+\end{minted}
+
+
+
+\subsubsection{Virtual Environments}
+Python applications will often use packages \& modules that don't come as part of the standard library.
+Applications will sometimes need a specific version of a library, because the application may require that a 
+particular bug has been fixed or the application may have been written using an obsolete version of the library's
+interface.
+This means that it may not be possible for one Python installation to meet the requirements of every application.
+If application $A$ needs version 1.0 of a particular module but application $B$ needs version 2.0, then the 
+requirements are in conflict and installing either version 1.0 or 2.0 will leave one application unable to run.
+The solution for this problem is to create a \textbf{virtual environment}, a self-contained directory tree that
+contains a Python installation for a particular version of Python plus a number of additional packages.
+Different applications can then use different virtual environments.
+\\\\
+By default, most IDEs will create a new virtual environment for each new project created.
+It is also possible to set up a project to run on a specific pre-configured virtual environment.
+The built-in module \mintinline{python}{venv} can also be used to create \& manage virtual environments through
+the console.
+\\\\
+To use the \mintinline{python}{venv} module, first decide where you want the virtual environment to be created,
+then open a command line at that location use the command \mintinline{bash}{python -m venv environmentname} to
+create a virtual environment with the specified name.
+You should then see the directory containing the virtual environment appear on the file system, which can then be
+activated using the command \mintinline{shell}{source environmentname/bin/activate}.
+\\\\
+To install a package to a virtual environment, first activate the virtual environment that you plan to install it to
+and then enter the command \mintinline{shell}{python -m pip install packagename}.
+\\\\
+If you have installed packages to a virtual environment, you will need to make that virtual environment available
+to Jupyter Lab so that your \verb|.ipynb| files can be executed on the correct environment.
+You can use the package \verb|ipykrenel| to do this.
+
+\section{Classification}
+\subsection{Supervised Learning Principles}
+Recall from before that there are several main types of machine learning techniques, including \textbf{supervised
+learning}, unsupervised learning, semi-supervised learning, \& reinforcement learning.
+Supervised learning tasks include both \textbf{classification} \& regression.
+\\\\
+The task definition of supervised learning is to, given examples, return a function $h$ (hypothesis) that 
+approximates some ``true'' function $f$ that (hypothetically) generated the labels for the examples.
+We need to have a set of examples called the \textbf{training data}, each having a \textbf{label} \& a set of 
+\textbf{attributes} that have known \textbf{values}.
+\\\\
+We consider the labels (classes) to be the outputs of some function $f$: the observed attributes are its inputs.
+We denote the attribute value inputs $x$ and labels are their corresponding outputs $f(x)$.
+An example is a pair $(x, f(x))$.
+The function $f$ is unknown, and we want to discover an approximation of it $h$.
+We can then use $h$ to predict labels of new data (generalisation).
+This is also known as \textbf{pure inductive learning}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/classification_data_example.png}
+    \caption{Training Data Example for a Classification Task}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{./images/supervised_learning_overview.png}
+    \caption{Overview of the Supervised Learning Process}
+\end{figure}
+
+\subsection{Introduction to Classification}
+The simplest type of classification task is where instances are assigned to one of two categories: this is referred
+to as a \textbf{binary classification task} or two-class classification task.
+Many popular machine learning problems fall into this category:
+\begin{itemize}
+    \item   Is cancer present in a scan? (Yes / No).
+    \item   Should this loan be approved? (Yes / No).
+    \item   Sentiment analysis in text reviews of products (Positive / Negative).
+    \item   Face detection in images (Present / Not Present).
+\end{itemize}
+
+The more general form of classification task is the \textbf{mutli-class classification} where the number of classes
+is $\geq 3$.
+
+\subsubsection{Example Binary Classification Task}
+Objective: build a binary classifier to predict whether a new previously unknown athlete who did not feature in the 
+dataset should be drafted.
+
+\begin{minipage}{0.5\textwidth}
+    There are 20 examples in the dataset, see \verb|college_athletes.csv| on Canvas.
+    \\\\
+    The college athlete's dataset contains two attributes: 
+    \begin{itemize}
+        \item   Speed (continuous variable).
+        \item   Agility (continuous variable).
+    \end{itemize}
+
+    The target data: whether or not each athlete was drafted to a professional team (yes / no).
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{./images/example_binary_classification.png}
+        \caption{Example Dataset for a Binary Classification Task}
+    \end{figure}
+\end{minipage}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{./images/feature_space_lot_college_athlete.png}
+    \caption{Feature Space Plot for the College Athlete's Dataset}
+\end{figure}
+
+We want to decide on a reasonable \textbf{decision boundary} to categorise new unseen examples, such as the one
+denoted by the purple question mark below.
+We need algorithms that will generate a hypothesis / model consistent with the training data.
+Is the decision boundary shown below in thin black lines a good one? 
+It is consistent with all of the training data, but it was drawn manually; in general, it won't be possible to 
+manually draw such decision boundaries when dealing with higher dimensional data (e.g., more than 3 features).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./images/feature_space_lot_college_athlete_decision_boundary.png}
+    \caption{Feature Space Plot for the College Athlete's Dataset}
+\end{figure}
+
+\subsubsection{Example Classification Algorithms}
+There are many machine learning algorithms available to learn a classification hypothesis / model.
+Some examples (with corresponding scikit-learn classes) are:
+\begin{itemize}
+    \item   $k$-nearest neighbours: scikit-learn \verb|KNeighboursClassifier|.
+    \item   Decision trees: scikit-learn \verb|DecisionTreeClassifier|.
+    \item   Gaussian Processes: scikit-learn \verb|GaussianProcessClassifier|.
+    \item   Neural networks: scikit-learn \verb|MLPClassifier|.
+    \item   Logistic regression: scikit-learn \verb|LogisticRegression|.
+            Note that despite its name, logistic regression is a linear model for classification rather than regression.
+\end{itemize}
+
+\subsubsection{Logistic Regression on the College Athletes Dataset}
+Below is an example of a very simple hypothesis generated using an ML model -- a linear classifier created using the
+scikit-learn \verb|LogisticRegression| with the default settings.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./images/logistic_regression_college_athletes.png}
+    \caption{Logistic Regression on the College Athletes Dataset}
+\end{figure}
+
+Is this a good decision boundary?
+$\frac{19}{21}$ training examples correct = $90.4\%$ accuracy.
+Note how the decision boundary is a straight line (in 2D).
+Note also that using logistic regression makes a strong underlying assumption that the data is
+\textbf{linearly separable}.
+
+\subsubsection{Decision Tree on the College Athletes Dataset}
+Below is an example of a more complex hypothesis, generated using the scikit-learn \verb|DecisionTreeClassifier|
+with the default settings.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./images/decision_tree_college_athletes.png}
+    \caption{Decision Tree on the College Athletes Dataset}
+\end{figure}
+
+Note the two linear decision boundaries: this is a very different form of hypothesis compared to logistic
+regression.
+Is this a good decision boundary?
+$\frac{21}{21}$ training examples correct = $100\%$ accuracy.
+
+\subsubsection{Gaussian Process on the College Athletes Dataset}
+Below is an example of a much more complex hypothesis generated using the scikit-learn 
+\verb|GaussianProcessClassifier| with the default settings.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./images/gaussian_process_college_athletes.png}
+    \caption{Gaussian Process on the College Athletes Dataset}
+\end{figure}
+
+Note the smoothness of the decision boundary compared to the other methods.
+Is this a good decision boundary?
+$\frac{21}{21}$ training examples correct = $100\%$ accuracy.
+\\\\
+Which of the three models explored should we choose?
+It's complicated; we need to consider factors such as accuracy of the training data \& independent test data,
+complexity of the hypothesis, per-class accuracy etc.
+
+\subsubsection{Use of Independent Test Data}
+Use of separate training \& test datasets is very important when developing an ML model.
+If you use all of your data for training, your model could potentially have good performance on the training data
+but poor performance on new independent test data.
+
+
 
 
 
