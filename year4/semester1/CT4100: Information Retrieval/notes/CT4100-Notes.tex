@@ -4,6 +4,7 @@
 \usepackage{censor}
 \StopCensoring
 \usepackage{fontspec}
+\usepackage{tcolorbox}
 \setmainfont{EB Garamond}
 % for tironian et fallback
 % % \directlua{luaotfload.add_fallback
@@ -341,11 +342,205 @@ where
     \item   $N_i$ is the number of documents that contain term $t_i$.
 \end{itemize}
 
+\section{Evaluation of IR Systems}
+When evaluating an IR system, we need to consider:
+\begin{itemize}
+    \item   The \textbf{functional requirements}: whether or not the system works as intended.
+            This is done with standard testing techniques.
+    \item   The \textbf{performance:} 
+            \begin{itemize}
+                \item   Response time.
+                \item   Space requirements.
+                \item   Measure by empirical analysis, efficiency of algorithms \& data structures for compression,
+                        indexing, etc.
+            \end{itemize}
+    \item   The \textbf{retrieval performance:} how useful is the system?
+            IR is a highly empirical discipline and there is a long history of the evaluation of retrieval performance.
+            This is less of an issue in data retrieval systems wherein perfect matching is possible as there exists
+            a correct answer.
+\end{itemize}
 
+\subsection{Test Collections}
+Evaluation of IR systems is usually based on a reference \textbf{test collection} involving human evaluations.
+The test collection usually comprises:
+\begin{itemize}
+    \item   A collection of documents $D$.
+    \item   A set of information needs that can be represented as queries.
+    \item   A list of relevance judgements for each query-document pair.
+\end{itemize}
 
+Issues with using test collections include:
+\begin{itemize}
+    \item   It can be very costly to obtain relevance judgements.
+    \item   Crowd sourcing.
+    \item   Pooling approaches.
+    \item   Relevance judgements don't have to be binary.
+    \item   Agreement among judges.
+\end{itemize}
 
+\textbf{TREC (Text REtrieval Conference)} provides a means to empirically test the performance of systems in
+different domains by providing \textit{tracks} consisting of a data set \& test problems.
+These tracks include:
+\begin{itemize}
+    \item   \textbf{Ad-hoc retrieval:} different tracks have been proposed to test ad-hoc retrieval including the
+            Web track (retrieval on web corpora) and the Million Query track (large number of queries).
+    \item   \textbf{Interactive Track}: users interact with the system for relevance feedback.
+    \item   \textbf{Contextual Search:} multiple queries over time.
+    \item   \textbf{Entity Retrieval:} the task is to retrieve entities (people, places, organisations).
+    \item   \textbf{Spam Filtering:} identifying \& filtering out non-relevant or harmful content such as email
+            spam.
+    \item   \textbf{Question Answering (QA):} the goal is to retrieve precise answers to user questions rather than
+            returning entire documents.
+    \item   \textbf{Cross-Language Retrieval:} the goal is to retrieve relevant documents in a different language
+            from the query.
+            Requires machine translation.
+    \item   \textbf{Conversational IR:} retrieving information in conversational IR systems.
+    \item   \textbf{Sentiment Retrieval:} emphasis on identifying opinions \& sentiments.
+    \item   \textbf{Fact Checking:} misinformation track.
+    \item   \textbf{Domain-Specific Retrieval:} e.g., genomic data.
+    \item   Summarisation Tasks.
+\end{itemize}
 
+Relevance is assessed for the information need and not the query.
+Because tuning \& optimisation can occur for many IR systems, it is considered good practice to tune on one 
+collection and then test on another.
+\\\\
+Interaction with an IR system may be a one-off query or an interactive session.
+For the former, \textit{quality} of the returned set is the important metric, while for interactive systems other
+issues have to be considered: duration of the session, user effort required, etc.
+These issues make evaluation of interactive sessions more difficult.
 
+\subsection{Precision \& Recall}
+The most commonly used metrics are \textbf{precision} \& \textbf{recall}.
+\subsubsection{Unranked Sets}
+Given a set $D$ and a query $Q$, let $R$ be the set of documents relevant to $Q$.
+Let $A$ be the set actually returned by the system.
+\begin{itemize}
+    \item   \textbf{Precision} is defined as $\frac{|R \cap A|}{|A|} = \frac{\text{relevant retrieved documents}}{\text{all retrieved documents}}$, i.e. what fraction of the retrieved documents are relevant.
+    \item   \textbf{Recall} is defined as $\frac{|R \cap A|}{|R|} = \frac{\text{relevant retrieved documents}}{\text{all relevant documents}}$, i.e. what fraction of the relevant documents were returned.
+\end{itemize}
+
+Having two separate measures is useful as different IR systems may have different user requirements.
+For example, in web search precision is of the greatest importance, but in the legal domain recall is of the greatest
+importance.
+\\\\
+There is a trade-off between the two measures; for example, by returning every document in the set, recall is 
+maximised (because all relevant documents will be returned) but precision will be poor (because many irrelevant documents will be returned).
+Recall is non-decreasing as the number of documents returned increases, while precision usually decreases as the
+number of documents returned increases.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}|}
+        \hline
+        & \textbf{Relevant} & \textbf{Non-Relevant} \\
+        \hline
+        \textbf{Relevant} & True Positive (TP) & False Negative (FN) \\
+        \hline
+        \textbf{Non-Relevant} & False Positive (FP) & True Negative (TN) \\
+        \hline
+    \end{tabular}
+    \caption{Confusion Matrix of True/False Positives \& Negatives}
+\end{table}
+
+$$
+\text{Precision } P = \frac{tp}{tp + fp} = \frac{\text{true positives}}{\text{true positives + false positives}}
+$$
+$$
+\text{Recall } R = \frac{tp}{tp + fn} = \frac{\text{true positives}}{\text{true positives + false negatives}}
+$$
+
+The \textbf{accuracy} of a system is the fraction of these classifications that are correct:
+$$
+\text{Accuracy} = \frac{tp + tn}{tp +fp + fn + tn}
+$$
+
+Accuracy is a commonly used evaluation measure in machine learning classification work, but is not a very useful
+measure in IR; for example, when searching for relevant documents in a very large set, the number of irrelevant
+documents is usually much higher than the number of relevant documents, meaning that a high accuracy score is
+attainable by getting true negatives by discarding most documents, even if there aren't many true positives. 
+\\\\
+There are also many single-value measures that combine precision \& recall into one value:
+\begin{itemize}
+    \item   F-measure.
+    \item   Balanced F-measure.
+\end{itemize}
+
+\subsubsection{Evaluation of Ranked Results}
+In IR, returned documents are usually ranked.
+One way of evaluating ranked results is to use \textbf{Precision-Recall plots}, wherein precision is typically
+plotted against recall.
+In an ideal system, we would have a precision value of 1 for a recall value of 1, i.e., all relevant documents
+have been returned and no irrelevant documents have been returned.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=Example]
+    Given $|D| = 20$ \& $|R| = 10$ and a ranked list of length 10, let the returned ranked list be:
+    $$
+    \mathbf{d_1}, \mathbf{d_2}, d_3, \mathbf{d_4}, d_5, d_6, \mathbf{d_7}, d_8, d_9, d_{10}
+    $$
+
+    where those in items in bold are those that are relevant.
+    \begin{itemize}
+        \item   Considering the list as far as the first document: Precision = 1, Recall = 0.1.
+        \item   As far as the first two documents: Precision = 1, Recall = 0.2.
+        \item   As far as the first three documents: Precision = 0.67, Recall = 0.2.
+    \end{itemize}
+
+    We usually plot for recall values = 10\% ... 90\%.
+\end{tcolorbox}
+
+We typically calculate precision for these recall values over a set of queries to get a truer measure of a system's
+performance:
+$$
+P(r) = \frac{1}{N} \sum^N_{i=1}P_i(r)
+$$
+
+Advantages of Precision-Recall include:
+\begin{itemize}
+    \item   Widespread use.
+    \item   It gives a definable measure.
+    \item   It summarises the behaviour of an IR system.
+\end{itemize}
+
+Disadvantages of Precision-Recall include:
+\begin{itemize}
+    \item   It's not always possible to calculate the recall measure effective of queries in batch mode.
+    \item   Precision \& recall graphs can only be generated when we have ranking.
+    \item   They're not necessarily of interest to the user.
+\end{itemize}
+
+Single-value measures for evaluating ranked results include:
+\begin{itemize}
+    \item   Evaluating precision when every new document is retrieved and averaging precision values.
+    \item   Evaluating precision when the first relevant document is retrieved.
+    \item   $R$-precision: calculate precision when the final document has been retrieved.
+    \item   Precision at $k$ (P@k).
+    \item   Mean Average Precision (MAP).
+\end{itemize}
+
+Precision histograms are used to compare two algorithms over a set of queries.
+We calculate the $R$-precision (or possibly another single summary statistic) of two systems over all queries.
+The difference between the two are plotted for each of the queries.
+
+\subsection{User-Oriented Measures}
+Let $D$ be the document set, $R$ be the set of relevant documents, $A$ be the answer set returned to the users, 
+and $U$ be the set of relevant documents previously known to the user.
+Let $AU$ be the set of returned documents previously known to the user.
+$$
+\text{Coverage} = \frac{|AU|}{|U|}
+$$
+Let \textit{New} refer to the set of relevant documents returned to the user that were previously unknown to the user.
+We can define \textbf{novelty} as:
+$$
+\text{Novelty} = \frac{|\text{New}|}{|\text{New}| + |AU|}
+$$
+
+The issues surrounding interactive sessions are much more difficult to assess.
+Much of the work in measuring user satisfaction comes from the field of HCI.
+The usability of these systems is usually measured by monitoring user behaviour or via surveys of the user's 
+experience.
+Another closely related area is that of information visualisation: ow best to represent the retrieved data for a
+user etc.
 
 
 
