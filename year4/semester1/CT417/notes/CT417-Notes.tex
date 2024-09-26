@@ -665,9 +665,418 @@ Key components of GitHub Actions include:
 
 \textbf{Composite actions} can be used to define reusable workflows.
 
+\section{Containerisation}
+\textbf{Containerisation} is a method of packaging software \& all of its dependencies so that it can run
+uniformly \& consistently across any infrastructure.
+Containers are isolated environments in which applications run, ensuring consistent behaviour across different
+environments (e.g., development, testing, production).
 
+\begin{figure}[H]
+    \centering \includegraphics[width=\textwidth]{images/containers_vs_vms.png}
+    \caption{Virtual Machines vs Containers }
+\end{figure}
 
+Containers virtualise the operating system, while virtual machines virtualise the hardware.
+Containers share the OS kernel but isolate the application \& its dependencies.
 
+\begin{table}[h!]
+    \centering
+
+    \begin{tabular}{|>{\arraybackslash}p{0.5\textwidth}|>{\arraybackslash}p{0.5\textwidth}|}
+        \hline
+        \textbf{Virtual Machines}                                           & \textbf{Containers} \\
+        \hline
+        Heavy \& resource-intensive                                         & Lightweight, share the OS kernel \\
+        \hline
+        Requires an entire OS for each VM                                   & Faster startup, less overhead \\
+        \hline
+        Slower startup \& resource usage                                    & More efficient resource usage\\
+        \hline
+    \end{tabular}
+    \caption{Virtual Machines vs Containers}
+\end{table}
+
+Reasons for using containerisation include:
+\begin{itemize}
+    \item   \textbf{Portability:} containers ensure that applications run the same regardless of the environment.
+    \item   \textbf{Scalability:} containers can be scaled easily, making them ideal for microservice architectures.
+    \item   \textbf{Efficiency:} containers are lightweight and use fewer resources than traditional VMs.
+    \item   \textbf{Isolation:} each container is isolated, meaning multiple containers can run on the same host
+            without interference.
+    \item   \textbf{Faster deployment:} containers can be started in seconds, enabling fast deployments \& rollbacks.
+\end{itemize}
+
+\subsection{Docker}
+\textbf{Docker} is an open-source platform for building, deploying, \& managing containerised applications.
+It simplifies container creation \& management, and provides a consistent environment for development, testing, \&
+production.
+Advantages of using Docker include:
+\begin{itemize}
+    \item   \textbf{Consistency across environments:} Docker ensures that the application runs the same regardless
+            of where it's deployed.
+            Eliminates the ``works on my machine'' problem by providing a consistent environment across all 
+            stages of development.
+    \item   \textbf{Isolation:} containers provide process isolation, so multiple applications or microservices can
+            run side-by-side without interfering with each other.
+    \item   \textbf{Scalability:} containers are lightweight and can be easily scaled horizontally (i.e., 
+            replicating containers to handle more traffic).
+    \item   \textbf{Efficiency:} compared to virtual machines, containers use fewer resources since they share
+            the host machine's kernel, making them much faster to start and stop.
+    \item   \textbf{Portability:} applications packaged in Docker containers can be easily moved across
+            environments, cloud platforms, \& OSes, ensuring smooth \& reliable deployments.
+    \item   \textbf{Easy integration:} seamlessly integrates with CI/CD tools \& workflows.
+\end{itemize}
+
+Key terms in Docker include:
+\begin{itemize}
+    \item   \textbf{Image:} a lightweight, standalone, executable package that includes everything an application 
+            needs (code, runtime, libraries, dependencies).
+    \item   \textbf{Container:} a runtime instance of an image.
+            While images are static, containers are dynamic and can be started, stopped, or moved across environments.
+    \item   \textbf{Dockerfile:} a text file with instructions to build a docker image.
+            It defines the steps to configure an environment, install dependencies, and set up the application.
+    \item   \textbf{Docker Hub:} a cloud-based repository for finding \& sharing container images, both public \&
+            private.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering \includegraphics[width=\textwidth]{images/docker_overview.png}
+    \caption{Docker Architecture Overview}
+\end{figure}
+
+Key Docker components include:
+\begin{itemize}
+    \item   \textbf{Docker Engine:} the runtime that runs \& manages containers.
+    \item   \textbf{Docker Hub:} a public repository where users can publish \& share container images.
+    \item   \textbf{Dockerfile:} a text files that contains instructions on how to build a Docker image.
+\end{itemize}
+
+\subsubsection{Building \& Running Applications in Docker Containers}
+The dockerfile structure is as follows:
+\begin{itemize}
+    \item   \mintinline{dockerfile}{FROM}: the base image (e.g., \verb|openjdk:17| for Java applications).
+    \item   \mintinline{dockerfile}{WORKDIR}: the directory inside the container where the application will reside.
+    \item   \mintinline{dockerfile}{COPY}: copies files from the host system into the container.
+    \item   \mintinline{dockerfile}{RUN}: executes commands (e.g., installing dependencies).
+    \item   \mintinline{dockerfile}{CMD}: defines the default command to run when the container starts (e.g., 
+            \mintinline{shell}{java -jar app.jar}).
+\end{itemize}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/musicFinder-1.0 jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+\end{minted}
+\caption{Example Dockerfile for a Spring Boot Application}
+\end{code}
+
+To build the Docker image from the Dockerfile:
+\begin{minted}[linenos, breaklines, frame=single]{shell}
+docker build -t my-app .
+\end{minted}
+
+The Docker container can then be run, mapping the container's port 8080 to the host's port 8080:
+\begin{minted}[linenos, breaklines, frame=single]{shell}
+docker run -p 8080:8080 my-app
+\end{minted}
+
+\subsubsection{Docker Best Practices}
+\begin{itemize}
+    \item   \textbf{Keep images lightweight:} use minimal base images (e.g., \verb|alpine|) to reduce the size of 
+            the final image, leading to faster build times \& fewer security vulnerabilities.
+    \item   \textbf{Multi-stage builds:} separate the build environment from the final image to reduce size \&
+            improve performance.
+            \begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+FROM maven:3.8-jdk-11 AS builder
+WORKDIR /build
+COPY . .
+RUN mvn clean package
+
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=builder /build/target/app.jar /app.jar
+CMD ["java", "-jar", "/app.jar"]
+            \end{minted}
+
+    \item   \textbf{Use \texttt{.dockerignore}:} similar to \verb|.gitignore|, it prevents unnecessary files from
+            being copied into the container, optimising build times.
+
+    \item   \textbf{Tagging:} tag your images \mintinline{shell}{docker build -t my-app:v1} for version control \&
+            easier management of deployments.
+
+    \item   Security best practices include:
+            \begin{itemize}
+                \item   Regularly update base images to avoid security vulnerabilities.
+                \item   Avoid running containers as root.
+                \item   Scan your Docker images for vulnerabilities using tools like Clair or Anchore.
+            \end{itemize}
+\end{itemize}
+
+\subsubsection{Common Docker Commands}
+\begin{itemize}
+    \item   Listing containers:
+            \begin{itemize}
+                \item   \mintinline{shell}{docker ps}: list running containers.
+                \item   \mintinline{shell}{docker ps -a}: list all containers, including stopped ones.
+            \end{itemize}
+
+    \item   Stopping / removing containers:
+            \begin{itemize}
+                \item   \mintinline{shell}{docker stop container_id}: stops a running container.
+                \item   \mintinline{shell}{docker rm container_id}: removes a stopped container.
+            \end{itemize}
+
+    \item   Viewing logs:
+            \begin{itemize}
+                \item   \mintinline{shell}{docker logs container_id}: shows the logs of a container.
+            \end{itemize}
+
+    \item   Entering a running container:
+            \begin{itemize}
+                \item   \mintinline{shell}{docker exec -it container_id /bin/bash}: opens a shell inside the running
+                        container.
+            \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering \includegraphics[width=\textwidth]{images/common_docker_cmds.png}
+    \caption{Some Common Docker Commands}
+\end{figure}
+
+\subsubsection{Practical Docker Example with Spring Boot}
+Prerequisites:
+\begin{itemize}
+    \item   Java 17 SDK.
+    \item   Docker (running).
+    \item   Maven.
+    \item   Sprint Boot CLI (Optional, but useful for scaffolding projects).
+\end{itemize}
+
+\begin{enumerate}
+    \item   Initialise a Spring Boot project with Maven using Spring Initializr to generate the project structure.
+    \item   Create the Song Suggester Logic in \verb|src/main/java/com/example/songsuggester/SongSuggesterController.java|:
+            \begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+package com.example.songsuggester;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.json.JSONObject;
+import java.util.Random;
+
+@RestController
+public class SongSuggesterController {
+    @GetMapping("/suggest")
+    public String suggestSong() {
+        String apiUrl = "https://itunes.apple.com/search?term=pop&limit=10";
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(apiUrl, String.class);
+
+        // Parse the JSON response
+        JSONObject jsonObject = new JSONObject(result);
+        var tracks = jsonObject.getJSONArray("results");
+
+        // Randomize the selection
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(tracks.length());
+        var randomTrack = tracks.getJSONObject(randomIndex);
+
+        // Extract the song and artist name
+        String song = randomTrack.getString("trackName");
+        String artist = randomTrack.getString("artistName");
+
+        return "Today's song suggestion: " + song + " by " + artist;
+    }
+}
+            \end{minted}
+
+    \item   Build and run the Spring Boot application:
+            \begin{enumerate}[label=\roman*.]
+                \item   Navigate to the project folder.
+                \item   Run the Maven build command:
+                        \begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+mvn clean install
+                        \end{minted}
+                \item   Start the Spring Boot application:
+                        \begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+mvn spring-boot:run
+                        \end{minted}
+                \item   Access the application by navigating to \url{http://localhost:8080/suggest} in your browser.
+            \end{enumerate}
+
+            \item   In the root of your project directory, create a Dockerfile:
+                    \begin{minted}[linenos, breaklines, frame=single]{dockerfile}
+# Use an official OpenJDK runtime as a parent image
+FROM openjdk:17-jdk-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the project JAR file into the container
+COPY target/song-suggester-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "app.jar"]
+                    \end{minted}
+
+    \item   Build the Docker image from the Dockerfile:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+docker build -t song-suggester .
+            \end{minted}
+
+    \item   Run the Docker container:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+docker run -p 8080:8080 song-suggester
+            \end{minted}
+\end{enumerate}
+
+\subsection{Container Orchestration}
+\textbf{Container orchestration} automates the management, deployment, scaling, \& networking of containers.
+It's crucial when dealing with a large number of containers running across multiple environments because as the
+number of containers grows, manually managing them becomes unfeasible.
+\\\\
+Key components of container orchestration include:
+\begin{itemize}
+    \item   \textbf{Scheduling:} automatically assigns containers to hots machines based on resource availability.
+    \item   \textbf{Scaling:} dynamically adds or removes containers based on demand.
+    \item   \textbf{Networking:} manages the communication between containers and ensures that they can interact
+            securely.
+    \item   \textbf{Load balancing:} distributes traffic across multiple containers to optimise resource usage.
+    \item   \textbf{Service discovery:} automatically detects and connects services running in different containers.
+\end{itemize}
+
+Orchestration benefits DevOps in the following ways:
+\begin{itemize}
+    \item   \textbf{Automation:} simplifies repetitive tasks such as deployment, scaling, \& rollback.
+    \item   \textbf{High availability:} distributes workloads across different machines, ensuring that services
+            remain available.
+    \item   \textbf{Fault tolerance:} automatically restarts or replaces failed containers and reroutes traffic
+            to healthy containers.
+    \item   \textbf{Scalability:} orchestrators can dynamically scale the number of running containers to handle
+            increased traffic.
+\end{itemize}
+
+Challenges with container orchestration include:
+\begin{itemize}
+    \item   \textbf{Complexity:} orchestration platforms can introduce signification complexity, especially for
+            small teams.
+    \item   \textbf{Learning curve:} tools like Kubernetes have a steep learning curve for new users.
+    \item   \textbf{Resource overhead:} orchestrators can consume considerable resources, particularly when
+            managing large-scale systems.
+    \item   \textbf{Networking:} configuring secure \& reliable networking between containers can be challenging.
+\end{itemize}
+
+Popular container orchestration tools include:
+\begin{itemize}
+    \item   \textbf{Kubernetes:}
+            \begin{itemize}
+                \item   Most widely used container orchestration platform.
+                \item   Manages containerised application across clusters of machines.
+                \item   Handles self-healing, automated rollouts, \& scaling.
+            \end{itemize}
+    \item   \textbf{Docker Swarm:}
+            \begin{itemize}
+                \item   Built-in Docker tool for orchestration.
+                \item   Easier to set up but less feature-rich than Kubernetes.
+                \item   Ideal for smaller setups with Docker-native capabilities.
+            \end{itemize}
+    \item   \textbf{Apache Mesos:}
+            \begin{itemize}
+                \item   General-purpose distributed systems platform that supports container orchestration.
+                \item   Suitable for large-scale environments requiring both container \& non-container workloads.
+            \end{itemize}
+\end{itemize}
+
+\subsubsection{Kubernetes}
+The Kubernetes architecture consists of a master node \& worker nodes:
+\begin{itemize}
+    \item   \textbf{Master Node:} manages the Kubernetes cluster.
+            \begin{itemize}
+                \item   \textbf{API Server:} entry point for REST operations.
+                \item   \textbf{Scheduler:} assigns containers to nodes.
+                \item   \textbf{Controller Manager:} ensures the desired state of the system.
+            \end{itemize}
+    \item   \textbf{Worker Nodes:} hosts running containerised applications.
+            \begin{itemize}
+                \item   \textbf{Kubelet:} ensures containers are running on a node.
+                \item   \textbf{Pod:} smallest deployable unit consisting of one or more containers, with shared
+                        storage \& network resources.
+                \item   \textbf{Kube-Proxy:} handles networking within Kubernetes.
+            \end{itemize}
+\end{itemize}
+
+Key Kubernetes concepts include:
+\begin{itemize}
+    \item   \textbf{Service:} an abstraction that defines a logical set of pods \& a policy for accessing them.
+    \item   \textbf{Deployment:} manages pod scaling \& rolling updates for your application.
+    \item   \textbf{Namespace:} provides scope for resources within a Kubernetes cluster, helping organise \& 
+            manage resources.
+\end{itemize}
+
+The steps to run Kubernetes locally are as follows:
+\begin{enumerate}
+    \item   \textbf{Install Minikube:} Minikube allows you to run Kubernetes on a single node.
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+\end{minted}
+    \item   Install \verb|kubectl|:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+sudo apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+            \end{minted}
+            Verify the installation by running \mintinline{shell}{kubectl version}.
+    \item   Running Kubernetes:
+            \begin{itemize}
+                \item   Use the following commands to start interacting with your Kubernetes cluster:
+                \begin{minted}[linenos, breaklines, frame=single]{shell}
+kubectl cluster-info
+kubectl get nodes
+                \end{minted}
+                You can deploy containers \& pods using:
+                \begin{minted}[linenos, breaklines, frame=single]{shell}
+kubectl apply -f <your-deployment-file>.yaml
+                \end{minted}
+            \end{itemize}
+    \item   Manage Kubernetes with Helm (optional):
+            \begin{itemize}
+                \item   \textbf{Helm} is a package manager for Kubernetes that makes deployment easier.
+                \item   To install Helm:
+                        \begin{minted}[linenos, breaklines, frame=single]{shell}
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+                        \end{minted}
+                \item   You can then start deploying applications using Helm Charts.
+            \end{itemize}
+\end{enumerate}
+
+To deploy the \verb|song-suggester| app with Kubernetes:
+\begin{enumerate}
+    \item   Create a Docker image for the \verb|suggest-music| app:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+docker build -t song-suggester .
+            \end{minted}
+    \item   Deploy the Docker container in a Kubernetes pod:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+kubectl create deployment song-suggester --image=song-suggester
+            \end{minted}
+    \item   Expose the app using a service to make it accessible outside the Kubernetes cluster:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+kubectl expose deployment song-suggester -type=LoadBalancer -- port=8080
+            \end{minted}
+    \item   Scale the application to run multiple instances:
+            \begin{minted}[linenos, breaklines, frame=single]{shell}
+kubectl scale deployment song-suggester --replicas=5
+            \end{minted}
+\end{enumerate}
 
 
 \end{document}
