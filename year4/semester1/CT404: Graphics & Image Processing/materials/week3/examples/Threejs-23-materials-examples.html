@@ -1,0 +1,115 @@
+<html>
+ <head>
+  
+  <script src="three.js"></script>
+  <script src="OrbitControls.js"></script>
+  <script>
+    'use strict'
+
+    var renderer, scene, camera, orbitcontrols;
+    var sphere2material, sphere3material;
+    var pointLight, directionalLight;
+
+    // values that we're animating
+    var mat2hue = 1;
+    var mat3green = 0;
+    // animation controller values
+    var mat2dir = -0.001;
+    var mat3dir = 0.001;
+
+    function draw() {
+      // create renderer attached to HTML Canvas object
+      var c = document.getElementById("canvas");
+      renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+
+      // create the scenegraph 
+      scene = new THREE.Scene();
+
+      // create a camera
+      var fov = 75;
+      var aspect = 600/600;
+      var near = 0.1;
+      var far = 1000;
+      camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+      camera.position.set(0, 0, 40);
+
+      orbitcontrols = new THREE.OrbitControls (camera, c);
+      orbitcontrols.enableDamping = true;
+      orbitcontrols.dampingFactor = 0.25;
+      orbitcontrols.enableZoom = true;
+      orbitcontrols.autoRotate = false;
+
+      // lights
+      pointLight = new THREE.PointLight(0xFFFFFF);
+      pointLight.position.set(-10, 20, 0);
+      scene.add(pointLight);
+      directionalLight = new THREE.DirectionalLight(0xffffff, 0.6); // args: color, intensity
+      directionalLight.position.set(-10, 15, 0);
+      scene.add(directionalLight);
+      scene.add(directionalLight.target); // the target object must be in the scene
+
+      // args: radius, widthSegments, heightSegments
+      // FLAT SHADING is achieved in Threejs using MeshPhongMaterial with flatShading set to true
+      var material1 = new THREE.MeshPhongMaterial({color: 0xff0000, flatShading:true, emissive: 0x003300});
+	    var sphere1 = new THREE.Mesh(new THREE.SphereBufferGeometry(7,10,10), material1); 
+      sphere1.position.set(-20,0,0);
+      scene.add(sphere1);
+
+      // SMOOTH SHADING is the default setting for MeshLambertMaterial
+      sphere2material = new THREE.MeshLambertMaterial({color: 0xffff00});
+	    var sphere2 = new THREE.Mesh(new THREE.SphereBufferGeometry(7,10,10), sphere2material);  
+      sphere2.position.set(0,0,0);
+      scene.add(sphere2);
+
+      // NORMAL-INTERPOLATING SHADING is the default for MeshPhongMaterial
+      sphere3material = new THREE.MeshPhongMaterial({color: 0x0000ff, specular: 0x00ff00, shininess: 100});
+	    var sphere3 = new THREE.Mesh(new THREE.SphereBufferGeometry(7,10,10), sphere3material);  
+      sphere3.position.set(20,0,0);
+      scene.add(sphere3);
+
+      // the "ground"
+      var box = new THREE.Mesh(new THREE.BoxGeometry(60, 5, 60), new THREE.MeshLambertMaterial({color: 0x00ff00}));
+      scene.add(box);
+      box.position.set(0,-15,0);
+
+      animate(); 
+    }
+
+    function animate() {
+      setTimeout(animate, 1000/60);
+
+      orbitcontrols.update();
+
+      // animate sphere2material between red and yellow using HSL
+      mat2hue += mat2dir;
+      if (mat2hue<=0) {
+        mat2hue = 0;
+        mat2dir = Math.abs(mat2dir);
+      }
+      else if (mat2hue>=0.2) {
+        mat2hue = 0.2;
+        mat2dir = -Math.abs(mat2dir);
+      }
+      sphere2material.color.setHSL(mat2hue, 1, 0.5);
+
+      // animate sphere3material between red and yellow using RGB
+      mat3green += mat3dir;
+      if (mat3green<=0) {
+        mat3green = 0;
+        mat3dir = Math.abs(mat3dir);
+      }
+      else if (mat3green>=1) {
+        mat3green = 1;
+        mat3dir = -Math.abs(mat3dir);
+      }
+      sphere3material.color.setRGB(1, mat3green, 0);
+
+      renderer.render(scene, camera);
+    }
+  </script>
+ </head>
+
+ <body onload="draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>

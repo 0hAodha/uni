@@ -1,0 +1,59 @@
+<html>
+ <head>
+  <script>
+var boxes = [];
+
+function attachEvents() {
+	document.onmousedown = function(event) {
+		// adds a new box at the mouse position
+		// step 1: find a spare index in the sparse array
+		var idx=Math.floor(Math.random()*1000);
+		while (typeof boxes[idx]!="undefined")
+			idx=Math.floor(Math.random()*1000);
+		// step 2: create a new box object and add to the array
+		// setting up its data properties
+		boxes[idx]=new Object();
+		boxes[idx].x = event.clientX;
+		boxes[idx].y = event.clientY;
+		var r = Math.floor(Math.random()*256);
+		var g = Math.floor(Math.random()*256);
+		var b = Math.floor(Math.random()*256);
+		boxes[idx].colr = "rgb("+r+","+g+","+b+")";
+		boxes[idx].dy = Math.floor(1+Math.random()*8);
+	}
+}
+
+function draw() {
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext('2d');
+ 
+	// over-write previous content, with a grey rectangle
+  context.fillStyle="#DDDDDD";
+  context.fillRect(0,0,600,600);
+
+    // iterate thru the objects in our sparse array
+	// the for..in construct obtains *indices* rather than *data values*
+  for (var idx in boxes) {   
+	var y=boxes[idx].y+boxes[idx].dy; // animate box downwards
+	if (y<600) {
+		context.save();
+		boxes[idx].y=y;
+		context.translate(boxes[idx].x,y);
+		context.fillStyle=boxes[idx].colr;
+		context.fillRect(0,0,20,20);
+		context.restore();
+	}
+	else
+		delete boxes[idx]; // box has passed offscreen so delete it from array
+  }
+
+    // do it all again in 1/30th of a second
+  window.setTimeout("draw();",1000/30);
+}
+  </script>
+ </head>
+
+ <body onload="attachEvents(); draw();">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>
