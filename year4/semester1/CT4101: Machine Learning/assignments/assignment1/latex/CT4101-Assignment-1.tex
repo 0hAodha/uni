@@ -1,0 +1,111 @@
+%! TeX program = lualatex
+\documentclass[a4paper]{article} 
+
+% packages
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black]{hyperref} 
+\usepackage{changepage}     % adjust margins on the fly
+
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+\usepackage{xcolor}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\captionsetup[listing]{skip=0pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{5pt}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{titlesec}
+% \titleformat{\section}{\LARGE\bfseries}{}{}{}[\titlerule]
+% \titleformat{\subsection}{\Large\bfseries}{}{0em}{}
+% \titlespacing{\subsection}{0em}{-0.7em}{0em}
+%
+% \titleformat{\subsubsection}{\large\bfseries}{}{0em}{$\bullet$ }
+% \titlespacing{\subsubsection}{1em}{-0.7em}{0em}
+
+% margins
+\addtolength{\hoffset}{-2.25cm}
+\addtolength{\textwidth}{4.5cm}
+\addtolength{\voffset}{-3.25cm}
+\addtolength{\textheight}{5cm}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0in}
+% \setcounter{secnumdepth}{0}
+
+\begin{document}
+\hrule \medskip
+\begin{minipage}{0.295\textwidth} 
+    \raggedright
+    \footnotesize 
+    Name: Andrew Hayes \\
+    % E-mail: \href{mailto://a.hayes18@universityofgalway.ie}{\texttt{a.hayes18@universityofgalway.ie}}  \hfill\\   
+    Student ID: 21321503 \hfill \\
+    Programme: 4BCT \hfill
+\end{minipage}
+\begin{minipage}{0.4\textwidth} 
+    \centering 
+    \vspace{0.4em}
+    \Large 
+    \textbf{CT4101} \\ 
+\end{minipage}
+\begin{minipage}{0.295\textwidth} 
+    \raggedleft
+    \today
+\end{minipage}
+\medskip\hrule 
+\begin{center}
+    \normalsize
+    Assignment 01: Classification Using Scikit-Learn
+\end{center}
+\hrule
+
+\section{Algorithm 1: <name\_of\_algorithm>}
+
+\subsection{Detailed Description of Algorithm 1}
+\subsection{Why I Chose this Algorithm}
+
+Graphic illustration of how the algorithm works
+
+\subsection{Hyperparameter Details for Tuning}
+
+\subsection{Model Training \& Evaluation}
+\subsubsection{Data Preprocessing \& Visualisation}
+\subsubsection{Training \& Evaluation Details}
+\subsubsection{Discussion of Results}
+
+\section{Algorithm 2: <name\_of\_algorithm>}
+
+\subsection{Detailed Description of Algorithm 2}
+Graphic illustration of how the algorithm works
+
+\subsection{Why I Chose this Algorithm}
+
+\subsection{Hyperparameter Details for Tuning}
+
+\subsection{Model Training \& Evaluation}
+\subsubsection{Data Preprocessing \& Visualisation}
+\subsubsection{Training \& Evaluation Details}
+\subsubsection{Discussion of Results}
+
+\section{Conclusions}
+\subsection{Key Findings}
+\subsection{Comparative Analysis of Algorithm Performances}
+\subsection{Recommended Hyperparameter Values Based on Results}
+\subsection{Concluding Remarks}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
