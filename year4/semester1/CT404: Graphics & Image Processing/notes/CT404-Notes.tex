@@ -1035,6 +1035,136 @@ The above code creates a correctly set-up hierarchy of nested objects, allowing 
 In Three.js, the term ``low-level geometry'' is used to refer to geometry objects consisting of vertices, faces, \& 
 normal.
 
+\section{Animation \& Interactivity}
+\subsection{Handling the Keyboard}
+Handling the keyboard involves recognising keypresses and updating the graphics in response.
+
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{html}{../materials/week3/examples/canvasWithKeyboardExample.html}
+    \caption{Keyboard Handling (Canvas/JavaScript)}
+\end{code}
+
+\subsection{Mouse Handling}
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{html}{../materials/week3/examples/canvasWithMouseExample.html}
+    \caption{Mouse Handling (Canvas/JavaScript)}
+\end{code}
+
+\subsection{Time-Based Animation}
+Time-based animation can be achieved using \mintinline{javascript}{window.setTimeout()} which repaints the 
+canvas at pre-defined intervals.
+
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{html}{../materials/week3/examples/canvasAnimationExample1.html}
+    \caption{Time-Based Animation with \mintinline{javascript}{window.setTimeout()}}
+\end{code}
+
+However, improved smoothness can be achieved using \mintinline{javascript}{window.requestAnimationFrame()} which is called at
+every window repaint/refresh.
+
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{html}{../materials/week3/examples/canvasAnimationExample1_withSmootherAnimation.html}
+    \caption{Smoother Time-Based Animation with \mintinline{javascript}{window.requestAnimationFrame()}}
+\end{code}
+
+\subsection{Raycasting}
+\textbf{Raycasting} is a feature offered by 3D graphics APIs which computes a ray from a start position in a specified direction
+and identifies the geometry that the ray hits.
+\begin{minted}[linenos, breaklines, frame=single]{html}
+renderer = new THREE.WebGLRenderer({ canvas: c, antialias: true });
+\end{minted}
+
+The following example illustrates the use of raycasting/picking and rotation/translation based on mouse selection and mouse 
+movement.
+It also illustrates how nested co-ordinate systems have been used to make the lamp parts behave correctly.
+
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{html}{../materials/week3/examples/Threejs-20-controllable-desk-lamp.html}
+    \caption{Controllable Desk Lamp}
+\end{code}
+
+\subsection{Shading Algorithms}
+The colour at any pixel on a polygon is determined by:
+\begin{itemize}
+    \item   The characteristics (including colour) of the surface itself.
+    \item   Information about light sources (ambient, directional, parallel, point, or spot) and their positions relative to
+            the surface.
+    \item   \textit{Diffuse} \& \textit{specular} reflections.
+\end{itemize}
+
+Classic shading algorithms include:
+\begin{itemize}
+    \item   Flat shading.
+    \item   Smooth shading (Gourard).
+    \item   Normal Interpolating Shading (Phong).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/shading_algs.png}
+    \caption{Different Shading Algorithms}
+\end{figure}
+
+\subsubsection{Flat Shading}
+\textbf{Flat shading} calculates and applies directly the shade of each surface, which is calculated via the cosine of the angle
+of incidence ray to the \textit{surface normal} (a \textbf{surface normal} is a vector perpendicular to the surface).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/flat_shading.png}
+    \caption{Flat Shading}
+\end{figure}
+
+\subsubsection{Smooth (Gourard) Shading}
+\textbf{Smooth (Gourard) shading} calculates the shade at each vertex, and interpolates (smooths) these shades across the 
+surfaces.
+Vertex normals are calculated by averaging the normals of the connected faces.
+Interpolation is often carried out in graphics hardware, making it generally very fast.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/smooth_shading.png}
+    \caption{Smooth Shading}
+\end{figure}
+
+\subsubsection{Normal Interpolating (Phong) Shading}
+\textbf{Normal interpolating (Phong) shading} calculates the normal at each vertex and interpolates these normals across the
+surfaces.
+The light, and therefore the shade at each pixel is individually calculated from its unique surface normal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/phong_shading.png}
+    \caption{Normal Interpolating (Phong) Shading}
+\end{figure}
+
+\subsection{Shading in Three.js}
+In Three.js, \textbf{materials} define how objects will be shaded in the scene.
+There are three different shading models to choose from:
+\begin{itemize}
+    \item   \mintinline{javascript}{MeshBasicMaterial}: none.
+    \item   \mintinline{javascript}{MeshPhongMaterial} (with \mintinline{javascript}{flatShading = true}): flat shading.
+    \item   \mintinline{javascript}{MeshLamberMaterial}: Gourard shading.
+\end{itemize}
+
+\subsection{Shadows in Three.js}
+Three.js supports the use of shadows although they are expensive to use.
+The scene is redrawn for each shadow-casting light, and finally composed from all the results.
+Games sometimes use fake ``blob shadows'' instead of proper shadows or else only let one light cast shadows to save computation.
+
+\subsection{Reflectivity of Materials in Three.js}
+There are a variety of colour settings in Three.js
+\begin{itemize}
+    \item   \textbf{Diffuse colour} is defined by the colour of the material.
+    \item   \textbf{Specular colour} is the colour of specular highlights (in Phong shading only).
+    \item   \textbf{Shininess} is the strength of specular highlights (in Phong only).
+    \item   \textbf{Emissive colour} is not affected by lighting.
+\end{itemize}
+
+
+
+
+
 
 
 
