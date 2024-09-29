@@ -304,3 +304,16 @@ year3/semester1/CT3534: Professional Experience
 
 # byte code files
 *.class
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.env
