@@ -1,3 +1,6 @@
 [submodule "year4/semester1/CT417/assignments/assignment1/as01-setup-musicfinder-andrew-cathal"]
 	path = year4/semester1/CT417/assignments/assignment1/as01-setup-musicfinder-andrew-cathal
 	url = git@github.com:CS-UniversityOfGalway/as01-setup-musicfinder-andrew-cathal.git
+[submodule "year4/semester1/CT436: Advanced Professional Skills/project"]
+	path = year4/semester1/CT436: Advanced Professional Skills/project
+	url = git@github.com:JackLennox/CT436-AdvanceProSkills.git
