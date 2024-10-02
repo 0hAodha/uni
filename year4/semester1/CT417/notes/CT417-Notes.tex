@@ -1078,5 +1078,69 @@ kubectl scale deployment song-suggester --replicas=5
             \end{minted}
 \end{enumerate}
 
+\section{DevSecOps}
+Traditional development cycles considered security at the end, leading to costly vulnerabilities in production.
+Modern applications involve complex microservices, and frequent releases that increase attack surfaces.
+Key risks in modern development include:
+\begin{itemize}
+    \item   Faster development leads to higher risks; without security baked into the process, vulnerabilities
+            can go unnoticed until late stages.
+    \item   Complex architectures such as containerised environments \& cloud infrastructure create new attack
+            vectors.
+    \item   Increasing rates of cyberattacks: 2023 saw a rise in supply chain attacks, phishing, \& ransomware incidents
+\end{itemize}
+
+\textbf{DevSecOps} involves integrating security throughout the entire DevOps lifecycle.
+It involves \textbf{shift-left security} which consists of moving security practices earlier in the development
+process to catch vulnerabilities before deployment.
+Doing so makes detecting vulnerabilities cheaper \& easier to fix due to earlier detection, reduces attack vectors from the start of the development process, and gives real-time visibility into security risks during development, not just post-deployment.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/tradsec_vs_devsecops.png}
+    \caption{DevOps vs DevSecOps}
+\end{figure}
+
+Benefits of DevSecOps include:
+\begin{itemize}
+    \item   Reduced time to fix bugs: fixing vulnerabilities earlier in development is faster \& cheaper.
+    \item   Continuous Security: automated tests \& monitoring ensure security across the pipeline.
+    \item   Better Compliance: ensures adherence to industry standards (e.g., GDPR, PCI-DSS) through continuous security checks.
+    \item   Improved Collaboration: security becomes a shared responsibility, promoting teamwork.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/devsecopskeyvulns.png}
+    \caption{Key Vulnerabilities}
+\end{figure}
+
+Key security metrics include:
+\begin{itemize}
+    \item   \textbf{Mean Time To Detection:} how fast can you detect security vulnerabilities?
+    \item   \textbf{Mean Time To Remediation:} how quickly can you fix vulnerabilities once detected?
+    \item   \textbf{Mean Time To Failure:} average amount of time a non-repairable system is expected to function before it fails.
+            $$
+            \text{MTTF} = \frac{\text{Total Operational Time}}{\text{Number of Failures}}
+            $$
+    \item   \textbf{Mean Time Before Failures:} similar metric to MTTF but for repairable systems that includes the time to failure and the time it takes to repair the system.
+            $$
+            \text{Mean Time Between failures} = \text{Mean Time To Detection} + \text{Mean Time To Remediation}
+            $$
+\end{itemize}
+
+DevSecOps best practices include:
+\begin{itemize}
+    \item   \textbf{Security as Code:} treat security policies \& tests like code.
+            Use version control, collaboration, \& automation reduces attack vectors from the start of the development process.
+    \item   \textbf{Automated Testing:} integrate automated security testing into CI/CD pipelines (static, dynamic, \& dependency checks).
+
+    \item   \textbf{Continuous Monitoring:} implement tools for real-time monitoring of security events in production.
+
+    \item   \textbf{Infrastructure as Code (IaC):} automate secure configurations of infrastructure to avoid security misconfigurations.
+
+    \item   \textbf{Training \& Awareness:} regularly train teams on the latest security practices \& vulnerabilities.
+\end{itemize}
+
 
 \end{document}
