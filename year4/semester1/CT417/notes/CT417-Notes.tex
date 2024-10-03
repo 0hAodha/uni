@@ -1142,5 +1142,156 @@ DevSecOps best practices include:
     \item   \textbf{Training \& Awareness:} regularly train teams on the latest security practices \& vulnerabilities.
 \end{itemize}
 
+\subsection{Security Vulnerabilities in Code}
+\textbf{Security vulnerabilities} are weaknesses in a system or application that attackers can exploit to compromise confidentiality, integrity, or availability.
+Understanding common vulnerabilities is key in building more secure applications, particularly in a DevSecOps pipeline.
+Common vulnerabilities include:
+\begin{itemize}
+    \item   SQL injection.
+    \item   Cross-Site Scripting (XSS).
+    \item   Cross-Site Request Forgery (CSRF).
+    \item   Insecure deserialisation.
+    \item   Impoper input validation.
+\end{itemize}
+
+\subsubsection{SQL Injection}
+\textbf{SQL injection} is a technique wherein attackers manipulate an application's SQL queries by injecting malicious SQL code through user inputs (e.g., forms or URL parameters).
+If user input is not properly sanitised, the attacker can execute arbitrary queries to retrieve, modify, or delete sensitive data.
+Types of SQL injection include:
+\begin{itemize}
+    \item   \textbf{Classic SQL injection:} occurs by inserting SQL queries in user inputs.
+    \item   \textbf{Blind SQL injection:} SQL queries are injected without knowing the output.
+    \item   \textbf{Error-Based SQL injection:} an attacker retrieves information from error messages returned by the database.
+\end{itemize}
+
+SQL injection can be prevented with:
+\begin{itemize}
+    \item   \textbf{Input validation:} ensure all user inputs are properly validated.
+    \item   \textbf{Parameterised queries:} use placeholders for query parameters to prevent direct user input into SQL queries.
+    \item   \textbf{Stored procedures:} use database-stored procedures instead of dynamic SQL queries.
+    \item   \textbf{ORM Frameworks:} use Object-Relational Mapping tools such as JPA which generate secure queries.
+    \item   \textbf{Least privilege:} ensure that the database user has minimal privileges.
+\end{itemize}
+
+\subsubsection{Cross-Site Scripting}
+\textbf{Cross-Site Scripting (XSS)} is a type of injection attack wherein malicious scripts are injected into otherwise benign \& trusted websites.
+The attacker tricks the victim's browser into executing malicious scripts, potentially compromising sensitive information such as cookies or login tokens.
+Types of XSS include:
+\begin{itemize}
+    \item   \textbf{Stored XSS:} a malicious script is permanently stored on a target server, e.g. in a database.
+            When users visit the page, the malicious script is delivered to their browser from the server.
+    \item   \textbf{Reflected XSS:} the injected script is reflected off a web server, often via an error message or search result.
+        The user is tricked into clicking a malicious link, where the script is injected and executed.
+    \item   \textbf{DOM-based XSS:} the vulnerability occurs in the browser rather than the server.
+            The malicious script is part of the Document Object Model.
+\end{itemize}
+
+Dangers of XSS include:
+\begin{itemize}
+    \item   \textbf{Data theft:} attackers can steal cookies, local storage data, \& other sensitive information.
+    \item   \textbf{Session hijacking:} attackers can impersonate users by stealing session tokens.
+\end{itemize}
+
+XSS can be mitigated with:
+\begin{itemize}
+    \item   \textbf{Input validation:} always validate \& sanitise user inputs.
+    \item   \textbf{Escaping user output:} escape any user input before rendering it in the HTML.
+    \item   \textbf{Content Security Policy (CSP):} use a strict CSP to block inline scripts, and only allow trusted scripts to be executed.
+    \item   \textbf{HTTPOnly Cookies:} prevent JavaScript from accessing cookies.
+\end{itemize}
+
+\subsubsection{Cross-Site Request Forgery}
+\textbf{Cross-Site Request Forgery (CSRF)} is an attack wherein a user is tricked into performing actions they didn't intend to by sending an unauthorised request to a trusted web application.
+This usually happens when the user is already authenticated and their browser automatically includes credentials (e.g., cookies, tokens).
+For example, a malicious website could contain a form that sends a request to a bank's API to transfer money; if the user is already logged into their bank account and visit this webpage, the browser will send the request with the user's bank credentials without them knowing.
+
+\subsection{Static Code Analysis}
+\textbf{Static code analysis} is the process of analysing source code without executing it to find potential errors, vulnerabilities, \& coding violations.
+It helps to identify weaknesses early in the development process, preventing security vulnerabilities, bugs, \& performance issues before they reach production.
+Key metrics include:
+\begin{itemize}
+    \item   \textbf{Code Complexity:} how difficult is it to understand, test, \& maintain a codebase.
+            It's often measured using \textbf{cyclomatic complexity} which counts the number of independent paths through a program's source code by counting the number of decision points (e.g., \mintinline{javascript}{if}, \mintinline{javascript}{while}, \& \mintinline{javascript}{for} statements in the code.
+            The higher the complexity, the more testing \& resources are required to ensure stability.
+            \\\\
+            High complexity indicates that a piece of code has many decision points, which can increase the likelihood of bugs, make it harder to test, \& make the code more prone to errors.
+            Low complexity is often associated with cleaner, more maintainable code.
+            \\\\
+            It is considered best practice to refactor large functions into smaller, more manageable functions and to keep functions \& classes single-responsibilty.
+
+
+    \item   \textbf{Code Duplication:} this occurs when the same block of code appears multiple times in a codebase.
+            This leads to redundancy, increased maintenance costs, \& the potential for inconsistency.
+            It is a code smell that increases the risk of errors during future modifications, as if a bug is found in one piece of duplicated code, all other copies of that code need to be fixed as well.
+            It leads to code that is harder to refactor, test, \& maintain.
+            \\\\
+            Best practice to avoid code duplication includes following the DRY (Don't Repeat Yourself) principle, refactoring  duplicated code into reusable functions, and to use inheritance or composition to remove repeated logic between classes.
+
+
+    \item   \textbf{Code Smells:} these are symptoms in the source code that \textit{might} be indicative of deeper problems.
+            They aren't necessarily bugs, but they make code harder to maintain and evolve over time.
+            They often point to violations of coding principles or patterns that might lead to future issues.
+            Examples include:
+            \begin{itemize}
+                \item   \textbf{Long methods:} methods that do too much, making them harder to read, test, \& maintain.
+                \item   \textbf{Large classes:} classes that handle too many responsibilities, making them complex.
+                \item   \textbf{Primitive obsession:} overuse of basic data types instead of creating more meaningful classes.
+                \item   \textbf{Feature envy:} a method in one class that heavily relies on the internal data of another class.
+                \item   \textbf{God object:} a class that knows too much or does too much, violating the Single Responsibility principle.
+            \end{itemize}
+
+            Code smells indicate areas that need refactoring.
+            While they may not be immediate bugs, they make the code harder to manage in the long run are are often signs of technical debt.
+            Best practice includes refactoring large classes \& methods into smaller, focused components, applying design patterns like Strategy, Factory, or Observer to fix specific code smells, and following SOLID (Single Responsibility, Open-Closed, etc.) principles to avoid common smells.
+\end{itemize}
+
+Static code analysis works by performing:
+\begin{enumerate}
+    \item   \textbf{Scanning:} automated tools analyse source code for predefined patterns \& rules.
+    \item   \textbf{Analysis:} tools break down the code and check for common vulnerabilities.
+    \item   \textbf{Reporting:} the analysis generates reports categorising findings as bugs, code smells, vulnerabilities, or performance issues.
+\end{enumerate}
+
+Key benefits of static code analysis include:
+\begin{itemize}
+    \item   \textbf{Early bug detection:} reduces future costs by catching bugs early.
+    \item   \textbf{Improved code quality:} ensures adherence to coding standards \& best practices.
+    \item   \textbf{Security improvements:} identifies security vulnerabilities.
+    \item   \textbf{Efficiency:} automated \& continuous scanning of large codebases.
+    \item   \textbf{CI/CD integration:} seamless integration with DevOps pipelines.
+\end{itemize}
+
+Types of static code analysis include:
+\begin{itemize}
+    \item   \textbf{Lexical analysis:} analyses tokens \& basic structures like variables \& operators.
+    \item   \textbf{Syntax analysis:} examines the structure of the code \& syntax rules.
+    \item   \textbf{Semantic analysis:} ensures that the logic of the code makes sense.
+    \item   \textbf{Data flow analysis:} examines how data flows through the program to identify unused variables or null pointer exceptions.
+\end{itemize}
+
+Tools for static code analysis include:
+\begin{itemize}
+    \item   \textbf{SonarQube:} supports Java, JavaScript, Python, etc. and features bug detection, vulnerability detection, code smells, \& technical debt.
+    \item   \textbf{ESLint:} supports JavaScript and features style guide enforcement \& best practices.
+    \item   \textbf{Checkmarx:} focuses on security and features vulnerability detection \& OWASP Top 10 compliance.
+    \item   \textbf{FindBugs:} supports Java and features detection of bug patterns in Java bytecode.
+\end{itemize}
+
+Best practices for static code analysis include:
+\begin{itemize}
+    \item   \textbf{Integrate early:} apply static analysis from the beginning of the development cycle.
+    \item   \textbf{Automate in CI/CD Pipelines:} ensure continuous scanning for every commit or build.
+    \item   \textbf{Review findings regularly:} don't ignore reports, address issues promptly.
+    \item   \textbf{Tune rules:} customise analysis rules based on the project requirements.
+    \item   \textbf{Complement with manual code reviews:} tools can't detect everything, manual reviews are still necessary.
+\end{itemize}
+
+Limitations of static code analysis include:
+\begin{itemize}
+    \item   \textbf{False positives:} not all flagged issues are real problems, requiring manual inspection.
+    \item   \textbf{No runtime error detection:} unlike dynamic analysis, it can't identify errors that only occur during execution.
+    \item   \textbf{Context ignorance:} might not understand the broader context of the code.
+    \item   \textbf{Performance overhead:} large codebases can take time to analyse thoroughly.
+\end{itemize}
 
 \end{document}
