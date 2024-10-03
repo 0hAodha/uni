@@ -1161,14 +1161,159 @@ There are a variety of colour settings in Three.js
     \item   \textbf{Emissive colour} is not affected by lighting.
 \end{itemize}
 
+\section{Image Processing}
+The difference between Graphics, Image Processing, \& Computer Vision is as follows:
+\begin{itemize}
+    \item   \textbf{Graphics} is the processing \& display of images of objects that exist conceptually rather than physically, wit emphasis on the generation of an image from a model of the objects, illumination, etc. and an emphasis on the rendering efficiency for real-time display and/or realism.
 
+    \item   \textbf{Image Processing} is the processing \& analysis of images of the real world, with an emphasis on the modification of the image.
 
+    \item   \textbf{Computer Vision} uses image processing, techniques from AI, \& pattern recognition to recognise \& categorise image data and extract domain-specific information from these images.
+\end{itemize}
 
+Image processing techniques include:
+\begin{itemize}
+    \item   \textbf{Image Enhancement:} provide a more effective display of data for visual interpretation or increase the visual distinction between features in the image.
+    \item   \textbf{Image Restoration:} correction of geometrics distortions, de-noising, de-blurring, etc.
+    \item   \textbf{Feature Extraction:} the extraction of useful features, e.g. corners, blobs, edges, \& lines, the extraction of image segments \& regions of interest, and the subtraction of background to extract foreground objects.
+\end{itemize}
 
+Image processing applications include industrial inspection, document image analysis, traffic monitoring, security and surveillance, remote sensing, scientific imaging, medical imaging, robotics and autonomous systems, face analysis and biometric, \& entertainment  
 
+\subsection{Introduction to OpenCV}
+\textbf{Open Source Computer Vision Library (OpenCV)} is an open source computer vision \& machine learning software library which is available for Python, C++, JavaScript, \& Java.
+It is a good choice for high-performance image processing and for making use of pre-built library functions.
+\\\\
+You can also write image processing code directly using Canvas \& JavaScript or Matlab Image Processing \& Computer Vision toolboxes.
 
+\subsection{Point Transformations}
+\textbf{Point transformations} modify the value of each pixel.
 
+\subsubsection{Histogram Manipulation}
+A \textbf{histogram} is a graphical representation of the distribution of pixel intensity values in an image.
+It displays the number of pixels for each intensity level, allowing us to understand the image's overall brightness \& contrast.
+Histogram manipulation utilises the following processes:
+\begin{itemize}
+    \item   \textbf{Contrast Stretching:} enhancing the contrast of an image by spreading out the intensity values across the available range, with the goal of making the distinction between different pixel values more apparent.
+            \textbf{Uniform expansion / linear stretch} is a method of contrast stretching that assigns a proportional number of grey levels to both frequently \& rarely occurring pixel values.
+            It aims to ensure that every pixel intensity has a chance to occupy the full range of values, and can be applied either globally (to the entire image) or locally (to smaller regions).
 
+            \begin{minipage}{\linewidth}
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\linewidth]{images/local_histogram_stretch_aerial.png}
+                    \caption{Aerial Photograph with a Local Histogram Stretch Applied}
+                \end{figure}
+            \end{minipage}
+
+    \item   \textbf{Histogram Equalisation} is a process that adjusts the intensity distribution of an image to achieve a uniform histogram.
+            It enhances contrast by redistributing pixel values, which helps in revealing more details, particularly in images where some pixel values are too dominant or too rare.
+
+            \begin{minipage}{\linewidth}
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\linewidth]{images/hoop_dreams.png}
+                    \caption{Histogram Equalisation Applied with Discretisation Effects}
+                \end{figure}
+            \end{minipage}
+\end{itemize}
+
+\subsubsection{Thresholding}
+\textbf{Thresholding} is a simple segmentation technique that is very useful for separating solid objects from a contrasting background.
+All pixels above a determined threshold grey level are assumed to belong to the object, and all pixels below that level are assumed to be outside that object (or vice-versa).
+The selection of the threshold level is very important: problems of over-segmentation exist (false negatives) and under-segmentation (false positives).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.44\textwidth]{images/thresholding_examples.png}
+    \caption{Thresholding Examples}
+\end{figure}
+
+\subsection{Geometric Transformations}
+\subsubsection{Interpolation}
+As a 2D arrray of values, a digital image can be thought of as a sampling of an underlying continuous function.
+Interpolation estimates this underlying continuous function by computing pixel values at real-valued co-ordinates where the estimated continuous function must coincide with the sampled data at the sample points.
+Types of interpolation include:
+\begin{itemize}
+    \item   Nearest-neighbour interpolation.
+    \item   Bilinear interpreation which calculates a distance-weighted average of the four pixels closest to the target sub-pixel position $(v,w)$.
+    \item   Bicubic interpolation which is more accurate but costly, where derivatives of the underlying function are also estimated.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/interpolation_examples.png}
+    \caption{Interpolation Examples}
+\end{figure}
+
+\subsubsection{Warping}
+\textbf{Warping} consists of arbitrary geometric transformations from real-valued co-ordinates $(x,y)$ to real-valued co-ordinates $(x^\prime, y^\prime)$ where the mapping function $f(x,y)$ specifies the transformation, or \textit{warping}.
+Applications include image rectification, image registration, map projection, \& image morphing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/warping_examples.png}
+    \caption{Warping Examples}
+\end{figure}
+
+\subsubsection{Image Rectification}
+\textbf{Image rectification} (part of camera calibration) is a standard approach to geometric correction consisting of displacement values for specified control points in the image.
+Displacement of non-control points is determined through \textit{interpolation}.
+For example, take a photograph of a rectangular grid and then determine the mapping required to move output control points back to known undistorted positions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/rectification_examples.png}
+    \caption{Image Rectification Examples}
+\end{figure}
+
+\subsubsection{Image Registration}
+\textbf{Image registration} is the process of transforming different sets of data into one co-ordinate system.
+Geometric operations are applied to images for the purposes of comparison, monitoring, measurement, etc. and have many applications in medical imaging.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/image_registration.png}
+    \caption{Image Registration Examples}
+\end{figure}
+
+\subsubsection{Map Projection}
+Aerial or spaceborne images of the surface of a planet may be rectified into photomaps.
+Both oblique and orthoganol photographs require correction for this application due to the shape of the surface being imaged.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/map_projection.png}
+    \caption{Map Projection Examples}
+\end{figure}
+
+\subsubsection{Image Morphing}
+\textbf{Image morphing} gradually transforms one image into another over a number of animation frames.
+It involves a dissolve from one image to the other (i.e., gradual change of pixel values) as well as an incremental geometric operation using control points (e.g., nostrils, eyes, chin, etc.).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/image_morphing.png}
+    \caption{Image Morphing Examples}
+\end{figure}
+
+\subsection{Spatial Filtering}
+Spatial filtering is a fundamental local operation in image processing that is used for a variety of tasks, including noise removal, blurring, sharpening, \& edge detection.
+It establishes a moving window called a \textbf{kernel} which contains an array of coefficients or weighting factors.
+The kernel is then moved across the original image so that it centres on each pixel in turn.
+Each coefficient in the kernel is multiplied by the value of the pixel below it, and the addition of each of these values determines the value of the pixel in the output image corresponding to the pixel in the centre of the kernel. 
+\begin{itemize}
+    \item   \textbf{Smoothing kernels} perform an averaging of the values in a local neighbourhood and therefore reduce the effects of noise.
+            Such kernels are often used as the first stage of pre-processing an image that has been corrupted by noise in order to restore the original image.
+    \item   \textbf{Differentiating kernels} accentuate the places where the signal is changing in value rapidly.
+            They are used to extract useful information from images, such as the boundaries of objects, for purposes such as object detection.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/spatial_filtering_smoothing_filters.png}
+    \caption{Spatial Filtering: Smoothing Filters}
+\end{figure}
 
 
 
