@@ -473,7 +473,7 @@ plotted against recall.
 In an ideal system, we would have a precision value of 1 for a recall value of 1, i.e., all relevant documents
 have been returned and no irrelevant documents have been returned.
 
-\begin{tcolorbox}[colback=gray!10, colframe=black, title=Example]
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Example}]
     Given $|D| = 20$ \& $|R| = 10$ and a ranked list of length 10, let the returned ranked list be:
     $$
     \mathbf{d_1}, \mathbf{d_2}, d_3, \mathbf{d_4}, d_5, d_6, \mathbf{d_7}, d_8, d_9, d_{10}
@@ -542,9 +542,162 @@ experience.
 Another closely related area is that of information visualisation: ow best to represent the retrieved data for a
 user etc.
 
+\section{Weighting Schemes}
+\subsection{Re-cap}
+The \textbf{vector space model} attempts to improve upon the Boolean model by removing the limitation of binary weights for index terms.
+Terms can have a non-binary value both in queries \& documents.
+Hence, we can represent documents \& queries as $n$-dimensional vectors:
+$$
+\vec{d_j} = \left( w_{1,j} , w_{2,j} , \dots , w_{n,j} \right)
+$$
+$$
+\vec{q} = \left( w_{1,q} , w_{2,q} , \dots , w_{n,q} \right)
+$$
 
+We can calculate the similarity between a document and a query by calculating the similarity between the vector representations.
+We can measure this similarity by measuring the cosine of the angle between the two vectors.
+We can derive a formula for this by starting with the formula for the inner product (dot product) of two vectors:
+\begin{align}
+a \cdot b = |a| |b| \cos(a,b) \\
+\Rightarrow
+\cos(a,b) = \frac{a \cdot b}{|a| |b|}
+\end{align}
 
+We can therefore calculate the similarity between a document and a query as:
+\begin{align*}
+    \text{sim}(\vec{d_j}, \vec{q}) = &\frac{d_j \cdot q}{|d_j| |q|} \\
+\Rightarrow
+    \text{sim}(\vec{d_j}, \vec{q}) = &\frac{\sum^n_{i=1} w_{i,j} \times w_{i,q}}{\sqrt{\sum^n_{i=1} w_{i,j}^2} \times \sqrt{\sum^n_{i=1} w_{i,q}^2}}
+\end{align*}
 
+We need a means to calculate the term weights in the document \& query vector representations.
+A term's frequency within a document quantifies how well a term describes a document.
+The more frequent a term occurs in a document, the better it is at describing that document and vice-versa.
+This frequency is known as the \textbf{term frequency} or \textbf{tf factor}.
+\\\\
+However, if a term occurs frequently across all the documents, then that term does little to distinguish one document from another.
+This factor is known as the \textbf{inverse document frequency} or \textbf{idf-frequency}.
+The most commonly used weighting schemes are known as \textbf{tf-idf} weighting schemes
+For all terms in a document, the weight assigned can be calculated by:
+\begin{align*}
+    w_{i,j} = f_{i,j} \times \log \frac{N}{n_i}
+\end{align*}
+where $f_{i,j}$ is the normalised frequency of term $t_i$ in document $d_j$, $N$ is the number of documents in the collection, and $n_i$ is the number of documents that contain the term $t_i$.
+\\\\
+A similar weighting scheme can be used for queries.
+The main difference is that the tf \& idf are given less credence, and all terms have an initial value of 0.5 which is increased or decreased according to the tf-idf across the document collection (Salton 1983).
 
+\subsection{Text Properties}
+When considering the properties of a text document, it is important to note that not all words are equally important for capturing the meaning of a document and that text documents are comprised of symbols from a finite alphabet.
+\\\\
+Factors that affect the performance of information retrieval include:
+\begin{itemize}
+    \item   What is the distribution of the frequency of different words?
+    \item   How fast does vocabulary size grow with the size of a document collection?
+\end{itemize}
+
+These factors can be used to select appropriate term weights and other aspects of an IR system.
+
+\subsubsection{Word Frequencies}
+A few words are very common, e.g. the two most frequent words ``the'' \& ``of'' can together account for about 10\% of word occurrences.
+Most words are very rare: around half the words in a corpus appear only once, which is known as a ``heavy tailed'' or Zipfian distribution.
+\\\\
+\textbf{Zipf's law} gives an approximate model for the distribution of different words in a document.
+It states that when a list of measured values is sorted in decreasing order, the value of the $n^{\text{th}}$ entry is approximately inversely proportional to $n$.
+For a word with rank $r$ (the numerical position of the word in a list sorted in by decreasing frequency) and frequency $f$, Zipf's law states that $f \times r$ will equal a constant.
+It represents a power law, i.e. a straight line on a log-log plot.
+\begin{align*}
+    \text{word frequency} \propto \frac{1}{\text{word rank}}
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/zipfs_law_brown_corpus.png}
+    \caption{Zipf's Law Modelled on the Brown Corpus}
+\end{figure}
+
+As can be seen above, Zipf's law is an accurate model excepting the extremes.
+
+\subsection{Vocabulary Growth}
+The manner in which the size of the vocabulary increases with the size of the document collection has an impact on our choice of indexing strategy \& algorithms.
+However, it is important to note that the size of a vocabulary is not really bounded in the real world due to the existence of mispellings, proper names etc., \& document identifiers.
+\\\\
+If $V$ is the size of the vocabulary and $n$ is the length of the document collection in word occurrences, then
+\begin{align*}
+    V = K \cdot n^\beta, \quad 0 < \beta < 1
+\end{align*}
+where $K$ is a constant scaling factor that determines the initial vocabulary size of a small collection, usually in the range 10 to 100, and $\beta$ is constant controlling the rate at which the vocabulary size increases usually in the range 0.4 to 0.6.
+
+\subsection{Weighting Schemes}
+The quality of performance of an IR system depends on the quality of the weighting scheme; we want to assign high weights to those terms with a high resolving power.
+tf-idf is one such approach wherein weight is increased for frequently occurring terms but decreased again for those that are frequent across the collection.
+The ``bag of words'' model is usually adopted, i.e., that a document can be treated as an unordered collection of words.
+The term independence assumption is also usually adopted, i.e., that the occurrence of each word in a document is independent of the occurrence of other words.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{``Bag of Words'' / Term Independence Example}]
+    If Document 1 contains the text ``Mary is quicker than John'' and Document 2 contains the text ``John is quicker than Mary'', then Document 1 \& Document 2 are viewed as equivalent.
+\end{tcolorbox}
+
+However, it is unlikely that 30 occurrences of a term in a document truly carries thirty times the significance of a single occurrence of that term.
+A common modification is to use the logarithm of the term frequency:
+\begin{align*}
+    \text{If } \textit{tf}_{i,d} > 0:&   \quad w_{i,d} = 1 + \log(\textit{tf}_{i,d})\\
+    \text{Otherwise:}&          \quad w_{i,d} = 0
+\end{align*}
+
+\subsubsection{Maximum Term Normalisation}
+We often want to normalise term frequencies because we observe higher frequencies in longer documents merely because longer documents tend to repeat the same words more frequently.
+Consider a document $d^\prime$ created by concatenating a document $d$ to itself:
+$d^\prime$  is no more relevant to any query than document $d$, yet according to the vector space type similarity $\text{sim}(d^\prime, q) \geq \text{sim}(d,q) \, \forall \, q$.
+\\\\
+The formula for the \textbf{maximum term normalisation} of a term $i$ in a document $d$ is usually of the form
+\begin{align*}
+\textit{ntf} = a + \left( 1 - a \right) \frac{\textit{tf}_{i,d}}{\textit{tf}\text{max}(d)}
+\end{align*}
+where $a$ is a smoothing factor which can be used to dampen the impact of the second term.
+\\\\
+Problems with maximum term normalisation include:
+\begin{itemize}
+    \item   Stopword removal may have effects on the distribution of terms: this normalisation is unstable and may require tuning per collection.
+    \item   There is a possibility of outliers with unusually high frequency.
+    \item   Those documents with a more even distribution of term frequencies should be treated differently to those with a skewed distribution.
+\end{itemize}
+
+More sophisticated forms of normalisation also exist, which we will explore in the future.
+
+\subsubsection{Modern Weighting Schemes}
+Many, if not all of the developed or learned weighting schemes can be represented in the following format
+\begin{align*}
+    \text{sim}(q,d) = \sum_{t \in q \cap d} \left( \textit{ntf}(D) \times \textit{gw}_t(C) \times \textit{qw}_t(Q) \right)
+\end{align*}
+where 
+\begin{itemize}
+    \item   $\textit{ntf}(D)$ is the normalised term frequency in a document.
+    \item   $\textit{gw}_t(C)$ is the global weight of a term across a collection.
+    \item   $\textit{qw}_t(Q)$ is the query weight of a term in a query $Q$.
+\end{itemize}
+
+The \textbf{Okapi BM25} weighting scheme is a standard benchmark weighting scheme with relatively good performance, although it needs to be tuned per collection:
+\begin{align*}
+    \text{BM25}(Q,D) = \sum_{t \in Q \cap D} \left( \frac{\textit{tf}_{t,D} \cdot \log \left( \frac{N - \textit{df}_t _ 0.5}{\textit{df} + 0.5} \right) \cdot \textit{tf}_{t, Q}}{\textit{tf}_{t,D} + k_1 \cdot \left( (1-b) + b \cdot \frac{\textit{dl}}{\textit{dl}_\text{avg}} \right)} \right)
+\end{align*}
+
+The \textbf{Pivoted Normalisation} weighting scheme is also as standard benchmark which needs to be tuned for collection, although it has its issues with normalisation:
+\begin{align*}
+    \text{piv}(Q,D) = \sum_{t \in Q \cap D} \left( \frac{1 + \log \left( 1 + \log \left( \textit{tf}_{t, D} \right) \right)}{(1 - s) + s \cdot \frac{\textit{dl}}{\textit{dl}_\text{avg}}} \right) \times \log \left( \frac{N+1}{\textit{df}_t} \right) \times \textit{tf}_{t, Q}
+\end{align*}
+
+The \textbf{Axiomatic Approach} to weighting consists of the following constraints:
+\begin{itemize}
+    \item   \textbf{Constraint 1:} adding a query term to a document must always increase the score of that document.
+    \item   \textbf{Constraint 2:} adding a non-query term to a document must always decrease the score of that document.
+    \item   \textbf{Constraint 3:} adding successive occurrences of a term to a document must increase the score of that document less with each successive occurrence.
+            Essentially, any term-frequency factor should be sub-linear.
+    \item   \textbf{Constraint 4:} using a vector length should be a better normalisation factor for retrieval.
+            However, using the vector length will violate one of the existing constraints.
+            Therefore, ensuring that the document length factor is used in a sub-linear function will ensure that repeated appearances of non-query terms are weighted less.
+\end{itemize}
+
+New weighting schemes that adhere to all these constraints outperform the best known benchmarks.
 
 \end{document}
