@@ -17,6 +17,8 @@
 \usepackage[a4paper,left=2cm,right=2cm,top=\dimexpr15mm+1.5\baselineskip,bottom=2cm]{geometry}
 \setlength{\parindent}{0pt}
 
+\usepackage{tcolorbox}
+\usepackage{amsmath}
 \usepackage{fancyhdr}       % Headers and footers 
 \fancyhead[R]{\normalfont \leftmark}
 \fancyhead[L]{}
@@ -25,6 +27,7 @@
 \usepackage{microtype}      % Slightly tweak font spacing for aesthetics
 \usepackage[english]{babel} % Language hyphenation and typographical rules
 \usepackage{xcolor}
+\setlength{\fboxsep}{0pt}
 \definecolor{linkblue}{RGB}{0, 64, 128}
 \usepackage[final, colorlinks = false, urlcolor = linkblue]{hyperref} 
 % \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
@@ -46,6 +49,16 @@
 
 \usepackage[yyyymmdd]{datetime}
 \renewcommand{\dateseparator}{--}
+
+\usepackage[bottom]{footmisc}
+\renewcommand{\footnoterule}{%
+    \hrule
+    \vspace{5pt}
+}
+
+% Remove superscript from footnote numbering
+\renewcommand{\thefootnote}{\arabic{footnote}} % Use Arabic numbers
+\renewcommand{\footnotelabel}{\thefootnote. } % Footnote label formatting
 
 \usepackage{enumitem}
 
@@ -650,6 +663,96 @@ complexity of the hypothesis, per-class accuracy etc.
 Use of separate training \& test datasets is very important when developing an ML model.
 If you use all of your data for training, your model could potentially have good performance on the training data
 but poor performance on new independent test data.
+
+\subsection{$k$-NN Hyperparameters}
+The $k$-NN algorithm also introduces a new concept to us that is very important for ML algorithms in general: hyperparameters.
+In ML algorithms, a \textbf{hyperparameter} is a parameter set by the user that is used to control the behaviour of the learning process.
+Many ML algorithms also have other parameters that are set by the algorithm during its learning process (e.g., the weights
+assigned to connections between neurons in an artificial neural network).
+Examples of hyperparameters include:
+\begin{itemize}
+    \item   Learning rate (typically denoted using the Greek letter $\alpha$).
+    \item   Topology of a neural network (the number \& layout of neurons).
+    \item   The choice of optimiser when updating the weights of a neural network.
+\end{itemize}
+
+Many ML algorithms are very sensitive to the choice of hyperparameters: poor choice of values yields poor performance.
+Therefore, hyperparameter tuning (i.e., determining the values that yield the best performance) is an important topic in ML.
+However, some simple ML algorithms do not have any hyperparameters.
+\\\\
+$k$-NN has several key hyperparameters that we must choose before applying it to a dataset:
+\begin{itemize}
+    \item   The number of neighbours $k$ to take into account when making a prediction: \mintinline{python}{n_neighbours} in the scikit-learn implementation of \mintinline{python}{KNeighboursClassifier}.
+    \item   The method used to measure how similar instances are to one another: \mintinline{python}{metric} in scikit-learn.
+\end{itemize}
+
+\subsection{Measuring Similarity}
+\subsubsection{Measuring Similarity Using Distance}
+Consider the college athletes dataset from earlier.
+How should we measure the similarity between instances in this case?
+\textbf{Distance} is one option: plot the points in 2D space and draw a straight line between them.
+We can think of each feature of interest as a dimension in hyperspace.
+\\\\
+A \textbf{metric} or distance function may be used to define the distance between any pair of elements in a set.
+$\text{metric}(a,b)$ is a function that returns the distance between two instances $a$ \& $b$ in a set.
+$a$ \& $b$ are vectors containing the values of the attributes we are interested in for the data points we wish to measure between.
+
+\subsubsection{Euclidean Distance}
+\textbf{Euclidean distance} is one of the best-known distance metrics.
+It computes the length of a straight line between two points.
+$$
+\text{Euclidean}(a,b) = \sqrt{\sum^m_{i=1}(a[i] - b[i])^2}
+$$
+
+Here $m$ is the number of features / attributes to be used to calculate the distance (i.e., the dimensions of the vectors $a$ \& $b$).
+Euclidean distance calculates the square root of the sum of squared differences for each feature.
+
+\subsubsection{Manhattan Distance}
+\textbf{Manhattan distance} (also known as ``taxicab distance'') is the distance between two points measured along axes at
+right angles.
+$$
+\text{Manhattan}(a,b) = \sum^m_{i=1}\text{abs}(a[i] - b[i])
+$$
+
+As before, $m$ is the number of features / attributes to be used to calculate the distance (i.e., the dimension of the vectors $a$ \& $b$) and $\text{abs}()$ is a function which returns the absolute value of a number.
+Manhattan distance calculates the sum of the absolute differences for each feature.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Example: Calculating Distance}]
+    Calculate the distance between $d_{12} = [5.00, 2.50]$ \& $d_5 = [2.75, 7.50]$.
+    $$
+    \text{Euclidean}(d_{12}, d_5) = \sqrt{(5.00 - 2.75)^2 + (2.50 - 7.50)^2} = 5.483
+    $$
+    $$
+    \text{Manhattan}(d_{12}, d_5) = \text{abs}(5.00 - 2.75) + \text{abs}(2.50 - 7.50) = 7.25
+    $$
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{./images/calc_distance_example.png}
+        \caption{Euclidean vs Manhattan Distance}
+    \end{figure}
+\end{tcolorbox}
+
+\subsubsection{Minkowski Distance}
+The \textbf{Minkowski distance} metric generalises both the Manhattan distance and the Euclidean distance metrics.
+$$
+\text{Minkowski}(a,b) = \left( \sum^m_{i=1} \text{abs}(a[i] - b[i])^p \right)^{\frac{1}{p}}
+$$
+As before, $m$ is the number of features / attributes to be used to calculate the distance (i.e., the dimension of the vectors $a$ \& $b$).
+Minkowski distance calculates the absolute value of the differences for each feature.
+
+\subsubsection{Similarity for Discrete Attributes}
+Thus far we have considered similarity measures that only apply to continuous attributes\footnote{Note that discrete/continuous attributes are not to be confused with classification/regression}.
+Many datasets have attributes that have a finite number of discrete values (e.g., Yes/No or True/False, survey responses, ratings).
+One approach to handling discrete attributes is \textbf{Hamming distance}: the Hamming distance is calculated as 0 for each attribute where both cases have the same value and 1 for each attribute where they are different.
+E.g., Hamming distance between the strings ``Ste\colorbox{yellow}{phe}n'' and ``Ste\colorbox{yellow}{fan}n'' is 3.
+
+\subsubsection{Comparison of Distance Metrics}
+Euclidean \& Manhattan distance are the most commonly used distance metrics although it is possible to define infinitely many distance metrics using the Minkowski distance.
+Manhattan distance is cheaper to compute than Euclidean distance as it is not necessary to compute the squares of differences and a square root, so Manhattan distance may be a better choice for very large datasets if computational resources are limited.
+It's worthwhile to try out several different distance metrics to see which is the most suitable for the dataset at hand.
+Many other methods to measure similarity also exist, including cosine similarity, Russel-Rao, Sokal-Michener.
+
 
 
 
