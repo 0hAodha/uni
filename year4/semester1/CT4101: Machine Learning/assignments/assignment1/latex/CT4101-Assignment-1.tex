@@ -58,10 +58,11 @@
     \vfill
     \raggedright
     \footnotesize 
-    Name: Andrew Hayes \\
-    % E-mail: \href{mailto://a.hayes18@universityofgalway.ie}{\texttt{a.hayes18@universityofgalway.ie}}  \hfill\\   
-    Student ID: 21321503 \hfill \\
-    Programme: 4BCT \hfill
+    \begin{tabular}{@{}l l} % Define a two-column table with left alignment
+        Name: & Andrew Hayes \\
+        Student ID: & 21321503 \\
+        Programme: & 4BCT \\
+    \end{tabular}
     \vfill
 \end{minipage}
 \begin{minipage}{0.4\textwidth} 
@@ -136,29 +137,29 @@ While the original random forest algorithm worked by taking the most popular lab
 \begin{tikzpicture}[every node/.style={circle, draw, minimum size=0.5cm}]
 
     % Binary Trees
-    \node (tree1) at (0,0);
-    \node (tree1l) at (-0.5,-1);
-    \node (tree1r) at (0.5,-1);
-    \draw (tree1) -- (tree1l);
-    \draw (tree1) -- (tree1r);
+    \node (tree1) at (0,0) {};
+    \node (tree1l) at (-0.5,-1) {};
+    \node (tree1r) at (0.5,-1) {};
+    \draw (tree1) -- (tree1l) {};
+    \draw (tree1) -- (tree1r) {};
     
-    \node (tree2) at (2,0);
-    \node (tree2l) at (1.5,-1);
-    \node (tree2r) at (2.5,-1);
-    \draw (tree2) -- (tree2l);
-    \draw (tree2) -- (tree2r);
+    \node (tree2) at (2,0) {};
+    \node (tree2l) at (1.5,-1) {};
+    \node (tree2r) at (2.5,-1) {};
+    \draw (tree2) -- (tree2l) {};
+    \draw (tree2) -- (tree2r) {};
 
-    \node (tree3) at (4,0);
-    \node (tree3l) at (3.5,-1);
-    \node (tree3r) at (4.5,-1);
-    \draw (tree3) -- (tree3l);
-    \draw (tree3) -- (tree3r);
+    \node (tree3) at (4,0) {};
+    \node (tree3l) at (3.5,-1) {};
+    \node (tree3r) at (4.5,-1) {};
+    \draw (tree3) -- (tree3l) {};
+    \draw (tree3) -- (tree3r) {};
     
-    \node (tree4) at (6,0);
-    \node (tree4l) at (5.5,-1);
-    \node (tree4r) at (6.5,-1);
-    \draw (tree4) -- (tree4l);
-    \draw (tree4) -- (tree4r);
+    \node (tree4) at (6,0) {};
+    \node (tree4l) at (5.5,-1) {};
+    \node (tree4r) at (6.5,-1) {};
+    \draw (tree4) -- (tree4l) {};
+    \draw (tree4) -- (tree4r) {};
 
     % Averaging Bracket
     \draw[decorate,decoration={brace,amplitude=10pt,mirror}] (-1,-2) -- (7,-2) node[below, midway, draw=none] {Averaging};
