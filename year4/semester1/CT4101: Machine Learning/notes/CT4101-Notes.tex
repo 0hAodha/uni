@@ -57,8 +57,8 @@
 }
 
 % Remove superscript from footnote numbering
-\renewcommand{\thefootnote}{\arabic{footnote}} % Use Arabic numbers
-\renewcommand{\footnotelabel}{\thefootnote. } % Footnote label formatting
+% \renewcommand{\thefootnote}{\arabic{footnote}} % Use Arabic numbers
+% \renewcommand{\footnotelabel}{\thefootnote. } % Footnote label formatting
 
 \usepackage{enumitem}
 
@@ -664,6 +664,61 @@ Use of separate training \& test datasets is very important when developing an M
 If you use all of your data for training, your model could potentially have good performance on the training data
 but poor performance on new independent test data.
 
+
+\section{$k$-Nearest Neighbours Algorithm}
+\textbf{$k$-nearest neigbours} (or $k$-NN) is one of the simplest machine learning algorithms.
+It generates a hypothesis using a very simple principle: predictions for the label or value assigned to a \textit{query instance} should be made based on the most \textit{similar} instances in the training dataset.
+Hence, this is also known as \textbf{similarity-based learning}.
+\\\\
+$k$-NN can be used for both classificatoin \& regression tasks, although for now we will focus only on its application to classification tasks using the scikit-learn implementation \mintinline{python}{KNeighborsClassifier}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/knn.png}
+    \caption{$K$-Nearest Neighbour Example}
+\end{figure}
+
+The operation of the $k$-NN algorithm is relatively easy to appreciate.
+The key insight is that each example is a point in the feature space.
+If samples are close to each other in the feature space, they should be close in their target values.
+This is related to \textit{code-based reasoning}.
+When you want to classify a new \textbf{query case}, you compare it to the stored set and retrieve the $k$ most similar instances.
+The query case is the given a label based on the most similar instances.
+\\\\
+The prediction for a query case is based on several ($k$) nearest neighbours.
+We compute the similarity of the query case to all stored cases, and pick the nearest $k$ neighbours;
+the simplest way to do this is to sort the instances by distance and pick the lowest $k$ instances.
+A more efficient way of doing this would be to identify the $k$ nearest instances in a single pass through the list of distances.
+The $k$ nearest neighbours then vote on the classification of the test case: prediction is the \textbf{majority} class voted for.
+
+\subsection{The Nearest Neighbour Algorithm}
+The \textbf{1-nearest neighbour algorithm} is the simplest similarity-based / instance-based method.
+There is no real training phase, we just store the training cases.
+Given a query case with a value to be predicted, we compute the distance of the query case from all stored instances and select the nearest neighbour case.
+We then assign the test case the same label (class or regression value) as its nearest neighbour.
+The main problem with this approach is susceptibility to noise; to reduce susceptibility to noise, use more than one neighbour, i.e., the $k$-nearest neighbours algorithm.
+\\\\
+1NN with Euclidean distance as the distance metric is equivalent to partitioning the feature space into a \textbf{Voronoi Tessellation}:
+finding the predicted target class is equivalent to finding which Voronoi region it occupies.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/voronoi.png}
+    \caption{Feature Space Plot (left) \& Corresponding Voronoi Tesselation (right)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/1nnboundary.png}
+    \caption{1NN Decision Boundary from Voronoi Tessellation}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/morevoronoi.png}
+    \caption{Effect of Adding More Training Data to Voronoi Tessellation}
+\end{figure}
+
 \subsection{$k$-NN Hyperparameters}
 The $k$-NN algorithm also introduces a new concept to us that is very important for ML algorithms in general: hyperparameters.
 In ML algorithms, a \textbf{hyperparameter} is a parameter set by the user that is used to control the behaviour of the learning process.
@@ -753,9 +808,125 @@ Manhattan distance is cheaper to compute than Euclidean distance as it is not ne
 It's worthwhile to try out several different distance metrics to see which is the most suitable for the dataset at hand.
 Many other methods to measure similarity also exist, including cosine similarity, Russel-Rao, Sokal-Michener.
 
+\subsection{Choosing a Value for $k$}
+The appropriate value for $k$ is application dependent, and experimentation is needed to find the optimal value.
+Typically, it is $> 3$ and often in the range $5$ -- $21$.
+Increasing $K$ has a \textbf{smoothing effect}:
+\begin{itemize}
+    \item   If $k$ is too low, it tends to overfit if the data is noisy.
+    \item   If $k$ is too high, it tends to underfit.
+\end{itemize}
 
+In imbalanced datasets, the majority target class tends to dominate for large $k$ values.
+It's important to note that $k$ does not affect computational cost much: most of the computation is in calculating the distances from the query to all stored instances.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/increasingk.png}
+    \caption{Effect of Increasing $k$ (1)}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/increasingk2.png}
+    \caption{Effect of Increasing $k$ (2)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/smoothingeffectk.png}
+    \caption{Smoothing Effect of $k$}
+\end{figure}
+
+\subsubsection{Distance-Weighted $k$-NN}
+In \textbf{distance-weighted $k$-NN}, we give each neighbour a weight equal to the inverse of its distance from the target.
+We then take the weighted vote or weighted average to classify the target case.
+It's reasonable to use $k = [\text{all training cases}]$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/distanceweightingknn.png}
+    \caption{Effect of Distance Weighting}
+\end{figure}
+
+\section{Decision Trees}
+\textbf{Decision trees} are a fundamental structure used in information-based machine learning.
+The idea is to use a decision tree as a predictive model to decide what category/label/class an item belongs to based on the values of its features.
+Decision trees consist of \textbf{nodes} (where two branches intersect) which are decision points which partition the data.
+Observations about an item (values of features) are represented using branches.
+The terminal nodes are called \textbf{leaves} and specify the target label for an item.
+The inductive learning of a decision tree is as follows:
+\begin{enumerate}
+    \item   For all attributes that have not yet been used in the tree, calculate their impurity (\textbf{entropy} or \textbf{Gini index}) and \textbf{information/Gini gain} values for the training samples.
+    \item   Select the attribute that has the \textbf{highest} information gain.
+    \item   Make a tree node containing that attribute.
+    \item   This node \textbf{partitions} the data: apply the algorithm recursively to each partition.
+\end{enumerate}
+
+The main class used in scikit-learn to implement decision tree learning for classification tasks is \mintinline{python}{DecisionTreeClassifier}.
+The default measure of impurity is the Gini index, but entropy is also an option.
+
+\subsection{Computing Entropy}
+We already saw how some descriptive features can more effectively discriminate between (or predict) classes which are present in the dataset.
+Decision trees partition the data at each node, so it makes sense to use features which have higher discriminatory power ``higher up'' in a decision tree.
+Therefore, we need to develop a formal measure of the discriminatory power of a given attribute.
+\\\\
+Claude Shannon (often referred to as ``the father of information theory'') proposed a measure of the impurity of the elements in the set called \textbf{entropy}.
+Entropy may be used to measure the uncertainty of a random variable.
+The term ``entropy'' generally refers to disorder or uncertainty, so the use of this term in the context of information theory is analogous to other well-known uses of the term such as in statistical themodynamics.
+The acquisition of information (\textbf{information gain}) corresponds to a \textbf{reduction in entropy}.
+\\\\
+The \textbf{entropy} of a dataset $S$ with $n$ different classes may be calculated as:
+\[
+    \text{Ent}(S) = \sum^n_{i=1} -p_i \log_2 p_i
+\]
+where $p_i$ is the proportion of the class $i$ in the dataset.
+This is an example of a probability mass function.
+Entropy is typically measured in \textbf{bits} (note the $\log_2$ in the equation above):
+the lowest possible entropy output from this function is 0 ($\log_2 1 = 0$), while the highest possible entropy is $\log_2n$ (which is equal to 1 when there are only two classes).
+\\\\
+We use the binary logarithm because a useful measure of uncertainty should assign high uncertainty to outcomes with a low probability and assign low uncertainty values to outcomes with a high probability.
+$\log_2$ returns large negative values when $P$ is close to 0 and small negative values when $P$ is close to 1.
+We use $-\log_2$ for convenience, as it returns positive entropy values with 0 as the lowest entropy.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Worked Entropy Example}]
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{images/anyonefortennis.png}
+        \caption{Example Data}
+    \end{figure}
+
+    Workings;
+    \begin{align*}
+        \text{Ent}(S)   =& \text{Ent}([9+, 5-]) \\
+                        =& \frac{-9}{14} \log_2 \left( \frac{9}{14} \right) - \frac{5}{14} \log_2 \left( \frac{5}{14} \right) \\
+                        =& 0.9403
+    \end{align*}
+
+    Note that if you are calculating entropy using a spreadsheet application such as Excel, make sure that you are using $\log_2$, e.g. \verb|LOG(9/14,2)|.
+\end{tcolorbox}
+
+\subsection{Computing Information Gain}
+The \textbf{information gain} of an attribute is the reduction of entropy from partitioning the data according to that attribute:
+\[
+    \text{Gain}(S,A) = \text{Ent}(S) - \sum_{v \in \text{Values}(A)} \frac{\left| S_v \right|}{\left| S \right|} \text{Ent}(S_v)
+\]
+
+Here $S$ is the entire set of data being considered and $S_v$ refers to each partition of the data according to each possible value $v$ for the attribute.
+$\left| S \right|$ \& $\left| S_v \right|$ refer to the cardinality or size of the overall dataset, and the cardinality or size of a partition respectively.
+When selecting an attribute for a node in a decision tree, we use whichever attribute $A$ that gives the greatest information gain.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Worked Information Gain Example}]
+    Given $\left| S \right| = 14$, $\left| S_{\text{windy} = \text{true}} \right| = 14$, \& $\left| S_{\text{windy} = \text{false}} \right| = 14$, calculate the information gain of the attribute ``windy''.
+
+    \begin{align*}
+        \text{Gain}(S, \text{windy}) =& \text{Ent}(S) - \frac{\left| S_{\text{windy} = \text{true}} \right|}{\left| S \right|} \text{Ent}(S_\text{windy} = \text{true})
+        -  \frac{\left| S_{\text{windy} = \text{false}} \right|}{\left| S \right|} \text{Ent}(S_\text{windy} = \text{false}) \\
+        =& \text{Ent}(S) - \left( \frac{6}{14} \right) \text{Ent}(\left[3+,3-\right]) - \left( \frac{8}{14} \right) \text{Ent}(\left[ 6+,2- \right]) \\
+        =& 0.940 - \left( \frac{6}{14} \right) 1.00 - \left( \frac{8}{14} \right) 0.811\\
+        =& 0.048
+    \end{align*}
+\end{tcolorbox}
 
 
 \end{document}
