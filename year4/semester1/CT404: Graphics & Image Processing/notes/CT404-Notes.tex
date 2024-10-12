@@ -4,6 +4,7 @@
 \usepackage{censor}
 \StopCensoring
 \usepackage{fontspec}
+\usepackage{tcolorbox}
 \setmainfont{EB Garamond}
 % for tironian et fallback
 % % \directlua{luaotfload.add_fallback
@@ -1297,7 +1298,7 @@ It involves a dissolve from one image to the other (i.e., gradual change of pixe
     \caption{Image Morphing Examples}
 \end{figure}
 
-\subsection{Spatial Filtering}
+\section{Spatial Filtering}
 Spatial filtering is a fundamental local operation in image processing that is used for a variety of tasks, including noise removal, blurring, sharpening, \& edge detection.
 It establishes a moving window called a \textbf{kernel} which contains an array of coefficients or weighting factors.
 The kernel is then moved across the original image so that it centres on each pixel in turn.
@@ -1314,6 +1315,265 @@ Each coefficient in the kernel is multiplied by the value of the pixel below it,
     \includegraphics[width=\textwidth]{images/spatial_filtering_smoothing_filters.png}
     \caption{Spatial Filtering: Smoothing Filters}
 \end{figure}
+
+For symmetric kernels with real numbers and signals with real values (as is the case with images), convolution is the same as cross-correlation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/2dconvolutioneg1.png}
+    \caption{Convolution Operation Denoted by \textbf{*}}
+\end{figure}
+
+\subsection{Image Filtering for Noise Reduction}
+We typically use \textbf{smoothing} to remove \textit{high-frequency noise} without unduly damaging the larger \textit{low-frequency} objects of interest.
+Commonly used smoothing filters include:
+\begin{itemize}
+    \item   \textbf{Blur:} averages a pixel and its neighbours.
+    \item   \textbf{Median:} replaces a pixel with the median (rather than the mean) of the pixel and its neighbours.
+    \item   \textbf{Gaussian:} a filter that produces a smooth response (unlike blur/``box'' \& median filtering) by weighting more towards the centre.
+\end{itemize}
+
+A typical ``classical'' (pre-deep learning) computer vision pipeline consists of the following steps:
+\begin{enumerate}
+    \item   Clean-up / Pre-processing:
+            \begin{itemize}
+                \item   Reduce noise (smoothing kernels).
+                \item   Remove geometric/radiometric distortion.
+                \item   Emphasise desired aspects of the image, e.g., edges, corners, blobs, etc. (differentiating kernels, feature detectors).
+            \end{itemize}
+
+    \item   Segmentation:
+            \begin{itemize}
+                \item   Identify / extract objects of interest.
+                \item   Sometimes the entire image is of interest, so the task is to separate it into non-overlapping regions.
+                \item   Most likely leverages domain-specific knowledge.
+                \item   Not always needed in deep learning based approaches.
+            \end{itemize}
+
+    \item   Measurement:
+            \begin{itemize}
+                \item   Quantify appropriate measurements on segmented objects.
+                \item   Might not be needed in deep learning based approaches.
+            \end{itemize}
+
+    \item   Classification:
+            \begin{itemize}
+                \item   Assign segmented objects to classes.
+                \item   Make decision etc.
+            \end{itemize}
+\end{enumerate}
+
+\subsection{Image Filtering for Edge Detection}
+Consider a horizontal slice across the image: \textbf{edge detection} filters are essentially performing a differentiation of the grey level with respect to distance, i.e., ``how different is a pixel to its neighbours?''.
+Some filters are akin to \textit{first derivatives} while others are more akin to \textit{second derivatives}.
+\\\\
+\textbf{Edge detection} is a common early step in image segmentation (often preceded by noise reduction).
+Edge detection determines how different pixels are from their neighbours: abrupt changes in brightness are interpreted as the edges of objects.
+Differentiating kernels can represent \textbf{first order} or \textbf{second order} derivatives.
+Differentiating kernels for edge detection can also be classified as \textbf{gradient magnitude} or \textbf{gradient direction}.
+
+\subsubsection{First Order Derivatives}
+The general image processing pipeline is as follows:
+\[
+    \text{Smoothing (to reduce noise)} \rightarrow \text{Derivative (so that noise is not accentuated)}
+\]
+
+Most differentiating kernels are built by combining these two operations.
+First order derivatives include:
+\begin{itemize}
+    \item   1D Gaussian derivative kernels.
+    \item   2D Gaussian derivative kernels: image gradients
+            \[
+                \nabla f(x,y) = \left[ \frac{\partial f}{\partial x} \frac{\partial f}{\partial y} \right]^T
+            \]
+\end{itemize}
+
+In image processing, an image can be represented as a 2D function $I(x,y)$ where $x$ \& $y$ are spatial co-ordinates and $I$ is the pixel intensity at those co-ordinates.
+The first-order derivatives in the $x$- \& $y$-directions are defined as:
+\[
+    \frac{\partial I}{\partial x} \text{ and } \frac{\partial I}{\partial y}
+\]
+These derivatives measure the rate of change of intensity in the horizontal \& vertical directions respectively.
+The concept is the same as differentiating a function, but applied to discrete pixel values, usually using finite differences or convolution with derivative filters.
+\\\\
+The \textbf{Prewitt operator} is the simplest 2D differentiating kernel.
+It is obtained by convolving a 1D Gaussian derivative kernel with a 1D box filter in the orthogonal direction.
+It is used to estimate the gradient of an image's intensity by highlighting regions with high spatial intensity variation, making it useful for detecting edges \& boundaries.
+It uses two $3 \times 3$ convolution kernels to approximate the first-order derivatives of the image in the horizontal \& vertical directions.
+
+\begin{align*}
+    \text{Prewitt}_x =& \frac{1}{3} 
+    \begin{bmatrix}
+        1 \\
+        1 \\
+        1
+    \end{bmatrix}
+    \otimes
+    \frac{1}{2}
+    \begin{bmatrix}
+        1 & 0 & -1
+    \end{bmatrix}
+    =
+    \frac{1}{6}
+    \begin{bmatrix}
+        1 & 0 & -1 \\
+        1 & 0 & -1 \\
+        1 & 0 & -1
+    \end{bmatrix} \\
+    \text{Prewitt}_y =& \frac{1}{3} 
+    \begin{bmatrix}
+        1 & 1 & 1
+    \end{bmatrix}
+    \otimes
+    \frac{1}{2}
+    \begin{bmatrix}
+        1 \\
+        0 \\
+        -1
+    \end{bmatrix}
+    =
+    \frac{1}{6}
+    \begin{bmatrix}
+        1 & 0 & -1 \\
+        1 & 0 & -1 \\
+        1 & 0 & -1
+    \end{bmatrix}
+\end{align*}
+
+The \textbf{Sobel operator} is more robust than the Prewitt operator as it uses the Gaussian $\sigma^2 = 0.5$ for the smoothing kernel:
+\begin{align*}
+    \text{Sobel}_x =& \text{gauss}_{0.5}(y) \otimes \text{gauss}_{0.5}(x)
+    = \frac{1}{4}
+    \begin{bmatrix}
+        1 \\
+        2 \\
+        1
+    \end{bmatrix}
+    \otimes
+    \frac{1}{2}
+    \begin{bmatrix}
+        1 & 0 & -1
+    \end{bmatrix}
+    = \frac{1}{8}
+    \begin{bmatrix}
+        1 & 0 & -1 \\
+        2 & 0 & -2 \\
+        1 & 0 & 1
+    \end{bmatrix} \\
+    \text{Sobel}_y =& \text{gauss}_{0.5}(x) \otimes \text{gauss}_{0.5}(y)
+    = \frac{1}{4}
+    \begin{bmatrix}
+        1 & 2 & 1
+    \end{bmatrix}
+    \otimes
+    \frac{1}{2}
+    \begin{bmatrix}
+        1 \\
+        0 \\
+        -1
+    \end{bmatrix}
+    = \frac{1}{8}
+    \begin{bmatrix}
+        1 & 2 & 1 \\
+        0 & 0 & 0 \\
+        -1 & -2 & -1
+    \end{bmatrix}
+\end{align*}
+
+The \textbf{Scharr operator} is similar to the Sobel operator but with a smaller variance $\sigma^2 = 0.375$ in the smoothing kernel.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Magnitude Images using First Order Derivatives}]
+    Calculate ``magnitude images'' of the directional image gradients in the following image:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/magnitudeimagesone.png}
+    \caption{Example Image}
+\end{figure}
+
+\begin{multicols}{2}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/magnitudeimagestwo.png}
+    \caption{Partial Derivative in the $x$ Direction}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/magnitudeimagesthree.png}
+    \caption{Partial Derivative in the $y$ Direction}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/magnitudeimagesfour.png}
+    \caption{The Magnitude of the Gradient}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/magnitudeimagesfive.png}
+    \caption{The Phase of the Gradient}
+\end{figure}
+\end{multicols}
+
+The partial derivatives of the image in the $x$ \& $y$ directions together form the two components of the gradient of the image.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Edge Detection by Thresholding Magnitude Images}]
+    Calculate edges by thresholding ``magnitude images'' of the directional image gradients.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/thresholdingmagnitudeimages1.png}
+    \caption{Input Greyscale Image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/thresholdingmagnitudeimages2.png}
+    \caption{Prewitt Operator (Vertical Gradient, Horizontal Gradient, Thresholding Gradient Magnitude)}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/thresholdingmagnitudeimages3.png}
+    \caption{Sobel Operator (Vertical Gradient, Horizontal Gradient, Thresholding Gradient Magnitude)}
+\end{figure}
+\end{tcolorbox}
+
+\subsubsection{Second Order Derivatives}
+For a function (or image) of two variables, the \textbf{second order derivative} in the $x$ \& $y$ directions can be obtained by convolving with the appropriately oriented \textbf{second-derivative kernel}.
+For a function or image $I(x,y)$, the second-order derivatives measure how the rate of change of the function changes, represented by $\frac{\partial^2 I(x,y)}{\partial x^2}$ for the second derivative in the $x$-direction and $\frac{\partial^2 I(x,y)}{\partial y^2}$ for the second derivative in the $y$-direction.
+\\\\
+In image processing, second-order derivatives can be computed using specialised convolution kernels that act as second-derivative operators:
+\begin{align*}
+    \frac{\partial^2 I(x,y)}{\partial x^2} =& I(x,y) \otimes
+    \begin{bmatrix}
+        1 & -2 & 1
+    \end{bmatrix}\\
+    \frac{\partial^2 I(x,y)}{\partial y^2} =& I(x,y) \otimes
+    \begin{bmatrix}
+        1 \\
+        -2 \\
+        1
+    \end{bmatrix}
+\end{align*}
+
+These kernels detect changes in intensity by convolving with the image.
+When applied, they help identify where the intensity values change significantly, highlighting potential edges or other features.
+\\\\
+These kernels are second-order derivatives because they involve convolving the function with a differentiating kernel twice.
+This can be seen in 1D by convolving the function with the non-centralised difference operator, then convolving the result again with the same operator:
+\[
+    (f(x) \otimes \begin{bmatrix}1 & -1\end{bmatrix} \otimes \begin{bmatrix} 1 & -1 \end{bmatrix}) = f(x) \otimes (\begin{bmatrix} 1 & -1 \end{bmatrix} \otimes \begin{bmatrix} 1 & 01 \end{bmatrix}) = f(x) \otimes \begin{bmatrix} 1 & -2 & 1 \end{bmatrix}
+\]
+
+Note that these 2D derivatives are not isotropic or symmetric.
+
+COME BACK TO LAPLACIAN OPERATOR
+
+\subsection{Image Filtering in the Frequency Domain}
+Any signal, discrete or continuous, periodic or non-periodic, can be represented as a sum of sinusoidal waves of different frequencies and phases which constitute the frequency domain representation of that signal.
 
 
 
