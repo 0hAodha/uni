@@ -1,91 +1,125 @@
 const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+const context = canvas.getContext('2d');
 
-// set canvas dimensions
+// make canvas the same size as the window
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// draw the stick figures
-draw();
-
-// Draw stick figure function
-function drawStickFigure(x, y) {
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = 'black';
-
-    // draw the stick figure's head
-    ctx.beginPath();
-    ctx.arc(x, y - 30, 20, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // draw the stick figure's left eye
-    ctx.beginPath();
-    ctx.arc(x - 7, y - 33, 1, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // draw the stick figure's right eye
-    ctx.beginPath();
-    ctx.arc(x + 7, y - 33, 1, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // draw the stick figure's mouth
-    ctx.beginPath();
-    ctx.arc(x, y - 25, 6, 0, Math.PI);
-    ctx.stroke();
-
-    // Body
-    ctx.beginPath();
-    ctx.moveTo(x, y - 10);
-    ctx.lineTo(x, y + 50); // Length of body
-    ctx.stroke();
-
-    // Arms
-    ctx.beginPath();
-    ctx.moveTo(x - 30, y + 10); // Left arm
-    ctx.lineTo(x + 30, y + 10); // Right arm
-    ctx.stroke();
-
-    // Legs
-    ctx.beginPath();
-    ctx.moveTo(x, y + 50); // Start at bottom of body
-    ctx.lineTo(x - 20, y + 100); // Left leg
-    ctx.moveTo(x, y + 50);
-    ctx.lineTo(x + 20, y + 100); // Right leg
-    ctx.stroke();
+// prompt user to enter a number between 1 and 5 and not continuing until one is selected
+let numberStickFigures = 0;
+while (numberStickFigures < 1 || numberStickFigures > 5) {
+    numberStickFigures = prompt("Enter an integer between 1 and 5");
 }
 
-// Animation function
-// function animate() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-//
-//     drawStickFigure(x, y); // Draw stick figure at current position
-//
-//     // Update position
-//     x += dx;
-//     y += dy;
-//
-//     // Check boundaries and reverse direction if necessary
-//     if (x + 20 > canvas.width || x - 20 < 0) dx = -dx; // Horizontal boundary check
-//     if (y + 100 > canvas.height || y - 50 < 0) dy = -dy; // Vertical boundary check
-//
-//     requestAnimationFrame(animate); // Recursive call to keep animation going
-// }
+// array to store position, speed etc of each stick figure
+let stickFigures = [];
+
+// Create stick figures with random positions and velocities
+for (let i = 0; i < numberStickFigures; i++) {
+    stickFigures.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        dx: (Math.random() - 0.5) * 4,
+        dy: (Math.random() - 0.5) * 4,
+        angle: 0, // Initial limb angle
+        angleSpeed: (Math.random() * 0.05) + 0.02 // Speed of limb movement
+    });
+}
+
+// Draw the stick figure
+function drawStickFigure(x, y, angle) {
+    context.lineWidth = 3;
+    context.strokeStyle = 'black';
+
+    // draw the head
+    context.beginPath();
+    context.arc(x, y - 30, 20, 0, Math.PI * 2);
+    context.stroke();
+
+    // left eye
+    context.beginPath();
+    context.arc(x - 7, y - 33, 1, 0, Math.PI * 2);
+    context.stroke();
+    context.fill();     // fill in circle
+
+    // right eye
+    context.beginPath();
+    context.arc(x + 7, y - 33, 1, 0, Math.PI * 2);
+    context.stroke();
+    context.fill();
+
+    // mouth
+    context.beginPath();
+    context.arc(x, y - 25, 6, 0, Math.PI);
+    context.stroke();
+
+    // torso
+    context.beginPath();
+    context.moveTo(x, y - 10);
+    context.lineTo(x, y + 50);
+    context.stroke();
+
+    // Arms with 2 parts (upper and lower arm)
+    const armLength = 30;
+    const upperArmAngle = Math.sin(angle) * Math.PI / 4; // Swinging angle for upper arms
+    const lowerArmAngle = Math.cos(angle) * Math.PI / -2; // Swinging angle for lower arms
+
+    context.beginPath();
+    // Left upper arm
+    context.moveTo(x, y + 10);
+    context.lineTo(x - armLength * Math.cos(upperArmAngle), y + 10 + armLength * Math.sin(upperArmAngle));
+    // Left lower arm
+    context.lineTo(x - armLength * Math.cos(upperArmAngle) - armLength * Math.cos(lowerArmAngle), y + 10 + armLength * Math.sin(upperArmAngle) + armLength * Math.sin(lowerArmAngle));
+
+    // Right upper arm
+    context.moveTo(x, y + 10);
+    context.lineTo(x + armLength * Math.cos(upperArmAngle), y + 10 + armLength * Math.sin(upperArmAngle));
+    // Right lower arm
+    context.lineTo(x + armLength * Math.cos(upperArmAngle) + armLength * Math.cos(lowerArmAngle), y + 10 + armLength * Math.sin(upperArmAngle) + armLength * Math.sin(lowerArmAngle));
+    context.stroke();
+
+    // Legs with 2 parts (thigh and calf)
+    const legLength = 40;
+    const upperLegAngle = Math.sin(angle) * Math.PI / 5; // Swinging angle for upper legs
+    const lowerLegAngle = Math.cos(angle) * Math.PI / 2; // Swinging angle for lower legs
+
+    context.beginPath();
+    // Left upper leg
+    context.moveTo(x, y + 50);
+    context.lineTo(x - legLength * Math.cos(upperLegAngle), y + 50 + legLength * Math.sin(upperLegAngle));
+    // Left lower leg
+    context.lineTo(x - legLength * Math.cos(upperLegAngle) - legLength * Math.cos(lowerLegAngle), y + 50 + legLength * Math.sin(upperLegAngle) + legLength * Math.sin(lowerLegAngle));
+
+    // Right upper leg
+    context.moveTo(x, y + 50);
+    context.lineTo(x + legLength * Math.cos(upperLegAngle), y + 50 + legLength * Math.sin(upperLegAngle));
+    // Right lower leg
+    context.lineTo(x + legLength * Math.cos(upperLegAngle) + legLength * Math.cos(lowerLegAngle), y + 50 + legLength * Math.sin(upperLegAngle) + legLength * Math.sin(lowerLegAngle));
+    context.stroke();
+}
+
+// Update the position and dance movements of each stick figure
+function updateStickFigures() {
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+    stickFigures.forEach((figure) => {
+        // Update position
+        figure.x += figure.dx;
+        figure.y += figure.dy;
+
+        // Bounce off the boundaries
+        if (figure.x + 20 > canvas.width || figure.x - 20 < 0) figure.dx = -figure.dx; // Horizontal boundary check
+        if (figure.y + 100 > canvas.height || figure.y - 50 < 0) figure.dy = -figure.dy; // Vertical boundary check
+
+        // Update limb angles for dancing
+        figure.angle += figure.angleSpeed;
+
+        // Draw the updated stick figure with animated limbs
+        drawStickFigure(figure.x, figure.y, figure.angle);
+    });
+
+    requestAnimationFrame(updateStickFigures); // Recursive call for animation
+}
 
 // Start animation
-// animate();
-
-function draw() {
-    // prompt the user to enter a number in a range and not continuing under a number in that range is selected
-    let numberStickFigures = 0;
-    while (numberStickFigures < 1 || numberStickFigures > 5) {
-        numberStickFigures = prompt("Enter an integer between 1 and 5");
-    }
-
-    for (let i = 1; i <= numberStickFigures; i++) {
-        // place the stick figure randomly on the canvas
-        const x = Math.floor(Math.random() * canvas.width);
-        const y = Math.floor(Math.random() * canvas.height);
-
-        drawStickFigure(x, y);
-    }
-}
+updateStickFigures();
