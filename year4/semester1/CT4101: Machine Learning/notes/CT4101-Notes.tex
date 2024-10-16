@@ -3,6 +3,8 @@
 % packages
 \usepackage{censor}
 \usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \StopCensoring
 \usepackage{fontspec}
 \setmainfont{EB Garamond}
@@ -917,7 +919,7 @@ $\left| S \right|$ \& $\left| S_v \right|$ refer to the cardinality or size of t
 When selecting an attribute for a node in a decision tree, we use whichever attribute $A$ that gives the greatest information gain.
 
 \begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Worked Information Gain Example}]
-    Given $\left| S \right| = 14$, $\left| S_{\text{windy} = \text{true}} \right| = 14$, \& $\left| S_{\text{windy} = \text{false}} \right| = 14$, calculate the information gain of the attribute ``windy''.
+    Given $\left| S \right| = 14$, $\left| S_{\text{windy} = \text{true}} \right| = 6$, \& $\left| S_{\text{windy} = \text{false}} \right| = 8$, calculate the information gain of the attribute ``windy''.
 
     \begin{align*}
         \text{Gain}(S, \text{windy}) =& \text{Ent}(S) - \frac{\left| S_{\text{windy} = \text{true}} \right|}{\left| S \right|} \text{Ent}(S_\text{windy} = \text{true})
@@ -927,6 +929,69 @@ When selecting an attribute for a node in a decision tree, we use whichever attr
         =& 0.048
     \end{align*}
 \end{tcolorbox}
+
+The best partitioning is the one that results in the highest information gain.
+Once the best split for the root node is found, the procedure is repeated with each subset of examples.
+$S$ will then refer to the subset in the partition being considered instead of the entire dataset.
+
+\subsection{Computing the Gini Index}
+An alternative to using entropy as the measure of the impurity of a set is to use the \textbf{Gini Index}:
+\[
+    \text{Gini}(S) = 1 - \sum^n_{i=1} p_i^2
+\]
+
+This is the default measure of impurity in scikit-learn.
+The gain for a feature can then be calculated based off the reduction in the Gini Index (rather than as a reduction in entropy):
+\[
+    \text{GiniGain}(S,A) = \text{Gini}(S) = \sum_{v \in \text{Values}(A)} \frac{\left| S_v \right|}{\left|S\right|}\text{Gini}(S_v)
+\]
+
+\subsection{The ID3 Algorithm}
+\begin{algorithm}[H]
+\caption{ID3 Algorithm}
+\begin{algorithmic}[1]
+\Procedure{ID3}{Examples, Attributes, Target}
+    \State \textbf{Input:} 
+    \State \quad Examples: set of classified examples
+    \State \quad Attributes: set of attributes in the examples
+    \State \quad Target: classification to be predicted
+    \If{Examples is empty}
+        \State \Return Default class
+    \ElsIf{all Examples have the same class}
+        \State \Return this class
+    \ElsIf{all Attributes are tested}
+        \State \Return majority class
+    \Else
+        \State Let Best = attribute that best separates Examples relative to Target
+        \State Let Tree = new decision tree with Best as root node
+        \ForAll{value $v_i$ of Best}
+            \State Let Examples$_i$ = subset of Examples where Best = $v_i$
+            \State Let Subtree = ID3(Examples$_i$, Attributes - Best, Target)
+            \State Add branch from Tree to Subtree with label $v_i$
+        \EndFor
+        \State \Return Tree
+    \EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Decision Tree Summary}
+Decision trees are popular because:
+\begin{itemize}
+    \item   It's a relatively easy algorithm to implement.
+    \item   It's fast: greedy search without backtracking.
+    \item   It has comprehensible output, which is important in decision-making (medical, financial, etc.).
+    \item   It's practical.
+    \item   It's \textbf{expressive:} a decision tree can technically represent any boolean function, although some functions require exponentially large trees such as a parity function.
+\end{itemize}
+
+\subsubsection{Dealing with Noisy or Missing Data}
+If the data is inconsistent or \textit{noisy} we can either use the majority class as in line 11 of the above ID3 algorithm, or interpret the values as probabilities, or return the average target feature value.
+
+
+
+
+
 
 
 \end{document}
