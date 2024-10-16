@@ -17,21 +17,27 @@ const colours = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
 // array to store position, speed etc of each stick figure
 let stickFigures = [];
 
-// Create stick figures with random positions and velocities
+// create stick figure objects with random colour, facial expression, co-ordinates, and speed
 for (let i = 0; i < numberStickFigures; i++) {
     stickFigures.push({
         colour: colours[Math.floor(Math.random() * colours.length)],
         isSmiling: Math.random() > 0.5,
+
         x: Math.random() * (canvas.width - 10),
         y: Math.random() * (canvas.height - 10),
+
+        // movement speed
         dx: (Math.random() - 0.5) * 4,
         dy: (Math.random() - 0.5) * 4,
-        angle: 0, // Initial limb angle
-        angleSpeed: (Math.random() * 0.5) + 0.02 // Speed of limb movement
+
+        limbAngle: 0,
+        dancingSpeed: (Math.random() * 0.5) + 0.02  // speed of limb movement
     });
 }
 
-// Draw the stick figure
+// function to draw a stick figure object
+// note that i am not using context.save() etc for drawing the stick figures repeatedly and am instead drawing them from scratch
+// i made the decision to do this to facilitate the stick figures dancing at different speeds, which would not be possible with context.save() etc
 function drawStickFigure(figure) {
     context.lineWidth = 3;
     context.strokeStyle = figure.colour;
@@ -46,7 +52,7 @@ function drawStickFigure(figure) {
     context.beginPath();
     context.arc(figure.x - 7, figure.y - 33, 1, 0, Math.PI * 2);
     context.stroke();
-    context.fill();     // fill in circle
+    context.fill();
 
     // right eye
     context.beginPath();
@@ -54,10 +60,14 @@ function drawStickFigure(figure) {
     context.stroke();
     context.fill();
 
-    // draw a smile or frown
+    // draw a smile or frown depending on the value of figure.isSmiling
     context.beginPath();
-    if   (figure.isSmiling) { context.arc(figure.x, figure.y - 25, 6, 0, Math.PI); }
-    else { context.arc(figure.x, figure.y - 20, 6, Math.PI, 2 * Math.PI); }
+    if (figure.isSmiling) {
+        context.arc(figure.x, figure.y - 25, 6, 0, Math.PI);
+    }
+    else {
+        context.arc(figure.x, figure.y - 20, 6, Math.PI, 2 * Math.PI);
+    }
     context.stroke();
 
     // torso
@@ -66,66 +76,84 @@ function drawStickFigure(figure) {
     context.lineTo(figure.x, figure.y + 50);
     context.stroke();
 
-    // Arms with 2 parts (upper and lower arm)
+    // 2-part arms
     const armLength = 30;
-    const upperArmAngle = Math.sin(figure.angle) * Math.PI / 4; // Swinging angle for upper arms
-    const lowerArmAngle = Math.cos(figure.angle) * Math.PI / -2; // Swinging angle for lower arms
+    const upperArmAngle = Math.sin(figure.limbAngle) * Math.PI / 4;
+    const lowerArmAngle = Math.cos(figure.limbAngle) * Math.PI / -2;
 
+    // left arm
     context.beginPath();
-    // Left upper arm
+
+    // upper left arm
     context.moveTo(figure.x, figure.y + 10);
     context.lineTo(figure.x - armLength * Math.cos(upperArmAngle), figure.y + 10 + armLength * Math.sin(upperArmAngle));
-    // Left lower arm
-    context.lineTo(figure.x - armLength * Math.cos(upperArmAngle) - armLength * Math.cos(lowerArmAngle), figure.y + 10 + armLength * Math.sin(upperArmAngle) + armLength * Math.sin(lowerArmAngle));
 
-    // Right upper arm
-    context.moveTo(figure.x, figure.y + 10);
-    context.lineTo(figure.x + armLength * Math.cos(upperArmAngle), figure.y + 10 + armLength * Math.sin(upperArmAngle));
-    // Right lower arm
-    context.lineTo(figure.x + armLength * Math.cos(upperArmAngle) + armLength * Math.cos(lowerArmAngle), figure.y + 10 + armLength * Math.sin(upperArmAngle) + armLength * Math.sin(lowerArmAngle));
+    // lower left arm
+    context.lineTo(figure.x - armLength * Math.cos(upperArmAngle) - armLength * Math.cos(lowerArmAngle), figure.y + 10 + armLength * Math.sin(upperArmAngle) + armLength * Math.sin(lowerArmAngle));
     context.stroke();
 
-    // Legs with 2 parts (thigh and calf)
-    const legLength = 40;
-    const upperLegAngle = (Math.PI / 3) + Math.sin(figure.angle) * Math.PI / 10; // Swinging angle for upper legs
-    const lowerLegAngle = (Math.PI / 3) + Math.cos(figure.angle) * Math.PI / 5; // Swinging angle for lower legs
-
+    // right arm
     context.beginPath();
-    // Left upper leg
+
+    // upper right arm
+    context.moveTo(figure.x, figure.y + 10);
+    context.lineTo(figure.x + armLength * Math.cos(-upperArmAngle), figure.y + 10 + armLength * Math.sin(-upperArmAngle));
+
+    // lower right arm
+    context.lineTo(figure.x + armLength * Math.cos(-upperArmAngle) + armLength * Math.cos(lowerArmAngle), figure.y + 10 + armLength * Math.sin(-upperArmAngle) + armLength * Math.sin(lowerArmAngle));
+    context.stroke();
+
+    // 2-part legs
+    const legLength = 40;
+    const upperLegAngle = (Math.PI / 3) + Math.sin(figure.limbAngle) * Math.PI / 10;
+    const lowerLegAngle = (Math.PI / 3) + Math.cos(figure.limbAngle) * Math.PI / 5;
+
+    // left leg
+    context.beginPath();
+
+    // left upper leg
     context.moveTo(figure.x, figure.y + 50);
     context.lineTo(figure.x - legLength * Math.cos(upperLegAngle), figure.y + 50 + legLength * Math.sin(upperLegAngle));
-    // Left lower leg
-    context.lineTo(figure.x - legLength * Math.cos(upperLegAngle) - legLength * Math.cos(lowerLegAngle), figure.y + 50 + legLength * Math.sin(upperLegAngle) + legLength * Math.sin(lowerLegAngle));
 
-    // Right upper leg
+    // left lower leg
+    context.lineTo(figure.x - legLength * Math.cos(upperLegAngle) - legLength * Math.cos(lowerLegAngle), figure.y + 50 + legLength * Math.sin(upperLegAngle) + legLength * Math.sin(lowerLegAngle));
+    context.stroke();
+
+    // right leg
+    context.beginPath();
+
+    // right upper leg
     context.moveTo(figure.x, figure.y + 50);
     context.lineTo(figure.x + legLength * Math.cos(upperLegAngle), figure.y + 50 + legLength * Math.sin(upperLegAngle));
-    // Right lower leg
+
+    // right lower leg
     context.lineTo(figure.x + legLength * Math.cos(upperLegAngle) + legLength * Math.cos(lowerLegAngle), figure.y + 50 + legLength * Math.sin(upperLegAngle) + legLength * Math.sin(lowerLegAngle));
     context.stroke();
 }
 
-// Update the position and dance movements of each stick figure
+// function to update the stick figures (make them move)
 function updateStickFigures() {
-    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     stickFigures.forEach((figure) => {
-        // Update position
+        // update position
         figure.x += figure.dx;
         figure.y += figure.dy;
 
-        // Bounce off the boundaries
-        if (figure.x + 20 >= canvas.width || figure.x - 20 <= 0) figure.dx = -figure.dx; // Horizontal boundary check
-        if (figure.y + 100 >= canvas.height || figure.y - 50 <= 0) figure.dy = -figure.dy; // Vertical boundary check
+        // make figure bounce off screen boundaries
+        if (figure.x + 20 >= canvas.width || figure.x - 20 <= 0) {
+            figure.dx = -figure.dx;
+        }
+        if (figure.y + 100 >= canvas.height || figure.y - 50 <= 0) {
+            figure.dy = -figure.dy;
+        }
 
-        // Update limb angles for dancing
-        figure.angle += figure.angleSpeed;
+        // update limb angles for dancing
+        figure.limbAngle += figure.dancingSpeed;
 
-        // Draw the updated stick figure with animated limbs
         drawStickFigure(figure);
     });
-
-    requestAnimationFrame(updateStickFigures); // Recursive call for animation
+    requestAnimationFrame(updateStickFigures);
 }
 
 updateStickFigures();
