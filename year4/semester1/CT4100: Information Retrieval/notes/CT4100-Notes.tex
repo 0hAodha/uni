@@ -679,7 +679,7 @@ where
 
 The \textbf{Okapi BM25} weighting scheme is a standard benchmark weighting scheme with relatively good performance, although it needs to be tuned per collection:
 \begin{align*}
-    \text{BM25}(Q,D) = \sum_{t \in Q \cap D} \left( \frac{\textit{tf}_{t,D} \cdot \log \left( \frac{N - \textit{df}_t _ 0.5}{\textit{df} + 0.5} \right) \cdot \textit{tf}_{t, Q}}{\textit{tf}_{t,D} + k_1 \cdot \left( (1-b) + b \cdot \frac{\textit{dl}}{\textit{dl}_\text{avg}} \right)} \right)
+    \text{BM25}(Q,D) = \sum_{t \in Q \cap D} \left( \frac{\textit{tf}_{t,D} \cdot \log \left( \frac{N - \textit{df}_t + 0.5}{\textit{df} + 0.5} \right) \cdot \textit{tf}_{t, Q}}{\textit{tf}_{t,D} + k_1 \cdot \left( (1-b) + b \cdot \frac{\textit{dl}}{\textit{dl}_\text{avg}} \right)} \right)
 \end{align*}
 
 The \textbf{Pivoted Normalisation} weighting scheme is also as standard benchmark which needs to be tuned for collection, although it has its issues with normalisation:
@@ -699,5 +699,116 @@ The \textbf{Axiomatic Approach} to weighting consists of the following constrain
 \end{itemize}
 
 New weighting schemes that adhere to all these constraints outperform the best known benchmarks.
+
+\section{Relevance Feedback}
+We often attempt to improve the performance of an IR system by modifying the user query;
+the new modified query is then re-submitted to the system.
+Typically, the user examines the returned list of documents and marks those which are relevant.
+The new query is usually created via incorporating new terms and re-weighting existing terms.
+The feedback from the user is used to re-calculate the term weights.
+Analysis of the document set can either be \textbf{local analysis} (on the returned set) or \textbf{global analysis} (on the whole document set).
+This feedback allows for the re-formulation of the query, which has the advantage of shielding the user from the task of query reformulation and from the inner details of the comparison algorithm.
+
+\subsection{Feedback in the Vector Space Model}
+We assume that relevant documents have similarly weighted term vectors.
+$D_r$ is the set of relevant documents returned, $D_n$ is the set of the non-relevant documents returned, and $C_r$ is the set of relevant documents in the entire collection.
+If we assume that $C_r$ is known for a query $q$, then the best vector for a query to distinguish relevant documents from non-relevant documents is
+\[
+    \vec{q} = \left( \frac{1}{\left|C_r\right|} \sum_{d_j \in C_r}d_j \right) - \left( \frac{1}{N - \left|C_r\right|} \sum_{d_j \notin C_r} d_j \right)
+\]
+
+However, it is impossible to generate this query as we do not know $C_r$.
+We can however estimate $C_r$ as we know $D_r$ which is a subset of $C_r$: the main approach for doing this is the \textbf{Rocchio Algorithm:}
+\[
+    \overrightarrow{q_{\text{new}}} = \alpha \overrightarrow{q_\text{orginal}} + \frac{\beta}{\left| D_r \right|} \sum_{d_j \in D_r} d_j - \frac{\gamma}{\left| D_n \right|} \sum_{d_j \in D_n}d_j
+\]
+
+where $\alpha$, $\beta$, \& $\gamma$ are constants which determine the importance of feedback and the relative importance of positive feedback over negative feedback.
+Variants on this algorithm include:
+\begin{itemize}
+    \item   \textbf{IDE Regular:}
+            \[
+                \overrightarrow{q_\text{new}} = \alpha \overrightarrow{q_\text{old}} + \beta \sum_{d_j \in D_r} d_j - \gamma \sum_{d_j \in D_n} d_j
+            \]
+
+    \item   \textbf{IDE Dec Hi:} (based on the assumption that positive feedback is more useful than negative feedback)
+            \[
+                \overrightarrow{q_\text{new}} = \alpha \overrightarrow{q_\text{old}} + \beta \sum_{d_j \in D_r} d_j - \gamma \text{MAXNR}(d_j)
+            \]
+            where $\text{MAXNR}(d_j)$ is the highest ranked non-relevant document.
+\end{itemize}
+
+The use of these feedback mechanisms have shown marked improvement in the precision \& recall of IR systems.
+Salton indicated in early work on the vector space model that these feedback mechanisms result in an average precision of at least 10\%.
+\\\\
+The precision-recall is re-calculated for the new returned set, often with respect to the returned document set less the set marked by the user.
+
+\subsection{Pseudo-Feedback / Blind Feedback}
+In \textbf{local analysis}, the retrieved documents are examined at query time to determine terms for query expansion.
+We typically develop some form of term-term correlation matrix. 
+To quantify connection between two terms, we expand the query to include terms correlated to the query terms.
+
+\subsubsection{Association Clusters}
+To create an \textbf{association cluster}, first create a matrix $M$;
+We can create term $\times$ term matrix to represent the level of association between terms.
+This is usually weighted according to
+\[
+    M_{i,j} = \frac{\text{freq}_{i,j}}{\text{freq}_{i} + \text{freq}_{j} - \text{freq}_{i,j}}
+\]
+
+To perform query expansion with local analysis, we can develop an association cluster for each term $t_i$ in the query.
+For each term $t_i \in q$ choose the $i^\text{th}$ query term and select the top $N$ values from its row in the term matrix.
+For a query $q$, select a cluster for each query term so that $\left| q \right|$ clusters are formed.
+$N$ is usually small to prevent generation of very large queries.
+We may then either take all terms or just those with the highest summed correlation.
+
+\subsubsection{Metric Clusters}
+Association clusters do not take into account the position of terms within documents: \textbf{metric clusters} attempt to overcome this limitation.
+Let $\text{dis}(t_i, t_j)$ be the distance between two terms $t_i$ \& $t_j$ in the same document.
+If $t_i$ \& $t_j$ are in different documents, then $\text{dis}(t_i, t_j) = \inf$.
+We can define the term-term correlation matrix by the following equation, and we can define clusters as before:
+\[
+    M_{i,j} = \sum_{t_i, t_j \in D_i} \frac{1}{\text{dis}(t_i, t_j)}
+\]
+
+\subsubsection{Scalar Clusters}
+\textbf{Scalar clusters} are based on comparing sets of words:
+if two terms have similar neighbourhoods then there is a high correlation between terms.
+Similarity can be based on comparing the two vectors representing the neighbourhoods.
+This measure can be used to define term-term correlation matrices and the procedure can continue as before.
+
+\subsection{Global Analysis}
+\textbf{Global analysis} is based on analysis of the whole document collection and not just the returned set.
+A similarity matrix is created with a similar technique to the method used in the vector space comparison.
+We then index each term by the documents in which the term is contained.
+It is then possible to calculate the similarity between two terms by taking some measure of the two vectors, e.g. the dot product.
+To use this to expand a query, we then:
+\begin{enumerate}
+    \item   Map the query to the document-term space.
+    \item   Calculate the similarity between the query vector and vectors associated with query terms.
+    \item   Rank the vectors $\vec{t_i}$ based on similarity.
+    \item   Choose the top-ranked terms to add to the query.
+\end{enumerate}
+
+\subsection{Issues with Feedback}
+The Rocchio \& IDE methods can be used in all vector-based approaches.
+Feedback is an implicit component of many other IR models (e.g., neural networks \& probabilistic models).
+The same approaches with some modifications are used in information filtering.
+Problems that exist in obtaining user feedback include:
+\begin{itemize}
+    \item   Users tend not to give a high degree of feedback.
+    \item   Users are typically inconsistent with their feedback.
+    \item   Explicit user feedback does not have to be strictly binary, we can allow a range of values.
+    \item   Implicit feedback can also be used, we can make assumptions that a user found an article useful if:
+            \begin{itemize}
+                \item   The user reads the article.
+                \item   The user spends a certain amount of time reading the article.
+                \item   The user saves or prints the article.
+            \end{itemize}
+
+            However, these metrics are rarely as trustworthy as explicit feedback.
+\end{itemize}
+
+
 
 \end{document}
