@@ -809,6 +809,170 @@ Problems that exist in obtaining user feedback include:
             However, these metrics are rarely as trustworthy as explicit feedback.
 \end{itemize}
 
+\section{Collaborative Filtering}
+\textbf{Content filtering} is based solely on matching content of items to user's information needs.
+\textbf{Collaborative filtering} collects human judgements and matches people who share the same information needs \& tastes.
+Users share their judgements \& opinions.
+It echoes the ``word of mouth'' principle.
+Advantages of collaborative filtering over content filtering include:
+\begin{itemize}
+    \item   Support for filtering / retrieval of items where contents cannot be easily analysed in an automated manner.
+    \item   Ability to filter based on quality / taste.
+    \item   Recommend items that do not contain content the user was expecting.
+\end{itemize}
+
+This approach has been successful in a number of domains -- mainly in recommending books/music/films and in e-commerce domains, e.g. Amazon, Netflix, Spotify, ebay, etc.
+It has also been applied to collaborative browsing \& searching.
+In fact, it can be applied whenever we have some notion of ``ratings'' or ``likes'' or ``relevance'' of items for a set of users.
+\\\\
+The data in collaborative filtering consists of \textbf{users} (a set of user identifiers), \textbf{items} (a set of item identifiers), \& \textbf{ratings by users of items} (numeric values in some pre-defined range).
+We can usually view this as a user-by-item matrix.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/userbyitemmatrix.png}
+    \caption{User-By-Item Matrix Example (ratings from 1 to 5; 0 indicates no rating)}
+\end{figure}
+
+With \textbf{explicit ratings}, the user usually provides a single numeric value, although the user maybe unwilling to supply many explicit ratings.
+\textbf{Universal queries} are when a gauge set of items is presented to the user for rating.
+Choosing a good gauge set is an open question.
+\textbf{User-selected queries} are when the user chooses which items to rate (often leaving a sparse ratings matrix with many null values).
+\\\\
+\textbf{Implicit ratings} are when the user's recommendation is obtained from purchase records, web logs, time spent reading an item, etc.
+This implicit rating is usually mapped to some numeric scale.
+\\\\
+For \textbf{user-user recommendation} approaches, there are three general steps:
+\begin{enumerate}
+    \item   \textbf{Calculate user correlation:} Find how \textit{similar} each user is to every other user.
+    \item   \textbf{Select neighbourhood:} form groups or \textit{neighbourhoods} of users who are similar. 
+    \item   \textbf{Generate prediction:} in each group, \textit{make recommendations} based on what other users in the group have rated.
+\end{enumerate}
+
+\subsection{Step 1: Calculate User Correlation}
+Some approaches for finding how similar each user is to every other user include:
+\begin{itemize}
+    \item   Pearson correlation.
+    \item   Constrained Pearson correlation.
+    \item   The Spearman rank correlation.
+    \item   Vector similarity.
+\end{itemize}
+
+\subsubsection{Pearson Correlation}
+\textbf{Pearson correlation} is when a weighted average of deviations from the neighbour's mean is calculated.
+\[
+    w_{a,u} = \frac{\sum^m_{i=1} (r_{a,i} - \overline{r}_a) \times (r_{u,i} - \overline{r}_u)}
+    {\sqrt{\sum^m_{i=1} (r_{u,i} - \overline{r}_u)^2} \times \sqrt{\sum^m_{i=1}(r_{a,i} - \overline{r}_a})^2}
+\]
+where for $m$ items:
+\begin{itemize}
+    \item   $r_{a,i}$ is the rating of a user $a$ for an item $i$.
+    \item   $r_a$ is the average rating given by a user $a$.
+    \item   $r_{u,i}$ is the rating of user $u$ for item $i$.
+    \item   $r_u$ is the average rating given by user $u$.
+\end{itemize}
+
+\subsubsection{Vector Similarity}
+\textbf{Vector similarity} uses the cosine measure between the user vectors (where users are represented by a vector of ratings for items in the data set) to calculate correlation.
+
+\subsection{Step 2: Select Neighbourhood}
+Some approaches for forming groups or \textbf{neighbourhoods} of users who are similar include:
+\begin{itemize}
+    \item   \textbf{Correlation thresholding:} all neighbours with absolute correlations greater than a specified threshold are selected, say 0.7 if correlations in range 0 to 1.
+    \item   \textbf{Best-$n$ correlations:} the best $n$ correlates are chosen.
+\end{itemize}
+
+A large neighbourhood can result in low-precision results, while a small neighbourhood can result in few or now predictions.
+
+\subsection{Step 3: Generate Predictions}
+For some user (the active user) in a group, make recommendations based on what other users inthe group have rated which the active user has not rated.
+Approaches for doing so include:
+\begin{itemize}
+    \item   \textbf{Compute the weighted average} of the user rating using the correlations as the weights.
+            This weighted average approach makes an assumption that all users rate items with approximately the same distribution.
+    \item   \textbf{Compute the weighted mean} of all neighbours' ratings.
+            Rather than take the explicit numeric value of a rating, a rating's strength is interpreted as its distance from a neighbour's mean rating.
+            This approach attempts to account for the lack of uniformity in ratings.
+
+            \[
+                P_{a,i} = \bar{r}_a + \frac{\sum^n_{u=1} (r_{u,i - \bar{r}_u}) \times w_{a,u}}{\sum^n_{u=1} w_{a,u}}
+            \]
+            where for $n$ neighbours:
+            \begin{itemize}
+                \item   $\bar{r}_a$ is the average rating given by active user $a$.
+                \item   $r_{u,i}$ is the rating of user $u$ for item $i$.
+                \item   $w_{a,u}$ is the similarity between user $u$ and $a$.
+            \end{itemize}
+\end{itemize}
+
+Note that the Pearson Correlation formula does not explicitly take into account the number of co-rated items by users.
+Thus it is possible to get a high correlation value based on only one co-rated item.
+Often, the Pearson Correlation formula is adjusted to take this into account.
+
+\subsection{Experimental Approach for Testing}
+A known collection of ratings by users over a range of items is decomposed into two disjoint subsets.
+The first set (usually the larger) is used to generate recommendations for items corresponding to those in the smaller set.
+These recommendations are then compared to the actual ratings in the second subset.
+The accuracy \& coverage of a system can thus be ascertained.
+
+\subsubsection{Metrics}
+The main metrics used to test the predictions produced are:
+\begin{itemize}
+    \item   \textbf{Coverage:} a measure of the ability of the system to provide a recommendation on a given item.
+    \item   \textbf{Accuracy:} a measure of the correctness of the recommendations generated by the system.
+\end{itemize}
+
+\textbf{Statistical accuracy metrics} are usually calculated by comparing the ratings generated by the system to user-provided ratings.
+The accuracy is usually presented as the mean absolute error (\textbf{MAE}) between ratings \& predictions.
+\\\\
+Typically, the value of the rating is not that important: it is more important to know if the rating is a useful or a non-useful rating.
+\textbf{Decision support accuracy metrics} measure whether the recommendation is actually useful to the user.
+Many other approaches also exist, including:
+\begin{itemize}
+    \item   Machine learning approaches.
+            \begin{itemize}
+                \item   Bayesian models.
+                \item   Clustering models.
+            \end{itemize}
+    \item   Models of how people rate items.
+    \item   Data mining approaches.
+    \item   Hybrid models which combine collaborative filtering with content filtering.
+    \item   Graph decomposition approaches.
+\end{itemize}
+
+\subsection{Collaborative Filtering Issues}
+\begin{itemize}
+    \item   \textbf{Sparsity of Matrix:} in a typical domain, there would be many users \& many items but any user would only have rated a small fraction of all items in the dataset.
+            Using a technique such as \textbf{Singular Value Decomposition (SVD)}, the data space can be reduced, and due to this reduction a correlation may be found between similar users who do not have overlapping ratings in the original matrix of ratings.
+
+    \item   \textbf{Size of Matrix:} in general, the matrix is very large, which can affect computational efficiency.
+            SVD has been used to improve scalability by dimensionality reduction.
+
+    \item   \textbf{Noise in Matrix:} we need to consider how would a user's ratings change for items and how to model time dependencies; are all ratings honest \& reliable?
+
+    \item   \textbf{Size of Neighbourhood:} while the size of the neighbourhood affects predictions, there is no way to know the ``right'' size.
+             Need to consider whether visualisation of the would neighbourhood help, whether summarisation of the main themes/feature of neighbourhoods help.
+
+    \item   \textbf{How to Gather Ratings:} new users, new items: perhaps use weighted average of global mean \& users or items.
+            What if the user is not similar to others?
+\end{itemize}
+
+\subsection{Combining Content \& Collaborative Filtering}
+For most items rated in a collaborative filtering domain, content information is also available:
+\begin{itemize}
+    \item   Books: author, genre, plot summary, language, etc.
+    \item   Music: artist, genre, sound samples, etc.
+    \item   Films: director, genre, actors, year, country, etc.
+\end{itemize}
+
+Traditionally, content is not used in collaborative filtering, although it could be.
+\\\\
+Different approaches may suffer from different problems, so can consider combining multiple approaches.
+We can also view collaborative filtering as a machine learning classification problem: for an item, do we classify it as relevant to a user or not?
+\\\\
+Much recent work has been focused on not only giving a recommendation, but also attempting to explain the recommendation to the user.
+Questions arise in how best to ``explain'' or visualise the recommendation.
+
 
 
 \end{document}
