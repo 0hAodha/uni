@@ -1575,7 +1575,43 @@ COME BACK TO LAPLACIAN OPERATOR
 \subsection{Image Filtering in the Frequency Domain}
 Any signal, discrete or continuous, periodic or non-periodic, can be represented as a sum of sinusoidal waves of different frequencies and phases which constitute the frequency domain representation of that signal.
 
+\section{Morphological Image Processing}
+The term \textbf{morphology} refers to shape.
+Morphological image processing assumes that an image consists of structures that can be handled by mathematical set theory.
+It is normally applied to binary (black \& white) images, e.g. after applying thresholding.
+A \textbf{set} is a group of pixels; different set operations can be performed on this set of pixels.
+Applications for morphological image analysis generally involve image analysis at a very small scale (i.e., small regions of pixels) e.g., medical image processing, scientific image processing, industrial inspection, etc.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/generalmorphologicalimageprocessingpipeline.png}
+    \caption{A General Morphological Image Processing Pipeline}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/basicsetoperators.png}
+    \caption{Basic Set Operators (From left to right: union, intersection, shift of $A$ by some amount $b$, reflection about the origin (assumed to be at the center), complement, \& set difference)}
+\end{figure}
+
+We can describe morphological differences in terms of intersections with test sets called \textbf{structuring elements (SEs)}.
+SEs are of a much smaller size than the original image.
+Morphological operations transform an image, i.e. changing a pixel from black to white (or vice-versa) if a defined structuring element ``fits'' at that point.
+The shape + size of the structuring element directly affect the information about the image obtained by the operation.
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Structuring Elements Example}]
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/seexample.png}
+    \caption{Structuring Elements Example}
+\end{figure}
+
+The three black objects $A$, $B$, \& $C$ are very similar in size (i.e., number of pixels) but different in morphology/shape.
+E.g., several possible translations of $D$ will fit into A, but none will fit into $B$.
+\end{tcolorbox}
+
+\subsection{Basic Morphological Operations}
+Basic morphological operations are performed by set operations between a given image and a structuring element, e.g., erosion, dilation, opening, closing.
 
 
 \end{document}
