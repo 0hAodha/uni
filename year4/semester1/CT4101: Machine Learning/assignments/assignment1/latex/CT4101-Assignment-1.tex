@@ -82,10 +82,12 @@
 \hrule 
 \begin{center}
     \normalsize
-    Assignment 01: Classification Using Scikit-Learn
+    Assignment 1: Classification Using Scikit-Learn
 \end{center}
 \hrule
 
+% \begin{multicols}{2}
+% \fontsize{9}{9}\selectfont
 \section{Description of Algorithms}
 \subsection{Algorithm 1: Random Forest}
 % Detailed description of algorithm 1.
@@ -131,9 +133,20 @@ While this would have excellent performance \& accuracy on the test data, it wou
 Random forests work by combining many decision trees into a forest, thus improving accuracy \& reducing overfitting by averaging multiple trees, reducing variance and leading to better generation.
 These decision trees are each generated using random, potentially overlapping subsets of the data training data.
 While the original random forest algorithm worked by taking the most popular label decided on by the set of trees \supercite{breiman}, the scikit-learn \mintinline{python}{RandomForestClassifier} works by taking a probability estimate for each label from each tree and averaging these to find the best label\supercite{scikit_ensembles}.
+\\\\
+In \mintinline{python}{RandomForestClassifier}, each tree is generated as follows:
+\begin{enumerate}
+    \item   A subset of the training data is randomly selected (hence the ``Random'' in the name of the algorithm).
+            These subsets are selected ``with replacement'' which means that different trees can select the same samples: they are not removed from the pool once they are first selected.
+            This results in unique, overlapping trees.
+    \item   Starting with the root node, each node is \textit{split} to partition the data.
+            Instead of considering all features of the samples when choosing the split, a random subset of features is selected, promoting diversity across the trees.
+            The optimal split is calculated using some metric such as Gini impurity or entropy to determine which split will provide the largest reduction in impurity.
+    \item   This process is repeated at every node until no further splits can be made.
+\end{enumerate}
 
 \begin{figure}[H]
-    \centering
+\centering
 \begin{tikzpicture}[every node/.style={circle, draw, minimum size=0.5cm}]
 
     % Binary Trees
@@ -173,40 +186,37 @@ While the original random forest algorithm worked by taking the most popular lab
 \caption{Random Forest Algorithm Example Diagram (with scikit-learn Averaging)}
 \end{figure}
 
-I chose the random forest classifier because it is resistant to overfitting, works well with complex \& non-linear data like the wildfire data in question, and offers a wide variety of hyperparameters for tuning.
+I chose the random forest classifier because it is resistant to overfitting, works well with complex \& non-linear data like the wildfire data in question, handles both categorical \& numerical features, and offers a wide variety of hyperparameters for tuning.
+It also has many benefits that are not particularly relevant to this assignment but are interesting nonetheless: it can handle both classification \& regression tasks, can handle missing data, and can be parallelised for use with large datasets.
+
+\subsubsection{Hyperparameter 1: \mintinline{python}{n_estimators}}
+The hyperparameter \mintinline{python}{n_estimators} is an \mintinline{python}{int} with a default value of 100 which controls the number of decision trees (\textit{estimators}) in the forest\supercite{scikit_randomforestclassifier}.
+Increasing the number of trees in the forest typically improves the model's accuracy \& stability, with diminishing marginal returns past a certain value, at the trade-off of increased computation \& memory consumption.
+Each tree is independently trained, so there is a big trade-off between computational cost \& performance.
+Using a lower number of estimators can result in underfitting, as there may not be a enough trees in the forest to capture the complexity of the data.
+
+\subsubsection{Hyperparameter 2: \mintinline{python}{max_depth}}
+The hyperparameter \mintinline{python}{max_depth} is an \mintinline{python}{int} with a default value of \mintinline{python}{None} which controls the maximum ``depth'' of each of the trees in the forest \supercite{scikit_randomforestclassifier}, where the ``depth'' of a tree refers to the longest path from the root node to a leaf node in said tree.
+With the default value of \mintinline{python}{None}, the trees will continue to grow until they cannot be split any further, meaning that each leaf node either only contains samples of the same class (i.e., in our case each leaf node is a definitive ``yes'' or ``no'') or contains a number of samples lower than the \mintinline{python}{min_samples_split} hyperparameter.
+The \mintinline{python}{min_samples_split} hyperparameter determines the minimum number of samples required to split a node; it has a default \mintinline{python}{int} value of 2 and therefore, since I am not tuning this hyperparameter for this assignment, it has no relevance as any leaf node that doesn't reach the minimum number of samples to be split is a ``pure'' node by virtue of containing only one class.
 \\\\
-\colorbox{yellow}{TODO:} add hyperparameter details for tuning
-% https://scikit-learn.org/stable/modules/ensemble.html#forest
-
-% \subsubsection{Why I Chose This Algorithm}
-%
-% \subsubsection{Hyperparameter Details for Tuning}
-% \subsubsection{Hyperparameter 1: Name}
-% \subsubsection{Hyperparameter 2: Name}
-
+High \mintinline{python}{max_depth} values allow for the trees to capture more complex patterns in the data, but can overfit the data, leading to poor testing accuracy.
+Bigger trees also naturally incur higher computational costs, requiring both more computation to create and more memory to store. 
+Lower \mintinline{python}{max_depth} values result in simpler trees which can only focus on the most important features \& patterns in the data, which in turn can reduce overfitting;
+however, low values run the risk of creating trees which are not big enough to capture the complexity of the data, and can lead to underfitting.
 
 \subsection{Algorithm 2: C-Support Vector Classification}
+\subsubsection{Hyperparameter 1: \mintinline{python}{kernel}}
+\subsubsection{Hyperparameter 2: \mintinline{python}{C}}
 
-% \subsection{Algorithm 2: Gaussian Na\"ive Bayes}
-% I chose this algorithm as I thought it could give an interesting contrast to my other chosen algorithm as Na\"ive Bayes is, generally speaking, not a very good choice for this kind of classification problem with environmental data.
-% This is because Na\"ive Bayes assumes \textit{feature independence}, which is certainly not true with the wildfire data provided for this assignment: for example, the features \verb|temp| \& \verb|humidity| are naturally going to be correlated, as are the features \verb|rainfall| \& \verb|drought_code|.
-
-% Detailed description of algorithm 1.
-% Clearly describe each of your chosen scikit-learn algorithm implementations in turn, paying special attention to discussing the two hyperparameters that you have chosen to tune for each algorithm.
-% You should write a maximum of 1 page per algorithm. 
-%
-% \subsubsection{Why I Chose This Algorithm}
-%
-% \subsubsection{Hyperparameter Details for Tuning}
-% \subsubsection{Hyperparameter 1: Name}
-% \subsubsection{Hyperparameter 2: Name}
-%
 % \section{Model Training \& Evaluation}
 %
 % \section{Conclusion}
 %
 % \bibliographystyle{plain}
 % \bibliography{references}
+
+% \end{multicols}
 
 \nocite{*}
 \printbibliography
