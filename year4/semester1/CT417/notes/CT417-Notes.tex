@@ -1294,4 +1294,76 @@ Limitations of static code analysis include:
     \item   \textbf{Performance overhead:} large codebases can take time to analyse thoroughly.
 \end{itemize}
 
+\section{Software Security}
+\textbf{Software security} is the concept of implementing mechanisms \& adopting best development practices to protect software against malicious attacks, i.e. to make it resistant to attacks and to keep it functional when attacked.
+In traditional software design \& development practices, software security was almost an afterthought.
+Secure software is defined as software engineered in such a way that its operation and functionality continues as normal even when subjected to malicious attacks.
+\\\\
+In computer security, a \textbf{threat} is a potential negative action or event facilitated by a vulnerability that results in an unwanted impact to a computer system or application.
+A threat can either be a negative \textit{intentional} event such as a cyberattack, or an \textit{accidental} even such as an earthquake.
+Different definitions from different authorities for what constitutes a threat include:
+\begin{itemize}
+    \item   \textbf{ISO27005:} a potentital cause of an incident that may result in harm of systems \& organisation.
+    \item   \textbf{NIST:} any circumstance or event with the potential to adversely impact organisation operations, organisational assets, or individuals through an information system via unauthorised access, destruction, disclosure, modification of information, and / or denial of service.
+    \item   \textbf{ENISA:} any circumstance or event with the potential to adversely impact an asset through unauthorised access, destruction, disclosure, modification of data, and / or denial of service.
+\end{itemize}
+
+\subsection{Threat Classification}
+Microsoft classifies threats into the following categories:
+\begin{itemize}
+    \item   \textbf{Spoofing of user identity:} e.g., an attacker takes on the identity of an administrator.
+    \item   \textbf{Tampering:} e.g., an attacker changes an account balance.
+    \item   \textbf{Repudiation:} e.g., a user denies performing an action without either parties having any way to prove otherwise.
+    \item   \textbf{Information disclosure:} privacy breach or data leak.
+    \item   \textbf{Elevation of privilege:} an attacker elevates their own security level to an administrator.
+    \item   \textbf{Denial of Service (DOS):} a cyber attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to the internet.
+\end{itemize}
+
+The term \textbf{threat agent} is used to indicate an individual, thing, or a group that can manifest a threat.
+These incldue:
+\begin{itemize}
+    \item   Non-target specific, e.g. a computer virus, worms, trojans, \& logic bombs.
+    \item   Employees, e.g. disgruntled staff or contractors.
+    \item   Organised crime \& criminals.
+    \item   Corporation, e.g. partners or competitors.
+    \item   Human (unintentional), e.g., accidents, carelessness.
+    \item   Human (intentional), insider, outsider.
+    \item   Natural, e.g., flood, fire, lighting, meteor, earthquakes.
+\end{itemize}
+
+\subsubsection{Requirement-Level Threats}
+Expertise in requirements engineering \& information system security is a rare combination: customers \& users don't know what they want with respect to security, and requirement engineers don't know what questions to ask to elicit security requirements.
+This combined lack of security expertise leads to missing or unidentified security requirements, resulting in security vulnerabilities.
+
+\subsubsection{Hardware-Level Threats}
+\begin{table}[h!]
+    \centering
+
+    \begin{tabular}{|>{\arraybackslash}p{0.5\textwidth}|>{\arraybackslash}p{0.5\textwidth}|}
+        \hline
+        \textbf{Threat}                             & \textbf{Countermeasure} \\ \hline
+        Eavesdropping devices (e.g., keyloggers)    & Physical Security \\ \hline
+        Power outage                                & Uninterruptible Power Supply \\ \hline
+        Natural Disasters                           & Geographically dispersed redundancy to avoid a single point of failure \\ \hline
+        Sabotage & Physical Security \\ \hline
+    \end{tabular}
+    \caption{Hardware-Level Threats \& Countermeasures}
+\end{table}
+
+\subsubsection{Code-Level Threats}
+Code-level threats include \textbf{unintentional} threats, which are mainly caused by a lack of secure coding knowledge.
+These can be mitigated with software security education \& training, automatic static \& dynamic code analysis, and peer code review.
+\\\\
+\textbf{Intentional} threats can be prevented with peer code review, job rotation, \& mandatory vacation.
+
+\subsubsection{Design-Level Threats}
+\textbf{Design-level threats} relate to weaknesses in principal OO design \& object interaction, therefore secure design is more fundamental than secure coding, e.g., object attributes being public rather than private.
+Best OO design practices are captures in design patterns for security.
+Code implementation without a solid design is dangerous \& costly.
+
+\subsubsection{Architectural-Level Design Threats}
+\textbf{Architectural design} decisions entail overarching design decisions.
+Widely accepted solutions to these recurring architectural design problems are referred to as \textbf{architectural patterns}.
+
+
 \end{document}
