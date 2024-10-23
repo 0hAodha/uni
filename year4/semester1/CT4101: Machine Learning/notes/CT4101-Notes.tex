@@ -125,6 +125,8 @@
     \item   Written Exam: 70\% (Last 2 year's exam papers most relevant).
 \end{itemize}
 
+There will be no code on the exam, but perhaps pseudo-code or worked mathematical examples.
+
 \subsection{Module Overview}
 \textbf{Machine Learning (ML)} allows computer programs to improve their performance with experience (i.e., data).
 This module is targeted at learners with no prior ML experience, but with university experience of mathematics \& 
@@ -975,6 +977,8 @@ The gain for a feature can then be calculated based off the reduction in the Gin
 \end{algorithmic}
 \end{algorithm}
 
+This code will not be asked for on the exam.
+
 \subsection{Decision Tree Summary}
 Decision trees are popular because:
 \begin{itemize}
@@ -987,6 +991,194 @@ Decision trees are popular because:
 
 \subsubsection{Dealing with Noisy or Missing Data}
 If the data is inconsistent or \textit{noisy} we can either use the majority class as in line 11 of the above ID3 algorithm, or interpret the values as probabilities, or return the average target feature value.
+\\\\
+For missing data, we could assign the most common value among the training examples that reach that node, or we could assume that the attribute has all possible values, weighting each value according to its frequency among the training examples that reach that node.
+
+\subsubsection{Instability of Decision Trees}
+The hypothesis found by decision trees is sensitive to the training set used as a consequence of the greedy search used.
+Some ideas to reduce the instability of decision trees include altering the attribute selection procedure, so that the tree learning algorithm is less sensitive to some percentage of the training dataset being replaced.
+
+\subsubsection{Pruning}
+Overfitting occurs in a predictive model when the hypothesis learned makes predictions which are based on spurious patterns in the training data set.
+The consequence of this is poor generalisation to new examples.
+Overfitting may happen for a number of reasons, including sampling variance or noise present in the dataset.
+\textbf{Tree pruning} may be used to combat overfitting in decision trees.
+However, tree pruning can also lead to induced trees which are inconsistent with the training set.
+\\\\
+Generally, there are two different approaches to pruning:
+\begin{itemize}
+    \item   Pre-pruning
+    \item   Post-pruning
+\end{itemize}
+
+\section{Model Evaluation}
+The most important part of the design of an evaluation experiment for a predictive model is not the same as the data used to train the model.
+The purpose of evaluation is threefold:
+\begin{itemize}
+    \item   To determine which model is the most suitable for a task.
+    \item   To estimate how the model will perform.
+    \item   To demonstrate to users that the model will meet their needs. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/holdouttestset.png}
+    \caption{Using a Hold-Out Test Set}
+\end{figure}
+
+By convention, in binary classification tasks we refer to one class as \textit{positive} and the other class as \textit{negative}.
+There are four possible outcomes for a binary classification task:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item   TP: True Positive.
+        \item   TN: True Negative.
+        \item   FP: False Positive.
+        \item   FN: False Negative.
+    \end{itemize}
+\end{multicols}
+
+These are often represented using a \textbf{confusion matrix}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/confmatrix.png}
+    \caption{Using a Hold-Out Test Set}
+\end{figure}
+
+The \textbf{misclassification rate} can be calculated as:
+\begin{align*}
+    \text{misclassification rate}  =& \frac{\text{\# of incorrect predictions}}{\text{total predictions}} \\
+    =& \frac{(\textit{FP} + \textit{FN})}{(\textit{TP} + \textit{TN} + \textit{FP} + \textit{FN})}
+\end{align*}
+
+The classification accuracy can be calculated as:
+\[
+    \text{classification accuracy} = \frac{(\textit{TP} + \textit{TN})}{(\textit{TP} + \textit{TN} + \textit{FP} + \textit{FN})}
+\]
+
+\subsection{Metrics for Binary Classification Tasks}
+Confusion matrix-based measures for binary categorical targets include:
+\begin{itemize}
+    \item   TPR: True Positive Rate.
+            \[
+                \textit{TPR} = \frac{\textit{TP}}{(\textit{TP} + \textit{FN})}
+            \]
+
+    \item   TNR: True Negative Rate.
+            \[
+                \textit{TNR} = \frac{\textit{TN}}{(\textit{TN} + \textit{FP})}
+            \]
+
+    \item   FPR: False Positive Rate.
+            \[
+                \textit{FPR} = \frac{\textit{FP}}{(\textit{TN} + \textit{FP})}
+            \]
+
+    \item   FNR: False Negative Rate.
+            \[
+                \textit{FNR} = \frac{\textit{FN}}{(\textit{TP} + \textit{FN})}
+            \]
+\end{itemize}
+
+All these measures can have values in the range of 0 to 1.
+Higher values of TPR \& TNR, and lower values of FNR \& FPR, indicate better model perfomance.
+
+\subsubsection{Precision \& Recall}
+\textbf{Precision} captures how often, when a model makes a positive prediction, that prediction turns out to be correct.
+\[
+    \text{precision} = \frac{\textit{TP}}{(\textit{TP} + \textit{FP})}
+\]
+
+\textbf{Recall} is equivalent to the true positive rate, and tells us how confident we can be that all the instances with the positive target level have been found by the model.
+Both precision \& recall have values in the range 0 to 1.
+\[
+    \text{precision} = \frac{\textit{TP}}{(\textit{TP} + \textit{FN})}
+\]
+
+\subsection{Multinomial Classification Tasks}
+All the measures we have discussed hitherto apply to binary classification problems only.
+Many classification problems are multinomial, i.e., have more that two target levels / classes.
+We can easily extend the confusion matrix concept to multiple target levels by adding a row \& a column for each level.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/expandedconfmatrix.png}
+    \caption{Extended Confusion Matrix}
+\end{figure}
+
+We can also calculate precision \& recall for each target level independently.
+$\textit{TP}(\mathrm{I})$ refers to the number of instances correctly assigned a prediction of class $\mathrm{I}$.
+$\textit{FP}(\mathrm{I})$ refers to the number of instances incorrectly assigned a prediction of class $\mathrm{I}$.
+$\textit{FN}(\mathrm{I})$ refers to the number of instances that should've been assigned a prediction of class $\mathrm{I}$ but were given some other prediction.
+
+\[
+    \text{precision}(\mathrm{I}) = \frac{\textit{TP}(\mathrm{I})}{\textit{TP}(\mathrm{I}) + \textit{FP}(\mathrm{I})}
+\]
+\[
+    \text{recall}(\mathrm{I}) = \frac{\textit{TP}(\mathrm{I})}{\textit{TP}(\mathrm{I}) + \textit{FN}(\mathrm{I})}
+\]
+
+Confusion matrices can be easily created in scikit-learn using the built-in classes.
+
+\subsection{Cross-Validation \& Grid Search}
+So far, we have just manually divided data into training \& test sets.
+We want to avoid problems with a ``lucky split'' where most difficult examples end up in the training set and most easy examples end up in the test set.
+Methods like $k$-fold cross-validation allow us to use all examples for both training \& testing.
+
+\subsubsection{$k$-Fold Cross-Validation}
+\textbf{$k$-fold cross validation (CV)} allows all of the data to be used for both training \& testing.
+The procedure is as follows:
+\begin{enumerate}
+    \item   Split the data into $k$ different folds.
+    \item   Use $k-1$ folds for training, and the remaining fold for testing.
+    \item   Repeat the entire process $k$ times, using a different fold for testing each time.
+            Report the per-fold accuracy \& the average accuracy for both training \& testing.
+\end{enumerate}
+
+Cross-validation can be easily implemented in scikit-learn by calling the \mintinline{python}{sklearn.model_selection.cross_val_score()} helper method on the estimator \& the dataset.
+This will return the testing accuracy only.
+If it is desired to report the training accuracy or other metrics, scikit-learn provides the method \mintinline{python}{sklearn.mode_selection.cross_validate} which provides additional options.
+Training scores will be returned in the parameter \mintinline{python}{return_train_score} of this method is set to \mintinline{python}{True}.
+The score parameter can be used to specify the metrics that will be computed to score the models trained during cross-validation.
+
+\subsubsection{Hyperparameter Optimisation}
+scikit-learn provides a class \mintinline{python}{sklearn.model_selection.GridSearchCV} that allows an exhaustive search through ranges of specified hyperparameter values.
+Scores are calculated for each possible hyperparameter combination on the grid, allowing the combination with the best score to be identified.
+It is widely used when performing hyperparameter tuning for ML models.
+
+\subsection{Prediction Scores \& ROC Curves}
+Many different classification algorithms produce \textbf{prediction scores}, e.g. N\"aive Bayes, logistic regression, etc.
+The score indicates the system's certainty that the given observation belongs to the positive class.
+To make the decision about whether the observation should be classified as positive or negative as a consumer of this score, one will interpret the score by picking a classification threshold (cut-off) and comparing the score against it.
+Any observations with scores higher than the threshold are then predicted as the positive class and scores lower than the threshold are predicted as the negative class.
+Often, a prediction score greater than or equal to 0.5 is interpreted as the positive class by default, and a prediction with a score less than 0.5 is interpreted as the negative class.
+The prediction score threshold can be changed, leading to different performance metric values and a different confusion matrix.
+\\\\
+As the threshold increases, TPR decreases, and TNR increases.
+As the threshold decreases, TPR increases, and TNR decreases.
+Capturing this trade-off is the basis of the \textbf{Receiver Operating Characteristic (ROC)} curve.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/roc.png}
+    \caption{ROC Curve}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/increasingthreshold.png}
+    \caption{Effect of Increasing the Classification Threshold}
+\end{figure}
+
+\subsubsection{ROC Curves}
+An ideal classifier would be in the top left corner, i.e. TPR = 1.0 and FPR = 0.0.
+The area under the ROC curve is often used to determine the ``strength'' of a classifier: greater area indicates a better classifier, and an ideal classifier has an area of 1.0.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/sampleroc.png}
+    \caption{Sample ROC Curves for 5 Different Models Trained on the Same Dataset}
+\end{figure}
+
+scikit-learn provides various classes to generate ROC curves: \url{https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html}.
+The link also gives some details on how ROC curves can be computed for mutli-class classification problems.
 
 
 
