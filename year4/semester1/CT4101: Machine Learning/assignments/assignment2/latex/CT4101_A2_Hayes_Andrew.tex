@@ -1,0 +1,92 @@
+%! TeX program = lualatex
+\documentclass[a4paper, 10pt]{article} 
+\usepackage[a4paper, margin=1.5cm]{geometry}
+
+% packages
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black, citecolor = black]{hyperref} 
+\newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
+\usepackage{changepage}     % adjust margins on the fly
+\usepackage{multicol}
+
+\usepackage[backend=biber, style=numeric, date=iso, urldate=iso]{biblatex}
+\addbibresource{references.bib}
+\DeclareFieldFormat{urldate}{Accessed on: #1}
+
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+\usepackage{xcolor}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\captionsetup[listing]{skip=0pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{5pt}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+\usepackage{titlesec}
+% \titleformat{\section}{\LARGE\bfseries}{}{}{}[\titlerule]
+% \titleformat{\subsection}{\Large\bfseries}{}{0em}{}
+% \titlespacing{\subsection}{0em}{-0.7em}{0em}
+%
+% \titleformat{\subsubsection}{\large\bfseries}{}{0em}{$\bullet$ }
+% \titlespacing{\subsubsection}{1em}{-0.7em}{0em}
+
+% margins
+% \addtolength{\hoffset}{-2.25cm}
+% \addtolength{\textwidth}{4.5cm}
+% \addtolength{\voffset}{-3.25cm}
+% \addtolength{\textheight}{5cm}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0in}
+% \setcounter{secnumdepth}{0}
+
+\begin{document}
+\hrule \medskip
+\begin{minipage}{0.295\textwidth} 
+    \vfill
+    \raggedright
+    \footnotesize 
+    \begin{tabular}{@{}l l} % Define a two-column table with left alignment
+        Name: & Andrew Hayes \\
+        Student ID: & 21321503 \\
+        Programme: & 4BCT \\
+    \end{tabular}
+    \vfill
+\end{minipage}
+\begin{minipage}{0.4\textwidth} 
+    \centering 
+    \Large 
+    \vfill
+    \textbf{CT4101}
+    \vfill
+\end{minipage}
+\begin{minipage}{0.295\textwidth} 
+    \raggedleft
+    \vfill
+    \today
+    \vfill
+\end{minipage}
+\smallskip
+\hrule 
+\begin{center}
+    \normalsize
+    Assignment 2: Regression Using Scikit-Learn
+\end{center}
+\hrule
+\nocite{*}
+\printbibliography
+\end{document}
