@@ -33,6 +33,7 @@
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 \usepackage{multicol}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \usepackage{changepage}     % adjust margins on the fly
 
@@ -1612,6 +1613,437 @@ E.g., several possible translations of $D$ will fit into A, but none will fit in
 
 \subsection{Basic Morphological Operations}
 Basic morphological operations are performed by set operations between a given image and a structuring element, e.g., erosion, dilation, opening, closing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/dilationofbinaryregion.png}
+    \caption{
+        Dilation of a binary region by a circular structuring element can be visualised as rolling the disk along the outside of the region; the result is enclosed by the path of the centre of the disk.
+        The right column shows the result of \textit{closing} (dilation followed by erosion), which fills lakes, bays, \& channels.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/erosiionofbinaryregion.png}
+    \caption{
+        Erosion can be visualised as rolling the disk along the inside of the region; the result is again enclosed by the path of the centre of the disk.
+        The right column shows the result of \textit{opening} (erosion followed by dilation), which removes capes, isthmuses, \& islands.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/resultofmorphologicaloperations.png}
+    \caption{
+        A binary image and the result of morphological operations: erode, dilate, open, \& close.
+        Erosion removes salt noise but shrinks the foreground.
+        Dilate fills pepper noise but expands the foreground.
+        Opening \& closing removes the respective types of noise while retaining the overall size of the foreground.
+    }
+\end{figure}
+
+\textbf{Thinning} is an operation used to reduce objects in a binary image to their skeletons without breaking their connectivity.
+It progressively removes pixels from the edges of objects while maintaining the general structure \& topology.
+It can be thought of as ``clever erosion'' and is done by using crafter ternary structuring elements (on, off, don't care).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/thinningSEs.png}
+    \caption{
+        Structuring elements commonly used for morphological thinning.
+        Coloured pixels are \textsc{on}, white pixels are \textsc{off}, and X indicates \textsc{don't-care}.
+        The top row shows the four edge SEs, while the bottom row shows the four corner SEs.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/thinningofsameimageusingSEs.png}
+    \caption{
+        Morphological thinning of the same binary image using the same SEs as the previous example.
+        In this case, however, the edge SEs are applied repeatedly as a set until convergence, before applying the corner SEs repeatedly as a sequence.
+        In the first iteration, pixels along the top, right, bottom, \& left of the region are removed by the edge SEs.
+        In the second iteration, nine additional pixels are removed by the edge SEs.
+        In the final iteration, a single pixel is removed by one of the corner SEs, thus producing a thinner skeleton than in the previous example.
+    }
+\end{figure}
+
+\textbf{Thickening} is the opposite of thinning, i.e. adding pixels to the foreground.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/thickeningSEs.png}
+    \caption{
+        Structuring elements commonly used for morphological thickening.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/thickeningSEsbinaryexample.png}
+    \caption{
+        Morphological thickening of a binary image using the SEs above.
+        Shown are the original image (left) and the final result after convergence (right).
+        The thickened result is an approximation to the convex hull.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/morphimagepipeline.png}
+    \caption{ A general morphological image processing pipeline. }
+\end{figure}
+
+\subsection{Connected Components}
+A pixel $q = (q_x, q_y)$ is a neighbour of pixel $p = (p_x, p_y)$ if $q$ is in the \textbf{neighbourhood} of $p$, denoted $q \in N(p)$ where $N$ is the neighbourhood function.
+Two pixels are said to be \textbf{adjacent} if they have the same value and if they are neighbours of each other.
+Pixels are said to be \textbf{connected} or \textbf{contiguous} if there exists a path between them
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/commonneighbourhoods.png}
+    \caption{Commonly used neighbourhoods. From left to right: $N_4$, $N_8$, \& $N_D$.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/binaryregioncommonneighbourhoods.png}
+    \caption{A binary region and the 4-, 8-, \& $m$-adjacency of its pixels. Note that $m$-adjacency removes the loops that sometimes occur with 8-adjacency.}
+\end{figure}
+
+A \textbf{connected component} is defined as a maximal set of pixels that are all connected with one another.
+\textbf{Connected component labelling} is the process of assigning a unique identifier to every pixel in the image indicating the connected component to which it belongs.
+
+\subsection{Distance Transform}
+A \textbf{distance transform} replaces pixels of one value (black or white) in a binary image with their distance to the nearest pixel of opposite value (white or black).
+This is useful for template matching \& granulometry (studying the size distribution/properties of objects).
+The assumption is that a local maximum is the centre of a distinct object: use a ``non-maximal suppressin'' to remove all other pixels.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/distancetransform.png}
+    \caption{Distance Transform Example}
+\end{figure}
+
+\subsection{Skeletonisation}
+A common approach to \textbf{skeletonisation} is to repeatedly thin the image until the result converges.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/skeletonisation.png}
+    \caption{The skeleton of a binary region is defined as the locus of points where the wave fronts of fires set to the boundary meet, or equivalently as the locus of the centres of the maximal balls.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/skeletonisationexamples.png}
+    \caption{Six different continuous shapes (blue) and their skeletons (red).}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/skeletonisationalgorithms.png}
+    \caption{Comparison of the various skeletonisation algorithms on two different binary images.}
+\end{figure}
+
+\subsection{Region Properties}
+\textbf{Regular moments} are statistical measures calculated from the pixel intensity values of an image that help in understanding the distribution of pixel values and can be used for shape analysis.
+The $p^\text{th}$ moment is defined as:
+\[
+    m_{pq} = \sum_x \sum_y x^p y^q I(x,y)
+\]
+where $I(x,y)$ is the pixel intensity at co-ordinates $(x,y)$.
+\\\\
+\textbf{Central moments} are similar to regular moments but are computed with respect to the mean of the pixel distribution.
+They provide a measure of the shape's properties such as its variance.
+The $p^\text{th}$ central moment is defined as:
+\[
+    \mu_{pq} = \sum_x \sum_y (x - \overline{x})^p (y - \overline{y})^q I(x,y)
+\]
+where $\overline{x}$ \& $\overline{y}$ are the mean co-ordinates.
+\\\\
+The \textbf{covariance matrix} is used to describe the distribution of points in a shape.
+It captures the relationship between the dimensions of the shape and is crucial for understanding the orientation \& spread of the shape in the feature space.
+\[
+    C =
+    \begin{bmatrix}
+        \mu_{20} & \mu_{11} \\
+        \mu_{11} & \mu_{02}
+    \end{bmatrix}
+\]
+
+\textbf{Compactness} is defined as:
+\[
+    \text{compactness} = \frac{4\pi (\text{area})}{(\text{perimeter})^2}
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/compactness.png}
+    \caption{
+        Left: a circle is the most compact shape, with a compactness of 1.
+        Middle: a shape whose compactness is less than 1.
+        Right: the eccentricity of the shape is computed as the eccentricity of the best-fitting ellipse.
+    }
+\end{figure}
+
+The \textbf{convex hull} of a region is the shape that results from enveloping the region with a rubber band, which removes all concavities.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/convexhull.png}
+    \caption{
+        Left: An arbitrarily shaped region in the plane.
+        Right: The convex hull of the region.
+        All vertices in both regions are locally convex except for $p_2$.
+    }
+\end{figure}
+
+\textbf{Eccentricity} measures the elongatedness of a binary region, i.e., how far it is from being rotationally symmetric around its centroid.
+To calculate it the eccentricity of a binary region:
+\begin{enumerate}
+    \item   Find the best/tightest fitting ellipse around the region.
+    \item   Then align this ellipse with the axes.
+    \item   Find the Covariance Matrix of this ellipse:
+            \[
+                C = P
+                \begin{bmatrix}
+                    \lambda_1 & 0 \\
+                    0 & \lambda_2
+                \end{bmatrix}
+                P^T
+            \]
+            This covariance matrix is obtained by using the moments of the binary region encapsulated by the ellipse:
+            \[
+                C = \frac{1}{\mu_{00}}
+                \begin{bmatrix}
+                    \mu_{20} & \mu_{11} \\
+                    \mu{11} & \mu_{02}
+                \end{bmatrix}
+                =
+                \eta
+                \begin{bmatrix}
+                    c & - \frac{b}{2} \\
+                    -\frac{b}{2} & a
+                \end{bmatrix}
+            \]
+
+    \item   The eccentricity will be a ratio of the eigenvalues of this matrix:
+            \[
+                \text{eccentricity} = \sqrt{\frac{\lambda_1 - \lambda_2}{\lambda_1}}
+            \]
+\end{enumerate}
+
+\textbf{Topology} is the study of objects that are preserved under continuous deformations of the objects, e.g., bending, stretching, \& compressing but not tearing or sewing.
+\textbf{Homotopy} or rubber sheet deformations is defined to be a deformation which does not change the topology of the object.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/homotopy.png}
+    \caption{
+        Top: the letters ``A'' \& ``P'' are related by a homotopy because there is a continuous deformation that relates the two shapes.
+        Bottom: the letters ``A'' \& ``B'' are not related by a homotopy because there is not a continuous deformation that relates the two shapes.
+        Rather, tearing the region to produce the extra hole is necessary (or sewing the hole in the case of the reverse transformation).
+    }
+\end{figure}
+
+The \textbf{Euler number} is a topological invariant characteristic defined by:
+\begin{align*}
+    \text{Euler number} =& \text{number of regions} - \text{number of holes} \\
+                        =& \text{number of vertices} - \text{number of edges} + \text{number of faces}
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/eulertesselations.png}
+    \caption{
+        Various tessellations of a region whose Euler number is 1 (left) and 0 (right), showing that the Euler number is not dependent upon the particular tessellation chosen.
+        Under each figure is the number of vertices minus edges plus faces according to the formula for the Euler number.
+        Note that there is implicitly at least one vertex, edges intersect at vertices, \& external vertices or edges are not counted.
+    }
+\end{figure}
+
+\textbf{Region boundary representations} are classically used in ``shape'' analysis or recognition.
+For distinguishing the shape of the boundary, generally we want to transform the sequence into a representation that is invariant to translation, rotation, and/or scale changes, as well as to the starting pixel.
+The most basic type of \textbf{signature} s known as the \textbf{centroidal profile} or \textbf{$r$-$\theta$ curve}.
+This approach captures the distance $r$ from the centre of the region as a function of the angle $\theta$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/centroidalprofile.png}
+    \caption{The centroidal profile ($r$-$\theta$ plot) of several shapes}
+\end{figure}
+
+\section{Edge \& Feature Detection}
+\subsection{Multiresolution Processing}
+\textbf{Multiresolution} refers to analysing the image at mutliple resolutions (scales).
+A $40 \times 40$ region in the original image will occupy only a $20 \times 20$ region in the downsampled image, a $10\times10$ region in the twice downsampled image, and so forth.
+Because each successive image is smaller than its predecessor, stacking the images on top of one another yields the shape of a pyramid called an \textbf{image pyramid}.
+Image pyramids are created by smoothing $\rightarrow$ downsampling $\rightarrow$ smoothing $\rightarrow$ downsampling.
+\\\\
+A \textbf{Gaussian pyramid} is when the image is smoothed by convolving with a Gaussian kernel.
+\begin{align*}
+    I^{(0)} (x,y)  =& I(x,y) \\
+    I^{(i+1)}(x,y) =& \left( I^{(i)} (x,y) \circledast \text{Gauss}_{\sigma^2} (x,y) \right) \downarrow 2
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/gaussianpyramids.png}
+    \caption{
+        Twelve levels of a Gaussian pyramid, obtained with $\sigma^2 = \frac{1}{4}(0.5) = 0.125$ and a downsampling factor of $\sqrt[4]{2}$.
+        Note that $I^{(4)}$ is half as large as $I^{(0)}$ in each direction, and that $I^{(8)}$ is half as large as $I^{(4)}$.
+    }
+\end{figure}
+
+A \textbf{Laplacian pyramid} is when the image is smoothed by convolving with several Gaussian kernels of varying variance, then taking their Difference of Gaussian (DoG) to approximate Lapalacian of Gaussian (LoG).
+\[
+    L^{(i+1)} (x,y) = \left( I^{(0)} (x,y) \circledast \text{LoG}_{(i+1)\sigma^2} (x,y) \right) \downarrow (i + 1) d
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/laplacianpyramids.png}
+    \caption{
+        Laplacian pyramid with $n = 2$ images per octave.
+        THe images are successively convolved with a Gaussian, then downsampled at the end of each octave to produce something that closely resembles a Gaussian pyramid.
+        Differences between successive Gaussian-smoothed images yield DoGs, which approximate LoGs.
+        The initial variance is $\frac{1}{2} (0.5) = 0.25$ and the ratio between successive standard deviations is $\rho = \sqrt{2}$.
+    }
+\end{figure}
+
+To construct a series of images at different \textbf{scale-spaces}, an image is convolved with varying kernel sizes of Gaussian smooting kernels of varying size \& variance (``scale'').
+It can be seen as an embedding of the original image into a one-parameter family of Gaussian kernels of increasing variance -- being the \textbf{continuous parameter}.
+The image size remains the same and is not down-sampled.
+It is used in further image analysis techniques such as SIFT Features.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/gaussianscalespace.png}
+    \caption{
+        The Gaussian scale space of an image consists of a continuous 3D volume in which each slice is an increasingly blurred version of the original image.
+        Shown here are ten sample images from the scale space.
+    }
+\end{figure}
+
+\subsection{Edge Detection}
+\textbf{Intensity edges} are pixels in the image where the intensity (or grey level) function changes rapidly.
+A \textbf{step edge} occurs when a light region is adjacent to  dark region.
+A \textbf{line edge} occurs when a thing light (or dark) object, such as a wire, is in front of a dark (or light) background.
+A \textbf{roof edge} occurs when the change is not in the lightness itself but rather in the derivative of the lightness.
+A \textbf{rampe edge} occurs when the lightness changes slowly across a region.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/intesnityedges.png}
+    \caption{Four types of intensity edges}
+\end{figure}
+
+The \textbf{Canny edge detector} is a classic algorithm for detecting intensity edges in a greyscale image that relies on the gradient magnitude.
+The algorithm involves three steps:
+\begin{enumerate}
+    \item   First, the gradient of the image is computed, including the magnitude \& phase.
+    \item   Second, in \textbf{non-maximum suppression}, any pixel is set to zero whose gradient magnitude is not a local maximum in the direction of the gradient.
+    \item   Finally, \textbf{edge linking} is performed to discard pixels without much support.
+\end{enumerate}
+
+The Canny edge detector is highly regarded for a number of reasons:
+\begin{itemize}
+    \item   It has a good ability to locate as many edges as possible.
+    \item   It is relatively insensitive to noise.
+    \item   There will be a minimal distance between its detected edges and the real edges, which is important when you want to measure or classify extracted objects.
+    \item   It only gives one response to each edge.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/cannyedgedetails.png}
+    \caption{
+        Top: an image and its partial derivatives in the $x$ \& $y$ directions.
+        Bottom: the gradient magnitude \& phase of the image, along with the thresholded gradient magnitude.
+    }
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/cannynonmaxsuppression.png}
+    \caption{
+        Non-maximum suppression.
+        The gradient direction (or phase) $\theta$ is quantised into one of four values, shown by the coloured wedges of the circle.
+        The quantised phase governs which of the two neighbours to compare with the pixel.
+        If the gradient magnitude of the pixel is not at least as great as both neighbours, then it is set to zero.
+        This has the effect of thinning the edges, as shown in the inset.
+    }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/cannyedgelinking.png}
+    \caption{
+        Edge linking with hysteresis, also known as double thresholding or hysteresis thresholding.
+        Thresholding the gradient magnitude with the low threshold produces too many edge pixels (left), while thresholding the high threshold produces too few edge pixels (middle).
+        Edge linking with hysteresis combines the benefits of both (right) to produce the final Canny edge detector output.
+    }
+\end{figure}
+
+\subsection{Feature Detection}
+An edge detector finds pixels with large gradient magnitude, whereas a \textbf{feature detector} finds pixels where the greyscale values \textit{vary locally in more than one direction}.
+One of the common places for feature points is at corners.
+Feature detection is frequently used in motion detection, object tracking, image registration, image stitchin, 3D modelling, optical flow, \& visual odometry/SLAM (robotics).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/panaroma.png}
+    \caption{Applications for feature detection include image registration, mosaics, stitching, \& panorama generation.}
+\end{figure}
+
+These features are typically hand-crafted as opposed to being discovered by deep learning pipelines.
+Good features are scale-invariant \& rotation invariant.
+\\\\
+Recall the \textbf{covariance matrix} built from central moments whose eigenvalues were used to find orientation \& eccentricity of a binary region.
+\begin{align*}
+    C_{(2 \times 2)}    =& E\left[ (x - \overline{x})(x - \overline{x})^T \rho(x) \right]\\
+    =& \frac{1}{\mu_{00}}
+    \begin{bmatrix}
+        \mu_{20} & \mu_{11} \\
+        \mu_{11} & \mu_{02} 
+    \end{bmatrix}
+\end{align*}
+
+We can then build a \textbf{gradient covariance matrix} or \textbf{autocorrelation matrix} from image gradients:
+\begin{align*}
+    Z = \sum_{x \in R} w(x)
+    \begin{bmatrix}
+        I^2_x(x) & I_x(x)I_y(x) \\
+        I_x(x)I_y(x) & I^2_y(x)
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        z_x & z_{xy} \\
+        z_{xy} & z_y
+    \end{bmatrix}
+\end{align*}
+
+Eigenvalues of the gradient covariance matrix indicate how the pixel values are varying in different directions.
+Eigenvalues are inherently rotationally invariant.
+If both eigenvalues are large, then the pixel values are varying in different directions.
+If one eigenvalue is large, it indicates an edge with pixel values that are varying in one direction only.
+\\\\
+The \textbf{Harris corner detector} finds pixel values with large ``cornerness'' defines as:
+\begin{align*}
+    \text{cornerness} =& \text{det}(Z) - k (\text{trace}(Z))^2 \\
+    =& z_x z_y - z_{xy}^2 - k (z_x + z_y)^2 \\
+    =& \lambda_1 \lambda_2 - k(\lamda_1 + \lambda_2)^2
+\end{align*}
+
+The \textbf{Tomasi-Kanade/Shi-Tomasi detector} finds pixel values with large ``cornerness'' defined as:
+\begin{align*}
+    \text{cornerness} = \text{min}( \{ \lambda_1, \lambda_2 \}) = \lambda_2
+\end{align*}
+
+\subsection{Feature Descriptors}
+A \textbf{feature descriptor} characterises detected features in a way that can be used for comparison across images.
+These include: SIFT features, GLOH (Gradient Location \& Histogram), HOG (Histogram of Gradients), etc.
 
 
 \end{document}
