@@ -973,6 +973,261 @@ We can also view collaborative filtering as a machine learning classification pr
 Much recent work has been focused on not only giving a recommendation, but also attempting to explain the recommendation to the user.
 Questions arise in how best to ``explain'' or visualise the recommendation.
 
+\section{Learning in Information Retrieval}
+Many real-world problems are complex and it is difficult to specify (algorithmically) how to solve many of these problems.
+Learning techniques are used in many domains to find solutions to problems that may not be obvious or clear to human users.
+In general, machine learning involves searching a large space of potential hypotheses or potential solutions to find the hypotheses/solution that best \textit{explains} or \textit{fits} a set of data and any prior knowledge, or is the best solution, or the solution that we can say learns if it improves the performance. 
+\\\\
+Machine learning techniques require a training stage before the learned solution can be used on new previously unseen data.
+The training stage consists of a data set of examples which can either be:
+\begin{itemize}
+    \item   \textbf{Labelled} (supervised learning).
+    \item   \textbf{Unlabelled} (unsupervised learning).
+\end{itemize}
+
+An additional data set must also be used to test the hypothesis/solution.
+\\\\
+\textbf{Symbolic knowledge} is represented in the form of the symbolic descriptions of the learned concepts, e.g., production rules or concept hierarchies.
+\textbf{Sub-symbolic knowledge} is represented in sub-symbolic form not readable by a user, e.g., in the structure, weights, \& biases of the trained network.
+
+\subsection{Genetic Algorithms}
+\textbf{Genetic algorithms} are inspired by the Darwinian theory of evolution:
+at each step of the algorithm, the best solutions are selected while the weaker solutions are discarded.
+It uses operators based on crossover \& mutation as the basis of the algorithm to sample the space of solutions.
+The steps of a genetic algorithm are as follows: first, create a random population. 
+Then, while a solution has not been found:
+\begin{enumerate}
+    \item   Calculate the fitness of each individual.
+    \item   Select the population for reproduction:
+            \begin{enumerate}[label=\roman*.]
+                \item   Perform crossover.
+                \item   Perform mutation.
+            \end{enumerate}
+    \item   Repeat.
+\end{enumerate}
+
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+% \usetikzlibrary{patterns}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        \node (reproduction)    [process] at (0, 2.5)  {Reproduction, Crossover, Mutation};
+        \node (population)      [process] at (-2.5, 0) {population};
+        \node (fitness)         [process] at (0, -2.5) {Calculate Fitness};
+        \node (select)          [process] at (2.5, 0)  {Select Population};
+
+        \draw [arrow] (population) -- (fitness);
+        \draw [arrow] (fitness) -- (select);
+        \draw [arrow] (select) -- (reproduction);
+        \draw [arrow] (reproduction) -- (population);
+    \end{tikzpicture}
+    \caption{Genetic Algorithm Steps}
+\end{figure}
+
+Traditionally, solutions are represented in binary.
+A \textbf{phenotype} is the decoding or manifestation of a \textbf{genotype} which is the encoding or representation of a phenotype.
+We need an evaluation function which will discriminate between better and worse solutions.
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Crossover Examples}]
+Example  of one-point crossover:
+\texttt{11001\underline{011}} and \texttt{11011\underline{111}} gives \texttt{11001\underline{111}} and \texttt{11011\underline{011}}.
+\\\\
+Example of $n$-point crossover: \texttt{\underline{110}110\underline{11}0} and \texttt{0001001000} gives \texttt{\underline{110}100\texttt{11}00} and \texttt{000\underline{110}10\underline{01}}.
+\end{tcolorbox}
+
+\textbf{Mutation} occurs in the genetic algorithm at a much lower rate than crossover.
+It is important to add some diversity to the population in the hope that new better solutions are discovered and therefore it aids in the evolution of the population.
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Mutation Example}]
+Example  of mutation: \texttt{1\underline{1}001001} $\rightarrow$ \texttt{1\underline{0}001001}.
+\end{tcolorbox}
+
+There are two types of selection:
+\begin{itemize}
+    \item   \textbf{Roulette wheel selection:} each sector in the wheel is proportional to an individual's fitness.
+            Select $n$ individuals by means of $n$ roulette turns.
+            Each individual is drawn independently.
+        \item   \textbf{Tournament selection:} a number of individuals are selected at random with replacement from the population.
+                The individual with the best score is selected.
+                This is repeated $n$ times.
+\end{itemize}
+
+Issues with genetic algorithms include:
+\begin{itemize}
+    \item   Choice of representation for encoding individuals.
+    \item   Definition of fitness function.
+    \item   Definition of selection scheme.
+    \item   Definition of suitable genetic operators.
+    \item   Setting of parameters:
+            \begin{itemize}
+                \item   Size of population.
+                \item   Number of generations.
+                \item   Probability of crossover.
+                \item   Probability of mutation.
+            \end{itemize}
+\end{itemize}
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Case Study 1: Application of Genetic Algorithms to IR}]
+    The effectiveness of an IR system is dependent on the quality of the weights assigned to terms in documents.
+    We have seen heuristic-based approaches \& their effectiveness and we've seen axiomatic approaches that could be considered.
+    \\\\
+    Why not learn the weights?
+    We have a definition of relevant \& non-relevant documents; we can use MAP or precision@$k$ as fitness.
+    Each genotype can be a set of vectors of length $N$ (the size of the lexicon).
+    Set all rates randomly initially.
+    Run the system with a set of queries to obtain fitness; select good chromosomes; crossover; mutate.
+    Effectively searching the landscape for weights to give a good ranking.
+\end{tcolorbox}
+
+
+\subsection{Genetic Programming}
+\textbf{Genetic programming} applies the approach of the genetic algorithm to the space of possible computer programs.
+``Virtually all problems in artificial intelligence, machine learning, adaptive systems, \& automated learning can be recast as a search for a computer program.
+Genetic programming provides a way to successfully conduct the search for a computer program in the space of computer programs.'' -- Koza.
+\\\\
+A random population of solutions is created which are modelled in a tree structure with operators as internal nodes and operands as leaf nodes.
+
+
+\begin{figure}[H]
+    \centering
+    \usetikzlibrary{trees}
+    \begin{tikzpicture}
+        [
+        every node/.style = {draw, shape=rectangle, align=center},
+        level distance = 1.5cm,
+        sibling distance = 1.5cm,
+        edge from parent/.style={draw,-latex}
+        ]
+        \node {+}
+            child { node {1} }
+            child { node {2} }
+            child { node {\textsc{if}}
+                child { node {>}
+                    child { node {\textsc{time}} }
+                    child { node {10} }
+                }
+                child { node {3} }
+                child { node {4} }
+            };
+    \end{tikzpicture}
+    \caption{\texttt{(+ 1 2 (IF (> TIME 10) 3 4))}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{./images/crossover.png}
+    \caption{Crossover Example}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{./images/mutation.png}
+    \caption{Mutation Example}
+\end{figure}
+
+The genetic programming flow is as follows:
+\begin{enumerate}
+    \item   Trees are (usually) created at random.
+    \item   Evaluate how each tree performs in its environment (using a fitness function).
+    \item   Selection occurs based on fitness (tournament selection).
+    \item   Crossover of selected solutions to create new individuals.
+    \item   Repeat until population is replaced.
+    \item   Repeat for $N$ generations.
+\end{enumerate}
+
+\subsubsection{Anatomy of a Term-Weighting Scheme}
+Typical components of term weighting schemes include:
+\begin{itemize}
+    \item   Term frequency aspect.
+    \item   ``Inverse document'' score.
+    \item   Normalisation factor.
+\end{itemize}
+
+The search space should be decomposed accordingly.
+
+\subsubsection{Why Separate Learning into Stages?}
+The search space using primitive measures \& functions is extremely large;
+reducing the search space is advantageous as efficiency is increased.
+It eases the analysis of the solutions produced at each stage.
+Comparisons to existing benchmarks at each of these stages can be used to determine if the GP is finding novel solutions or variations on existing solutions.
+It can then be identified from where any improvement in performance is coming.
+
+\subsubsection{Learning Each of the Three Parts in Turn}
+\begin{enumerate}
+    \item   Learn a term-discrimination scheme (i.e., some type of idf) using primitive global measures.
+            \begin{itemize}
+                \item   8 terminals \& 8 functions.
+                \item   $T = \{\textit{df}, \textit{cf}, N, V, C, 1, 10, 0.5\}$.
+                \item   $F = \{+, \times, \div, -, \text{square}(), \text{sqrt}(), \text{ln}(), \text{exp}()\}$.
+            \end{itemize}
+
+    \item   Use this global measure and learn a term-frequency aspect.
+            \begin{itemize}
+                \item   4 terminals \& 8 functions.
+                \item   $T = \{\textit{tf}, 1, 10, 0.4\}$.
+                \item   $F = \{+, \times, \div, -, \text{square}(), \text{sqrt}(), \text{ln}(), \text{exp}()\}$.
+            \end{itemize}
+
+    \item   Finally, learn a normalisation scheme.
+            \begin{itemize}
+                \item   6 terminals \& 8 functions.
+                \item   $T = \{ \text{dl}, \text{dl}_{\text{avg}}, \text{dl}_\text{dev}, 1, 10, 0.5 \}$.
+                \item   $F = \{ +, \times, \div, -, \text{square}(), \text{sqrt}(), \text{ln}(), \text{exp}() \}$.
+            \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{./images/threestages.png}
+    \caption{Learning Each of the Three Stages in Turn}
+\end{figure}
+
+\subsubsection{Details of the Learning Approach}
+\begin{itemize}
+    \item   7 global functions were developed on \~32,000 OHSUMED documents.
+            \begin{itemize}
+                \item   All validated on a larger unseen collection and the best function taken.
+                \item   Random population of 100 for 50 generations.
+                \item   The fitness function used was MAP.
+            \end{itemize}
+
+    \item   7 tf functions were developed on \~32,000 LATIMES documents.
+            \begin{itemize}
+                \item   All validated on a larger unseen collection and the best function taken.
+                \item   Random population of 200 for 25 generations.
+                \item   The fitness function used was MAP.
+            \end{itemize}
+
+    \item   7 normalisation functions were developed 3 $\times$ \~ 10,000 LATIMES documents.
+            \begin{itemize}
+                \item   All validated on a larger unseen collection and the best function taken.
+                \item   Random population of 200 for 25 generations.
+                \item   Fitness function used was average MAP over the 3 collections.
+            \end{itemize}
+\end{itemize}
+
+\subsubsection{Analysis}
+The global function $w_3$ always produces a positive number:
+\[
+    w_3 = \sqrt{\frac{\textit{cf}^3_t \cdot N}{\textit{df}^4_t}}
+\]
+
+
+\begin{tcolorbox}[colback=gray!10, colframe=black, title=\textbf{Case Study 1: Application of Genetic Programming to IR}]
+    Evolutionary computing approaches include:
+    \begin{itemize}
+        \item   Evolutionary strategies.
+        \item   Genetic algorithms.
+        \item   Genetic programming.
+    \end{itemize}
+
+    Why genetic programming for IR?
+    \begin{itemize}
+        \item   Produces a symbolic representation of a solution which is useful for further analysis.
+        \item   Using training data, MAP can be directly optimised (i.e., used as the fitness function).
+        \item   Solutions produced are often generalisable as solution length (size) can be controlled.
+    \end{itemize}
+\end{tcolorbox}
 
 
 \end{document}
