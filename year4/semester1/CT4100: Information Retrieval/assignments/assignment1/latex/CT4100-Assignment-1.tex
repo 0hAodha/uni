@@ -6,10 +6,16 @@
 \usepackage[english]{babel} % Language hyphenation and typographical rules
 \usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black]{hyperref} 
 \usepackage{changepage}     % adjust margins on the fly
+\usepackage{enumitem}
+\usepackage{amsmath}
 
 \usepackage{fontspec}
 \setmainfont{EB Garamond}
 \setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage[backend=biber, style=numeric, date=iso, urldate=iso]{biblatex}
+\addbibresource{references.bib}
+\DeclareFieldFormat{urldate}{Accessed on: #1}
 
 \usepackage{minted}
 \usemintedstyle{algol_nu}
@@ -49,15 +55,17 @@
 \begin{minipage}{0.295\textwidth} 
     \raggedright
     \footnotesize 
-    Name: Andrew Hayes \\
-    E-mail: \href{mailto://a.hayes18@universityofgalway.ie}{\texttt{a.hayes18@universityofgalway.ie}}  \hfill\\   
-    ID: 21321503 \hfill
+    \begin{tabular}{@{}l l}
+        Name: & Andrew Hayes \\
+        Student ID: & 21321503 \\
+        E-mail: & \href{mailto://a.hayes18@universityofgalway.ie}{a.hayes18@universityofgalway.ie} \\
+    \end{tabular}
 \end{minipage}
 \begin{minipage}{0.4\textwidth} 
     \centering 
     \vspace{0.4em}
-    \Large 
-    \textbf{CT4100} \\ 
+    \LARGE 
+    \textsc{ct4100} \\ 
 \end{minipage}
 \begin{minipage}{0.295\textwidth} 
     \raggedleft
@@ -70,4 +78,91 @@
 \end{center}
 \hrule
 
+\section{Question 1}
+\subsection{Indexing Structure for a Sparse Term-Document Matrix}
+One of the key factors that must be considered when choosing an appropriate indexing structure for a term-document matrix is the sparsity of the matrix, as (according to Zipf's law) most terms will occur quite rarely in the corpus and not occur at all in most documents, resulting in the majority of indices in the term-document matrix containing a \textsc{null} value.
+Another key factor that must be considered is lookup speed: typically, we will be trying to find the documents that are most relevant to a given query or vector of terms, so we want to be able to quickly find a given term in the matrix and the documents in which that term has the highest weight.
+\\\\
+One data structure that addresses these factors is the \textbf{inverted index}.
+At a high level, this is a data structure which consists of the list of all terms in the corpus, where each term in the list points to a list of tuples (called a \textit{posting list}) containing the identifier of each document in which the term occurs and the weight of said term in the document.
+This completely circumvents the issue of storing a large volume of \textsc{null} weight values, as we only store a weight for a document which contains the given term.
+\\\\
+If the term list was implemented as a hash table with a suitable hash function yielding minimal collisions, where each term in the corpus is a key pointing to a posting list value, the time complexity of retrieving the list of documents in which that term occurs would be $O(1)$ in the general case.
+Provided the posting list was implemented as a list of document-weight pairs, sorted by decreasing order of weight, it would then also be an $O(1)$ operation to retrieve the top $n$ documents for which that term is relevant.
+Therefore, searching for the most relevant documents for a term or calculating which documents are most relevant to a query vector would be extremely fast \& efficient. 
+\\\\
+A major drawback, however, of using an inverted index to represent the term-document matrix is that it is only efficient when we start with a term and want to find the relevant documents; it is extremely inefficient if we are starting with a document and want to find the relevant terms in that document (so inefficient, in fact, that one would be better off just re-calculating the term weights for that document than searching through the inverted index).
+I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is unimportant.
+
+\subsection{Algorithm to Calculate the Similarity of a Document to a Query}
+Assuming that the both the query and the document are supplied in full as just a string of terms:
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{python}
+def calculate_term_weights(terms_string):
+    term_frequencies = {}
+
+    # iterating over each whitespace-separated term in the list
+    for term in terms_string.split():
+        term_frequencies[term] = term_frequencies.get(term, 0) + 1
+
+\end{minted}
+\caption{Algorithm to Calculate the Similarity of a Document to a Query}
+\end{code}
+
+\section{Similarity of a Given Query to Varying Documents}
+For a document $D_1 = \{ \text{Shipment of gold damage in a fire} \}$ and a query $Q = \{ \text{gold silver truck} \}$,
+and assuming that we are only considering the similarity of the query \& document as weighted vectors in the vector space model, then $\text{sim}(Q, D_1)$ should be relatively low as the query and the document only share one term.
+Since no term is repeated in either the query or the document, each term should have equal weight.
+For each of the following augmentations on $D_1$:
+
+\begin{enumerate}[label=\alph*)]
+    \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Fire.} \}$:
+            the inclusion of an additional term ``fire'' increases the weight of the term ``fire'' in determining the meaning of the document.
+            Since $Q$ does not contain the term ``fire'', the $\text{sim}(Q, D_1)$ will be reduced.
+
+    \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Fire. Fire.} \}$:
+            the inclusion of two additional instances of the term ``fire'' further increases the weight of the term ``fire'' in determining the meaning of the document, and thus further reduces $\text{sim}(Q, D_1)$.
+
+    \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Gold.} \}$:
+            the repetition of the term ``gold'' in $D_1$ increases the weight of the term in determining the meaning of the document, and since the term ``gold'' also appears in $Q$, $\text{sim}(Q, D_1)$ will be increased compared to the unaltered document.
+
+    \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Gold. Gold.} \}$:
+            the double repetition of the term ``gold'' in $D_1$ further increases the weight of the term in determining the meaning of the document, and since the term ``gold'' also appears in $Q$, $\text{sim}(Q, D_1)$ will be further increased.
+\end{enumerate}
+
+However, a human reviewer of the above similarity scores might argue that further repetition of terms in the augmented documents does little to affect the meaning of the document, and so one could consider using the logarithm of the term frequency to reduce the significance of each additional occurrence of a term.
+
+\section{Context-Based Weighting Scheme for Scientific Articles}
+The two additional features I  have chosen to include in my context-based weighting scheme are:
+\begin{itemize}
+    \item   \textbf{Citation count:} a somewhat obvious choice, as citation count is a measure of the number of times the article in question has been referenced by another publication, and thus is a good indicator of how influential the article is.
+            Including the citation count in the weighting scheme will prioritise returning more influential articles, and increases the likelihood that returned articles will be of use to the searcher.
+            However, since it is unlikely that the $n+1^\text{th}$ citation when $n = 3000$ holds the same importance as the $n+1^\text{th}$ citation when $n = 5$, the logarithm of the citation count should be used instead of the raw citation count.
+            Since the citation count may be zero, we ought to add 1 to the citation count before calculating the logarithm, as $\log(0) = - \infty$; while we do want to assign a negative bias to low citation counts, I think $-\infty$ is probably \textit{too} negative.
+
+    \item   \textbf{Years since publication:} the inclusion of the citation count in the weighting scheme could cause an undesirable bias that favours older articles, as newer articles may have a low citation count simply because enough time hasn't elapsed since their publication for them to have been cited by other publications.
+            This is especially undesirable for scientific papers, where one would imagine that more recent \& up-to-date research articles would be of greater importance (generally speaking) than older articles.
+            This can be counteracted via the inclusion of a negative bias based on the number of years since publication: the older the article, the greater the reduction.
+            However, subtracting some value from the similarity score could cause the similarity score to become negative, particularly in the case of very old papers that are very dissimilar to the query.
+            To maintain positive similarity scores for the sake of simplicity, I instead chose to incorporate the years-since-publication as a negative exponent on a positive number so that the resulting value is never negative, but shrinks as exponentially as the documents get older.
+\end{itemize}
+
+With these two features in mind, my proposed weighting scheme would be as follows:
+\[
+    S_i = \alpha \cdot \text{tf-idf} + \beta \cdot \log(C_i + 1) + e^{- \gamma Y_i}
+\]
+where:
+\begin{itemize}
+    \item   $i$ is the document in question.
+    \item   $S_i$ is the significance of the document $i$.
+    \item   $\alpha$, $\beta$, \& $\gamma$ are tuning parameters that control the influence of the tf-idf, citation count, \& years since publication on the similarity score, respectively.
+    \item   $C_i$ is the citation count for document $i$.
+    \item   $Y_i$ is the number of years since document $i$ was published.
+\end{itemize}
+
+
+
+\newpage
+\nocite{*}
+\printbibliography
 \end{document}
