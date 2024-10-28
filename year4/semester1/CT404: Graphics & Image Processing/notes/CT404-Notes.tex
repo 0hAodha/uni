@@ -63,7 +63,7 @@
     \begin{center}
         \hrule
         \vspace*{0.6cm}
-        \censor{\huge \textbf{CT404}}
+        \censor{\Huge \textsc{ct404}}
         \vspace*{0.6cm}
         \hrule
         \LARGE
@@ -82,9 +82,11 @@
             \vspace{0.4em}
             \raggedright
             \normalsize 
-            Name: \censor{Andrew Hayes} \\
-            E-mail: \censor{\href{mailto://a.hayes18@universityofgalway.ie}{\texttt{a.hayes18@universityofgalway.ie}}}  \hfill\\   
-            Student ID: \censor{21321503} \hfill
+            \begin{tabular}{@{}l l}
+                Name: & Andrew Hayes \\
+                Student ID: & 21321503 \\
+                E-mail: & \href{mailto://a.hayes18@universityofgalway.ie}{a.hayes18@universityofgalway.ie} \\
+            \end{tabular}
         \end{minipage}
         \begin{minipage}{0.495\textwidth} 
             \raggedleft
@@ -2033,7 +2035,7 @@ The \textbf{Harris corner detector} finds pixel values with large ``cornerness''
 \begin{align*}
     \text{cornerness} =& \text{det}(Z) - k (\text{trace}(Z))^2 \\
     =& z_x z_y - z_{xy}^2 - k (z_x + z_y)^2 \\
-    =& \lambda_1 \lambda_2 - k(\lamda_1 + \lambda_2)^2
+    =& \lambda_1 \lambda_2 - k(\lambda_1 + \lambda_2)^2
 \end{align*}
 
 The \textbf{Tomasi-Kanade/Shi-Tomasi detector} finds pixel values with large ``cornerness'' defined as:
