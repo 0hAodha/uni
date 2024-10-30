@@ -92,7 +92,7 @@ Provided the posting list was implemented as a list of document-weight pairs, so
 Therefore, searching for the most relevant documents for a term or calculating which documents are most relevant to a query vector would be extremely fast \& efficient. 
 \\\\
 A major drawback, however, of using an inverted index to represent the term-document matrix is that it is only efficient when we start with a term and want to find the relevant documents; it is extremely inefficient if we are starting with a document and want to find the relevant terms in that document (so inefficient, in fact, that one would be better off just re-calculating the term weights for that document than searching through the inverted index).
-I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is unimportant.
+I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is not the intended use of the matrix.
 
 \subsection{Algorithm to Calculate the Similarity of a Document to a Query}
 Assuming that the both the query and the document are supplied in full as just a string of terms:
