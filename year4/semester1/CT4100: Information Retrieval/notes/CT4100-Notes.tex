@@ -4,7 +4,7 @@
 \usepackage{censor}
 \StopCensoring
 \usepackage{fontspec}
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
 \setmainfont{EB Garamond}
 % for tironian et fallback
 % % \directlua{luaotfload.add_fallback
@@ -1228,6 +1228,112 @@ The global function $w_3$ always produces a positive number:
         \item   Solutions produced are often generalisable as solution length (size) can be controlled.
     \end{itemize}
 \end{tcolorbox}
+
+Empirical evaluation shows that the evolved scheme outperforms a tuned pivot normalisation scheme and a tuned BM25 scheme.
+The evolved scheme is also non-parametric.
+The use of primitive atomic measures and basic function types is crucial in allowing the shape of term-weighting functions to evolve.
+
+\subsection{Neural Networks}
+Previously, we reviewed the notion of learning in IR and looked at the application of the evolutionary computation approach as a search for solutions in information retrieval.
+The advantages were that we had solutions that could be analysed.
+However, the usefulness of the solution found is dependent on the usefulness of the primitive features chosen to extract from queries and the documents collection.
+\\\\
+The dominant learning approach in recent years has been the \textbf{neural} approach.
+The neural approach can be seen being applied directly to:
+\begin{itemize}
+    \item   The information retrieval tasks itself.
+    \item   To other related problems/areas that can feed into the IR process.
+    \item   Related problems in IR (e.g., query suggestions).
+\end{itemize}
+
+Approaches in the domain have been both supervised \& unsupervised.
+One of the first approaches to adopt a neural network model can be traced back to the 1980s, with an effectively three-layer network consisting of documents, terms, \& query.
+A spreading activation method was used, where query nodes are highlights and propagate to terms which in turn highlight certain documents.
+
+
+\begin{tcolorbox}[breakable, colback=gray!10, colframe=black, title=\textbf{Case Study: Self-Organising Maps (Kohonen)}]
+Self-organising maps are an example of unsupervised learning.
+Documents are mapped to 2D space, and dense areas indicate clusters hierarchically.
+In the Kohonen approach, documents are mapped to 2D space and each region is characterised / represented by terms.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{./images/som.png}
+    \caption{A SOM created over a collection of AI-related documents}
+\end{figure}
+
+Users can traverse the collection by clicking on an area of the map that is of interest.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{./images/som1.png}
+    \caption{Finally, the user arrives at a list of papers/articles that have been clustered together}
+\end{figure}
+
+Kohonen self-organising maps represent a sub-symbolic, neural approach to clustering.
+The algorithm takes a set of $n$-dimensional vectors and attempts to map them onto a two-dimensional grid.
+The grid comprises of a set of nodes, each of which is assigned an $n$-dimensional vector.
+These vectors contain randomly assigned weights.
+\\\\
+The algorithm is as follows:
+\begin{enumerate}
+    \item   Select an input vector randomly.
+    \item   Identify the grid node which is closest to the input vector: the ``winning node''.
+    \item   Adjust the weights on the winning node so that it is closer to the input vector.
+    \item   Adjust the weights on nodes near to the winning node so that they are closer to the winning node.
+\end{enumerate}
+
+Note:
+\begin{itemize}
+    \item   The rate of modification of weights decreases over time.
+    \item   The size of the neighbourhood affected (near the winning node) decreases over time.
+    \item   The resulting clustering of tuples maintains the distance relationship between the input data.
+\end{itemize}
+\end{tcolorbox}
+
+There has been huge interest in the application of NN models in IR in recent years as there have been several breakthroughs due to the use of neural networks with multiple layers (so-called ``deep architectures'') and the availability of large datasets \& computing power.
+Proposed neural models learn representations of language from raw text that can bridge the gap between query \& document vocabulary.
+Neural IR is the application of shallow or deep NN to IR tasks.
+\\\\
+Neural models for IR use vector representations of text and usually contain a large number of parameters that need to be tuned.
+ML models with a large set of parameters benefit from large quantities of training data.
+Unlike traditional ``learning to rank'' approaches that train over a set of hand-crafted features, more recent NN accept the raw text as input.
+Some main steps in classical IR include:
+\begin{itemize}
+    \item   Generating a representation of the user's query.
+    \item   Generating a representation of the documents that captures the ``content'' of the document.
+    \item   Generating a ``similarity'' score (comparison).
+\end{itemize}
+
+All neural approaches can be classified as to whether they affect the representation of the query, the document, or the comparison.
+By inspecting only the query terms, the IR model ignores all evidence of the context provided in the rest of the document: only occurrences of a word are included, and not other terms that capture the same meaning or the same topic.
+Traditional IR models have also used dense vector representations of terms \& documents.
+Many neural representations have commonalities with these traditional approaches.
+
+\subsection{Query Representation}
+Types of vector representations include:
+\begin{itemize}
+    \item   One-Hot representations: akin to what we have seen thus far, in that each term is represented by one value.
+    \item   Distributed representation: typically a real-valued vector which attempts to better capture the meaning of the terms.
+\end{itemize}
+
+NNs are often used to learn this ``embedding'' or representation of terms.
+\\\\
+The \textbf{distributional hypothesis} states that terms that occur in similar contexts tend to be semantically similar.
+An \textbf{embedding} is a representation of items in a new space such that the properties of, and the relationships between the items are preserved from the original representation.
+There are many algorithms for this, e.g., \textit{word2vec}.
+Representations are generated for queries \& for documents.
+We compare the query \& document in this embedding space: documents \& queries that are similar should be similar in this embedding space.
+\\\\
+Text \& language is typically represented as a sequence; 
+for analysing questions \& sentences, we need to learn or model these sequences.
+In a \textbf{recurrent neural network}, a neuron's output is a function of the current state of the neuron \& the input vector.
+They are very successful in capturing / learning sequential relationships.
+A large set of architectures are used with different topologies.
+Convolutional networks (most often associated with images) are also used to learn the relationships between terms.
+Sequential processing has been used in query understanding, retrieval, expansion, etc.
+\\\\
+In summary, neural approaches are powerful, typically more computationally expensive than traditional approaches, have good performance, but have issues with explainability.
 
 
 \end{document}
