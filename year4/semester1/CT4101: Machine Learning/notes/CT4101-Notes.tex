@@ -1180,9 +1180,205 @@ The area under the ROC curve is often used to determine the ``strength'' of a cl
 scikit-learn provides various classes to generate ROC curves: \url{https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html}.
 The link also gives some details on how ROC curves can be computed for mutli-class classification problems.
 
+\section{Data Processing \& Normalisation}
+\subsection{Data Normalisation}
+One major problem in data normalisation is \textbf{scaling}.
+For example, if Attribute 1 has a range of 0-10 and Attribute 2 has a range from 0-1000, then Attribute 2 will dominate calculations.
+The solution for this problem is to rescale all dimensions independently:
+\begin{itemize}
+    \item   Z-normalisation: calculated by subtracting the population mean from an individual raw score and then dividing it by the population standard deviation.
+            \[
+                z = \frac{x - \mu}{\sigma}
+            \]
+            where $z$ is the z-score, $x$ is the raw score, $\mu$ is the population mean, \& $\sigma$ is the standard deviation of the population. 
+            \\\\
+            This can be achieved in scikit-learn using the \mintinline{python}{StandardScaler} utility class.
 
+    \item   Min-Max data scaling: also called 0-1 normalisation or range normalisation.
+            \[
+                X' = \frac{X - X_{\text{min}}}{X_{\text{max}} - X_{\text{min}}}
+            \]
+            This can be achieved in scikit-learn using the \mintinline{python}{MinMaxScaler} utility class.
+\end{itemize}
 
+It is generally good practice to normalise continuous variables before developing an ML model.
+Some algorithms (e.g., $k$-NN) are much more susceptible to the effects of the relative scale of attributes than others (e.g., decision trees are more robust to the effects of scale).
 
+\subsection{Binning}
+\textbf{Binning} involves converting a continuous feature into a categorical feature.
+To perform binning, we define a series of ranges called \textbf{bins} for the continuous feature that corresponds to the levels of the new categorical feature we are creating.
+Two of the more popular ways of defining bins include equal-width binning \& equal-frequency binning.
+\\\\
+Deciding on the number of bins can be complex:
+in general, if we set the number of bins to a very low number we may lose a lot of information, but if we set the number of bins to a very high number then we might have very few instances in each bin or even end up with empty bins.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/numbins.png}
+    \caption{The effect of different numbers of bins}
+\end{figure}
+
+\subsubsection{Equal-Width Binning}
+The \textbf{equal-width binning} approach splits the range of the feature values into $b$ bins, each of size $\frac{\text{range}}{b}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/equalbins.png}
+    \caption{Equal-width binning}
+\end{figure}
+
+\subsubsection{Equal-Frequency Binning}
+\textbf{Equal-frequency binning} first sorts the continuous feature values into ascending order, and then places an equal number of instances into each bin, starting with bin 1.
+The number of instances placed in each bin is simply the total number of instances divided by the number of bins $b$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/freqbins.png}
+    \caption{Equal-frequency binning}
+\end{figure}
+
+\subsection{Sampling}
+Sometimes, the dataset that we have is so large that we do not use all the data available to us and instead take a smaller percentage from the larger dataset.
+For example, we may wish to only use part of the data because training will take a long time with very many examples for some algorithms.
+In the case of $k$-NN, a very large training set may lead to long prediction times.
+However, we need to be careful when sampling to ensure that the resulting datasets are still representative of the original data and that no unintended bias is introduced during this process.
+Common forms of sampling include: top sampling, random sampling, stratified sampling, under-sampling, \& over-sampling.
+
+\subsubsection{Top Sampling}
+\textbf{Top sampling} simply selects the top $s\%$ of instances from a dataset to create a sample.
+It runs a serious risk of introducing bias as the sample will be affected by any ordering of the original dataset; therefore, top sampling should be avoided.
+
+\subsubsection{Random Sampling}
+\textbf{Random sampling} is a good default sampling strategy as it randomly selects a proportion ($s\%$) of the instances from a large dataset to create a smaller set.
+It is a good choice in most cases as the random nature of the selection of instances should avoid introducing bias.
+
+\subsubsection{Stratified Sampling}
+\textbf{Stratified sampling} is a sampling method that ensures that the relative frequencies of the levels of a specific stratification feature are maintained in the sampled dataset.
+To perform stratified sampling, the instances in a dataset are divided into groups (or \textit{strata}), where each group contains only instances that have a particular level for the stratification feature.
+$s\%$ of the instances in each stratum are randomly selected and these selections are combined to give an overall sample of $s\%$ of the original dataset.
+\\\\
+In contrast to stratified sampling, sometimes we would like a sample to contain different relative frequencies of the levels of a particular discrete feature to the distribution in the original dataset.
+To do this, we can use under-sampling or over-sampling.
+
+\subsubsection{Under-Sampling}
+\textbf{Under-sampling} begins by dividing a dataset into groups, where each group contains only instances that have a particular level for the feature to be under-sampled.
+The number of instances in the smallest group is the under-sampling target size.
+Each group containing more instances than the smallest one is then randomly sampled by the appropriate percentage to create a subset that is the under-sampling target size.
+These under-sampled groups are then combined to create the overall under-sampled dataset.
+
+\subsubsection{Over-Sampling}
+\textbf{Over-sampling} addresses the same issue as under-sampling but in the opposite way:
+after dividing the dataset into groups, the number of instances in the largest group becomes the over-sampling target size.
+From each smaller group, we then create a sample containing that number of instances using random sampling without replacement.
+These larger samples are combined to form the overall over-sampled dataset.
+
+\subsection{Feature Selection}
+\subsubsection{The Curse of Dimensionality}
+Some attributes are much more significant than others are considered equally in distance metric, possibly leading to bad predictions.
+$k$-NN uses all attributes when making a prediction, whereas other algorithms (e.g., decision trees) use only the most useful features and so are not as badly affected by the curse of dimensionality.
+Any algorithm that considers all attributes in a high-dimensional space equally has this problem, not just $k$-NN + Euclidean distance.
+Two solutions to the curse of dimensionality are:
+\begin{itemize}
+    \item   Assign weighting to each dimension (not the same as distance-weighted $k$-NN).
+            Optimise weighting to minimise error.
+    \item   Give some dimensions 0 weight: feature subset selection.
+\end{itemize}
+
+Consider $~$ cases with $d$ dimensions, in a hypercube of \textit{unit} volume.
+Assume that neighbourhoods are hypercubes with length $b$; volume is $b^d$.
+To contain $k$ points, the average neighbourhood must occupy $\frac{k}{N}$ of the entire volume.
+\begin{align*}
+    \Rightarrow& b^d = \frac{k}{N} \\
+    \Rightarrow& b = \left( \frac{k}{N}\right)^\frac{1}{d} 
+\end{align*}
+
+In high dimensions, e.g. $k=10$, $N=1,000,000$, $d=100$, then $b = 0.89$, i.e., a neighbourhood must occupy 90\% of each dimension of space.
+In low dimensions, with $k=10$, $N=1,000,000$, $d=2$, then $b= 0.003$ which is acceptable.
+High dimensional spaces are generally very sparse, and each neighbour is very far away.
+
+\subsubsection{Feature Selection}
+Fortunately, some algorithms partially mitigate the effects of the curse of dimensionality (e.g., decision tree learning).
+However, this is not true for all algorithms, and heuristics for search can sometimes be misleading.
+$k$-NN and many other algorithms use all attributes when making a prediction.
+Acquiring more data is not always a realistic option; the best way to avoid the curse of dimensionality is to use only the most useful features during learning: \textbf{feature selection}.
+\\\\
+We may wish to distinguish between different types of descriptive features:
+\begin{itemize}
+    \item   \textbf{Predictive:} provides information that is useful when estimating the correct target value.
+    \item   \textbf{Interacting:} provides useful information only when considered in conjunction with other features.
+    \item   \textbf{Redundant:} features that have a strong correlation with another feature.
+    \item   \textbf{Irrelevant:} doesn't provide any useful information for estimating the target value.
+\end{itemize}
+
+Ideally, a good feature selection approach should identify the smallest subset of features that maintain prediction performance.
+
+\subsubsection{Feature Selection Approaches}
+\begin{itemize}
+    \item   \textbf{Rank \& Prune:} rank features according to their predictive power and keep only the top $X\%$.
+            A \textbf{filter} is a measure of the predictive power used during ranking, e.g., information gain.
+            A drawback of rank \& prune is that features are evaluated in isolation, so we will miss useful \textit{interacting features}.
+    \item   \textbf{Search for useful feature subsets:}
+            we can pick out useful interacting features by evaluating feature subsets.
+            We could generate, evaluate, \& rank all possible feature subsets then pick the best (essentially a brute force approach, computationally expensive).
+            A better approach is a \textbf{greedy local search}, which builds the feature subset iteratively by starting out with an empty selection, then trying to add additional features incrementally.
+            This requires evaluation experiments along the way.
+            We stop trying to add more features to the selection once termination conditions are met.
+\end{itemize}
+
+\subsection{Covariance \& Correlation}
+As well as visually inspecting scatter plots, we can calculate formal measures of the relationship between two continuous features using \textbf{covariance} \& \textbf{correlation}.
+
+\subsubsection{Measuring Covariance}
+For two features $a$ \& $b$ in a dataset of $n$ instances, the \textbf{sample covariance} between $a$ \& $b$ is:
+\[
+    \text{cov}(a,b) = \frac{1}{n-1} \sum^n_{i=1} \left( \left( a_i - \overline{a} \right) \times \left( b_i - \overline{b} \right) \right)
+\]
+
+where $a_i$ \& $b_i$ are the $i^\text{th}$ instances of features $a$ \& $b$ in a dataset, and $\overline{a}$ \& $\overline{b}$ are the sample means of features $a$ \& $b$.
+\\\\
+Covariance values fall into the range $[- \infty, \infty]$, where negative values indicate a negative relationship, positive values indicate a positive relationship, \& values near to zero indicate that there is little to no relationship between the features.
+\\\\
+Covariance is measured in the same units as the features that it measures, so comparing something like weight of a basketball player to the height of a basketball player doesn't really make sense as the features are not in the same units.
+To solve this problem, we use the \textbf{correlation coefficient}, also known as the Pearson product-moment correlation coefficient or Pearson's $r$.
+
+\subsubsection{Measuring Correlation}
+\textbf{Correlation} is a normalised form of covariance with range $[-1,1]$.
+The correlation between two features $a$ \& $b$ can be calculated as
+\[
+    \text{corr}(a,b) = \frac{\text{cov}(a,b)}{\text{sd}(a) \times \text{sd}(b)}
+\]
+where $\text{cov}(a,b)$ is the covariance between features $a$ \& $b$, and $\text{sd}(a)$ \& $\text{sd}(b)$ are the standard deviations of $a$ \& $b$ respectively.
+\\\\
+Correlation values fall into the range $[-1,1]$ where values close to $-1$ indicate a very strong negative correlation (or covariance), values close to $1$ indicate a very strong positive correlation, \& values around $0$ indicate no correlation.
+Features that have no correlation are said to be \textbf{independent}.
+\\\\
+The \textbf{covariance matrix}, usually denoted as $\sum$, between a set of continuous features $\{a,b, \dots, z\}$, is given as
+\[
+    \sum_{\{ a, b, \dots, z \}} =
+    \begin{bmatrix}
+        \text{var}(a) & \text{cov}(a,b) & \cdots & \text{cov}(a,z) \\
+        \text{cov}(a,b) & \text{var}(b) & \cdots & \text{cov}(b,z) \\
+        \vdots & \vdots & \vdots & \vdots \\
+        \text{cov}(z,a) & \text{cov}(z,b) & \cdots & \text{var}(z)
+    \end{bmatrix}
+\]
+
+Similarly, the \textbf{correlation matrix} is just a normalised version of the covariance matrix and shows the correlation between each pair of features:
+\[
+    \underset{\{ a,b,\dots,z \}}{\text{correlation matrix}} =
+    \begin{bmatrix}
+        \text{corr}(a,a) & \text{corr}(a,b) & \cdots & \text{corr}(a,z) \\
+        \text{corr}(b,a) & \text{corr}(b,b) & \cdots & \text{corr}(b,z) \\
+        \vdots & \vdots & \cdots & \vdots \\
+        \text{corr}(z,a) & \text{corr}(z,b) & \cdots & \text{corr}(z,z)
+    \end{bmatrix}
+\]
+
+Correlation is a good measure of the relationship between two continuous features, but is not perfect.
+Firstly, the correlation measure given earlier responds only to linear relationships between features.
+In a linear relationship between two features, as one feature increases or decreases, the other feature increases or decreases by a corresponding amount.
+Frequently, features will have a very strong non-linear relationship that correlation does not respond to.
+Some limitations of measuring correlation are illustrated very clearly in the famous example of Anscombe's Quartet, published by the famous statistician Francis Anscombe in 1973.
 
 
 
