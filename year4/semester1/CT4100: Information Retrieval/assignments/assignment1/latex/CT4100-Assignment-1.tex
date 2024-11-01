@@ -88,26 +88,77 @@ At a high level, this is a data structure which consists of the list of all term
 This completely circumvents the issue of storing a large volume of \textsc{null} weight values, as we only store a weight for a document which contains the given term.
 \\\\
 If the term list was implemented as a hash table with a suitable hash function yielding minimal collisions, where each term in the corpus is a key pointing to a posting list value, the time complexity of retrieving the list of documents in which that term occurs would be $O(1)$ in the general case.
-Provided the posting list was implemented as a list of document-weight pairs, sorted by decreasing order of weight, it would then also be an $O(1)$ operation to retrieve the top $n$ documents for which that term is relevant.
+Provided the posting list was implemented as a list of document-weight pairs, sorted by decreasing order of weight, it would then also be an $O(k)$ operation to retrieve the top $k$ documents for which that term is relevant, with $k$ being a fixed integer that does not scale with the list size $n$.
 Therefore, searching for the most relevant documents for a term or calculating which documents are most relevant to a query vector would be extremely fast \& efficient. 
-\\\\
-A major drawback, however, of using an inverted index to represent the term-document matrix is that it is only efficient when we start with a term and want to find the relevant documents; it is extremely inefficient if we are starting with a document and want to find the relevant terms in that document (so inefficient, in fact, that one would be better off just re-calculating the term weights for that document than searching through the inverted index).
-I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is not the intended use of the matrix.
+% \\\\
+% A major drawback, however, of using an inverted index to represent the term-document matrix is that it is only efficient when we start with a term and want to find the relevant documents; it is extremely inefficient if we are starting with a document and want to find the relevant terms in that document (so inefficient, in fact, that one would be better off just re-calculating the term weights for that document than searching through the inverted index).
+% I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is not the intended use of the matrix.
 
 \subsection{Algorithm to Calculate the Similarity of a Document to a Query}
 Assuming that the both the query and the document are supplied in full as just a string of terms:
 \begin{code}
+% def calculate_term_weights(terms_string):
+%     term_frequencies = {}
+%
+%     # iterating over each whitespace-separated term in the list
+%     for term in terms_string.split():
+        % term_frequencies[term] = term_frequencies.get(term, 0) + 1
 \begin{minted}[linenos, breaklines, frame=single]{python}
-def calculate_term_weights(terms_string):
-    term_frequencies = {}
+"""
+Input: 
+    query_terms: an array of terms in the user query, suitably pre-processed (e.g., stemmed, lemmatised)
+    doc_id: an integer identifying the document in the inverted index
+    inverted_index: a hash table of terms and tuples consisting of the doc_id and the weight of the term in that document
+"""
+def similarity(query_terms, doc_id, inverted_index):
+    query_vector = {}  # dictionary to store weights of terms in the query
+    doc_vector   = {}  # dictionary to store weights of terms in the document
 
-    # iterating over each whitespace-separated term in the list
-    for term in terms_string.split():
-        term_frequencies[term] = term_frequencies.get(term, 0) + 1
+    # calculate the term frequency for each term in the query
+    for term in query_terms:
+        # initialise to 1 if not already present in vector, otherwise increment
+        query_vector[term] = query_vector.get(term, 0) + 1
 
+    # normalise the query weights
+    for term in query_vector:
+        query_vector[term] = query_vector[term] / len(query_terms)
+
+    # Step 2: Retrieve document term weights from the inverted index
+    # for each query term, find the term in the inverted index, if present
+    for term in query_terms:
+        if term in inverted_index:
+
+            # find the weight of the term in the given document, if present and add to doc_vector
+            for (doc, weight) in inverted_index[term]:
+                if doc == doc_id:
+                    doc_vector[term] = weight
+
+    # calculate the dot product of the query vector and document vector
+    dot_product = 0
+    for term in query_vector:
+        if term in doc_vector:
+            dot_product += query_vector[term] * doc_vector[term]
+
+    # calculate the magnitudes of the query and document vectors
+    total_squared_query_weights = 0
+    for weight in query_vector.values():
+        total_query_weights += weight^2
+    query_magnitude = sqrt(total_squared_query_weights)
+
+    total_squared_doc_weights = 0
+    for weight in doc_vector.values():
+        total_doc_weights += weight^2
+    doc_magnitude = sqrt(total_squared_doc_weights)
+
+    # calculate cosine similarity
+    return (dot_product / (query_magnitude * doc_magnitude))
 \end{minted}
 \caption{Algorithm to Calculate the Similarity of a Document to a Query}
 \end{code}
+
+As can be seen from the above algorithm, calculating the similarity of a specific document in the corpus to a query is not a particularly efficient operation using the inverted index: finding the tuple pertaining to the given document in the postings list for a query term is an $O(n)$ operation in the worst case, and $n$ could be potentially billions of documents depending on the corpus in question;
+it would most likely be computationally cheaper to just ignore the inverted index and recompute the weights of each term in the document.
+However, I still maintain that the inverted index is a good choice for term-document matrix, as I assume that general searching of the corpus for the most similar documents to a query is the ordinary use case of such a data structure.
 
 \section{Similarity of a Given Query to Varying Documents}
 For a document $D_1 = \{ \text{Shipment of gold damage in a fire} \}$ and a query $Q = \{ \text{gold silver truck} \}$,
@@ -160,9 +211,7 @@ where:
     \item   $Y_i$ is the number of years since document $i$ was published.
 \end{itemize}
 
-
-
-\newpage
+% \newpage
 \nocite{*}
 \printbibliography
 \end{document}
