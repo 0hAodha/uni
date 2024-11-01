@@ -95,7 +95,8 @@ Therefore, searching for the most relevant documents for a term or calculating w
 % I have made the assumption that the former type of search is what we would want to be optimising for in our system, and that the latter kind of search is not the intended use of the matrix.
 
 \subsection{Algorithm to Calculate the Similarity of a Document to a Query}
-Assuming that the both the query and the document are supplied in full as just a string of terms:
+Assuming that the inverted index has already been created, and the term weights for every document in the corpus have been pre-computed (and suitably normalised):
+
 \begin{code}
 % def calculate_term_weights(terms_string):
 %     term_frequencies = {}
@@ -123,12 +124,11 @@ def similarity(query_terms, doc_id, inverted_index):
     for term in query_vector:
         query_vector[term] = query_vector[term] / len(query_terms)
 
-    # Step 2: Retrieve document term weights from the inverted index
     # for each query term, find the term in the inverted index, if present
     for term in query_terms:
         if term in inverted_index:
 
-            # find the weight of the term in the given document, if present and add to doc_vector
+            # find the weight of the term in the given document if present and add to doc_vector
             for (doc, weight) in inverted_index[term]:
                 if doc == doc_id:
                     doc_vector[term] = weight
@@ -158,7 +158,7 @@ def similarity(query_terms, doc_id, inverted_index):
 
 As can be seen from the above algorithm, calculating the similarity of a specific document in the corpus to a query is not a particularly efficient operation using the inverted index: finding the tuple pertaining to the given document in the postings list for a query term is an $O(n)$ operation in the worst case, and $n$ could be potentially billions of documents depending on the corpus in question;
 it would most likely be computationally cheaper to just ignore the inverted index and recompute the weights of each term in the document.
-However, I still maintain that the inverted index is a good choice for term-document matrix, as I assume that general searching of the corpus for the most similar documents to a query is the ordinary use case of such a data structure.
+However, I still maintain that the inverted index is a good choice for a term-document matrix, as I assume that general searching of the corpus for the most similar documents to a given query is the primary use case of such a data structure.
 
 \section{Similarity of a Given Query to Varying Documents}
 For a document $D_1 = \{ \text{Shipment of gold damage in a fire} \}$ and a query $Q = \{ \text{gold silver truck} \}$,
@@ -169,10 +169,11 @@ For each of the following augmentations on $D_1$:
 \begin{enumerate}[label=\alph*)]
     \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Fire.} \}$:
             the inclusion of an additional term ``fire'' increases the weight of the term ``fire'' in determining the meaning of the document.
-            Since $Q$ does not contain the term ``fire'', the $\text{sim}(Q, D_1)$ will be reduced.
+            Since $Q$ does not contain the term ``fire'', $\text{sim}(Q, D_1)$ will be reduced.
+            Note that this requires that the query \& document have been suitably pre-processed so that the strings ``Fire'' \& ``fire'' are considered equivalent.
 
     \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Fire. Fire.} \}$:
-            the inclusion of two additional instances of the term ``fire'' further increases the weight of the term ``fire'' in determining the meaning of the document, and thus further reduces $\text{sim}(Q, D_1)$.
+            the inclusion of two additional instances of the term ``fire'' further increases the weight of the term ``fire'' in determining the meaning of the document, and thus further reduces $\text{sim}(Q, D_1)$ as ``fire'' does not occur in $Q$.
 
     \item   $D_1 = \{ \text{Shipment of gold damaged in a fire. Gold.} \}$:
             the repetition of the term ``gold'' in $D_1$ increases the weight of the term in determining the meaning of the document, and since the term ``gold'' also appears in $Q$, $\text{sim}(Q, D_1)$ will be increased compared to the unaltered document.
@@ -189,13 +190,14 @@ The two additional features I  have chosen to include in my context-based weight
     \item   \textbf{Citation count:} a somewhat obvious choice, as citation count is a measure of the number of times the article in question has been referenced by another publication, and thus is a good indicator of how influential the article is.
             Including the citation count in the weighting scheme will prioritise returning more influential articles, and increases the likelihood that returned articles will be of use to the searcher.
             However, since it is unlikely that the $n+1^\text{th}$ citation when $n = 3000$ holds the same importance as the $n+1^\text{th}$ citation when $n = 5$, the logarithm of the citation count should be used instead of the raw citation count.
-            Since the citation count may be zero, we ought to add 1 to the citation count before calculating the logarithm, as $\log(0) = - \infty$; while we do want to assign a negative bias to low citation counts, I think $-\infty$ is probably \textit{too} negative.
+            Since the citation count may be zero, we ought to add 1 to the citation count before calculating the logarithm, as $\log(0) = - \infty$;
+            while we do want to assign a negative bias to low citation counts, I think $-\infty$ is probably \textit{too} negative a bias.
 
-    \item   \textbf{Years since publication:} the inclusion of the citation count in the weighting scheme could cause an undesirable bias that favours older articles, as newer articles may have a low citation count simply because enough time hasn't elapsed since their publication for them to have been cited by other publications.
-            This is especially undesirable for scientific papers, where one would imagine that more recent \& up-to-date research articles would be of greater importance (generally speaking) than older articles.
+    \item   \textbf{Years since publication:} the inclusion of the citation count in the weighting scheme could cause an undesirable bias that favours older articles, as newer articles may have a low citation count simply because insufficient time has elapsed since their publication for them to have been cited by other publications.
+            This is especially undesirable for scientific papers, as one would imagine that more recent \& up-to-date research articles would be of greater importance (generally speaking) than older articles.
             This can be counteracted via the inclusion of a negative bias based on the number of years since publication: the older the article, the greater the reduction.
             However, subtracting some value from the similarity score could cause the similarity score to become negative, particularly in the case of very old papers that are very dissimilar to the query.
-            To maintain positive similarity scores for the sake of simplicity, I instead chose to incorporate the years-since-publication as a negative exponent on a positive number so that the resulting value is never negative, but shrinks as exponentially as the documents get older.
+            To maintain positive similarity scores for the sake of simplicity, I instead chose to incorporate the years-since-publication as a negative exponent on a positive number so that the resulting value is never negative, but shrinks exponentially as the age of the document increases.
 \end{itemize}
 
 With these two features in mind, my proposed weighting scheme would be as follows:
