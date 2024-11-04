@@ -134,5 +134,89 @@ My selected single-channel image is the greyscale version of the green-channel-o
 \end{figure}
 
 \subsection{Image Enhancement}
+\begin{code}
+\inputminted[linenos, breaklines, frame=single]{python}{../code/task1/2_image_enhancement.py}
+\caption{\mintinline{python}{2_image_enhancement.py}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/2_image_enhancement_output.png}
+    \caption{Output of \mintinline{python}{2_image_enhancement.py}}
+\end{figure}
+
+I chose to use the histogram equalisation technique as it gave the best contrast, as seen from the calculated standard deviation in contrast above and in the output images below.
+
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/histogram_equalised.jpg}
+    \captionof{figure}{Histogram-equalised image}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/contrast_stretched.jpg}
+    \captionof{figure}{Contrast-stretched image}
+\end{minipage}
+
+\subsection{Thresholding}
+\begin{code}
+\inputminted[linenos, breaklines, frame=single]{python}{../code/task1/3_thresholding.py}
+\caption{\mintinline{python}{3_thresholding.py}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/3_thresholding_output.png}
+    \caption{Output of \mintinline{python}{3_thresholding.py}}
+\end{figure}
+
+I used Otsu's algorithm to find the optimal threshold value that best separated the foreground (objects of interest) from the background.
+As can be seen from the above output, the optimal value chosen was 129.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../code/task1/output/otsu.jpg}
+    \caption{Image with Otsu thresholding}
+\end{figure}
+
+\subsection{Noise Removal}
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{python}{../code/task1/4_noise_removal.py}
+    \caption{\mintinline{python}{4_noise_removal.py}}
+\end{code}
+
+\noindent
+\begin{minipage}{0.24\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_1.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 1}}
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_3.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 3}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.24\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_5.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 5}}
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_7.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 7}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.24\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_9.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 9}}
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_11.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 11}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.24\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_13.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 13}}
+    \includegraphics[width=\textwidth]{../code/task1/output/kernel_size_15.jpg}
+    \captionof{figure}{\mintinline{python}{kernel_size = 15}}
+\end{minipage}
 
 \end{document}
