@@ -1575,10 +1575,49 @@ To make such judgements without deep domain knowledge, a normalise \textbf{domai
 \\\\
 The \textbf{$R^2$ coefficient} is a domain-independent measure that compares the performance of a model on a test set with the performance of an imaginary model that always predicts the average values from the test set.
 $R^2$ values may be interpreted as the amount of variation in the target feature that is explained by the descriptive features in the model.
+\begin{align*}
+    \text{sum of squared errors} =& \frac{1}{2} \sum^n_{i=1} \left( t_i - \mathbb{M} \left( d_i \right) \right)^2 \\
+    \text{total sum of squares} =& \frac{1}{2} \sum^n_{i=1} \left( t_i - \overline{t} \right)^2 \\
+    R^2 =& \frac{\text{sum of squared errors}}{\text{total sum of squares}}
+\end{align*}
 
+where $\overline{t}$ is the average value of the target variable.
+\\\\
+$R^2$ values are usually in the range $[0,1]$, with larger values indicating better performance.
+However, $R^2$ values can be $< 0$ in certain rare cases (although 1 is always the maximum $R^2$ value).
+Negative $R^2$ values indicate a very poor model performance, i.e. that the model performs worse than the horizontal straight-line hypothesis that always predicts the average value of the target feature.
+For example, a negative $R^2$ on the test set with a positive $R^2$ value on the training set likely indicates that the model is overfit to the training data.
 
+\subsection{Applying $k$-NN to Regression Tasks}
+Previously, we have seen that the $k$-nearest neighbours algorithm bases its prediction on several ($k$) nearest neighbours by computing the distance from the query case to all stored cases, and picking the $k$ nearest neighbours.
+When $k$-NN is used for classification tasks, the neighbours vote on the classification of the test case.
+In \textbf{regression} tasks, the average value of the neighbours is taken as the label for the query case.
 
+\subsubsection{Uniform Weighting}
+Assuming that each neighbour is given an equal weighting:
 
+\begin{align*}
+    \text{prediction}(q) = \frac{1}{k} \sum^k_{i=1} t_i
+\end{align*}
+
+where $q$ is a vector containing the attribute values for the query instance, $k$ is the number of neighbours, $t_i$ is the target value of neighbour $i.
+
+\subsubsection{Distance Weighting}
+Assuming that each neighbour is given a weight based on the inverse square of its distance from the query instance:
+
+\begin{align*}
+    \text{prediction}(q) = \frac{ \sum^k_{i=1} \left( \frac{1}{ \text{dist}(q, d_i)^2  \times t_i } \right) }{ \sum^k_{i=1} \left( \frac{1}{\text{dist}(q, d_i)^2  } \right) }
+\end{align*}
+
+where $q$ is a vector containing the attribute values for the query instance and $\text{dist}(q,d_i)$ returns the distance between the query and the neighbour $i$.
+
+\subsection{Applying Decision Trees to Regression}
+\textbf{Regression trees} are constructed similarly to those for classification;
+the main change is that the function used to measure the quality of a split is changed so that it is a measure relevant to regression, e.g. variance, MSE, MAE, etc.
+This adapation is easily made to the ID3/C4.5 algorithm.
+\\\\
+The aim in regression trees is to group similar target values together at a leaf node.
+Typically, a regression tree returns the mean target value at a leaf node.
 
 
 
