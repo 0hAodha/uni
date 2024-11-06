@@ -36,6 +36,8 @@
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
 \usepackage{changepage}     % adjust margins on the fly
+\usepackage{amssymb}
+\usepackage{amsfonts}
 
 \usepackage{minted}
 \usemintedstyle{algol_nu}
@@ -1379,6 +1381,204 @@ Firstly, the correlation measure given earlier responds only to linear relations
 In a linear relationship between two features, as one feature increases or decreases, the other feature increases or decreases by a corresponding amount.
 Frequently, features will have a very strong non-linear relationship that correlation does not respond to.
 Some limitations of measuring correlation are illustrated very clearly in the famous example of Anscombe's Quartet, published by the famous statistician Francis Anscombe in 1973.
+
+\section{Regression}
+Heretofore, we have looked primarily at classification supervised learning tasks, where the goal is to predict one class from a finite number of possible discrete classes.
+In \textbf{regression} tasks, we also have labelled training \& testing data, but the labels take the form of floating-point values (real numbers): the goal is to predict a floating-point  number, not a class.
+Examples of algorithms for regression tasks include:
+\begin{itemize}
+    \item   Linear regression.
+    \item   Decision trees.
+    \item   $k$-nearest neighbours.
+    \item   Neural networks.
+\end{itemize}
+
+\subsection{Supervised Learning Considerations}
+\subsubsection{Inconsistent Hypotheses}
+Various hypotheses can be consistent with observations but inconsistent for each other: which one should we choose?
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/inconsistenthypotheses.png}
+    \caption{Hypotheses consistent with the observations but inconsistent with each other}
+\end{figure}
+
+One solution to this problem is \textbf{Ockham's Razor}: prefer the simplest hypothesis consistent with the data.
+However, definitions of simplicity (and consistency) may be subject to debate and it depends strongly on how hypotheses are expressed.
+\\\\
+Another consideration to be made is whether or not the hypothesis language is too limited: we might be unable to find a hypothesis that exactly matches the true function.
+If the true function is more complex than what the hypothesis can express, it will \textbf{undefit} the data.
+If the hypothesis language cannot exactly match the true function, there will be a trade-offf between the complexity of the hypothesis and how well it fits the data.
+If the hypothesis language is very expressive, its search space will be very large and the computational complexity of finding a good hypothesis will be high.
+We will also need a large amount of data to avoid \textbf{overfitting}.
+\\\\
+We can't forget that \textit{we never know the true underlying function}.
+For example, to avoid the problem with poorly fitting data, we could change the algorithm so that, as well as a searching for the coefficients of polynomials, it tries combinations of trigonometric functions: 
+the learning problem will become enormously more complex but it will probably not solve our problems as we could easily think up some different kind of mathematical function to generate a new dataset that the algorithm still cannot represent perfectly.
+For this reason, we often use relatively simple hypothesis languages in the absence of special knowledge about the domain: more complex languages don't come with any real guarantees, and more simple languages correspond to easier searching.
+
+\subsubsection{Noise, Overfitting, \& Underfitting}
+\textbf{Noise} consists of imprecise or incorrect attribute values or labels.
+We can't always quantify it, but we should know from the situation if it is present.
+For example, labels may require subjective judgements or values may come from imprecise judgements.
+\\\\
+If the data might have noise, it is harder to decide which hypothesis is best.
+If you increase the complexity of the hypothesis, you increase ability to fit the data but might also increase the risk of overfitting.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/biasvariance.png}
+    \caption{Bias \& variance}
+\end{figure}
+
+\subsection{Linear Regression Models}
+We will be referring to the following office rentals example regression dataset throughout this section:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/regressiondataset.png}
+    \caption{A dataset that includes office rental prices \& a number of descriptive features for 10 Dublin city-centre offices}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/sizevrentalprice.png}
+    \caption{Scatter plot of size vs rental price}
+    \label{fig:regression_scatter_plot}
+\end{figure}
+
+\subsubsection{Parameterised Prediction Models}
+A \textbf{parameterised prediction model} is initialised with a set of random parameters and an error function is used to judge how well this initial model performs when making predictions for instances in a training dataset.
+Based on the value of the error function, the parameters are iteratively adjusted to create a more \& more accurate model.
+This is the approach taken by many common ML models, e.g. simple linear regression \& neural networks.
+
+\subsubsection{Developing a Simple Linear Regression Model}
+From the scatter plot in Figure \ref{fig:regression_scatter_plot}, it appears that there is a linear relationship between the size and the rental price.
+The equation of a line can be written as $y = mx + c$.
+The below scatter plot shows the same scatter plot as in Figure \ref{fig:regression_scatter_plot}, but with a simple linear model added to capture the relationship between office sizes \& rental prices.
+This model is $\text{rental price} = 6.47 + 0.62 \times \text{size}$.
+We can use this model to determine the expected rental price of 730 square foot office:
+$\text{rental price} = 6.47 + 0.62 \times 730 = 459$.
+\\\\
+Multivariate linear regression using vector notation can be represented as:
+\begin{align*}
+    \mathbb{M}(d)   =& w[0] \times d[0] + w[1] \times d[1] + \cdots + w[m] \times d[m] \\
+    =& \sum^m_{j=0} w[j] \times d[j] \\
+    =& w \cdot d
+\end{align*}
+where:
+\begin{itemize}
+    \item   $w$ is a vector of model weights,
+    \item   $m$ is the number of independent variables,
+    \item   $\mathbb{M}_w(d)$ is the predicted value,
+    \item   $w \cdot d$ is the vector dot product.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/simplelinearregressionmodel.png}
+    \caption{
+        Scatter plot of the \textsc{size} \& \textsc{rental price} features
+        For all models in the above scatter plot, $w[0]$ is set to 6.47.
+        From top to bottom, the models use 0.4, 0.5, 0.62, 0.7. \& 0.8 respectively for $w[1]$.
+    }
+\end{figure}
+
+For linear regression in one independent variable, we have only two components in the weight vector: $w[0]$ (intercept) \& $w[1]$ (slope), and we make predictions based on the value of one independent variable (\textsc{size} in this case).
+
+\subsubsection{Measuring Error}
+Error is measured between the predicted value and the target value.
+Note that errors may be positive or negative, i.e., above or below the regression line.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/measuringerror.png}
+    \caption{
+        A scatter plot of the \textsc{size} \& \textsc{rental price} features from the office rentals dataset showing a candidate prediction model (with $w[0] = 6.47$ \& $w[1] = 0.62$) and the resulting errors.
+    }
+\end{figure}
+
+\[
+    \text{sum of squared errors} = \frac{1}{2} \sum^n_{i=1} \left(t_i - \mathbb{M}\left(d_i\right)\right)^2
+\]
+
+In order to formally measure the fit of a linear regression model with a set of training data, we require an error function that captures the error between the predictions made by a model \& the actual values in a training dataset.
+Here $t_i \dots t_n$ is the set of $n$ target values and $\mathbb{M}(d_1) \dots \mathbb{M}(d_n)$ is the set of predictions.
+By minimising the sum of squared errors or $L_2$, we can develop a best fit linear regression model.
+Note that some errors are positive and some errors are negative; if we simply add these errors together, the positive and negative errors would cancel each other out.
+Therefore, we use the sum of the squared errors rather than the sum of errors because this means that all values will be positive.
+\\\\
+The $x$-$y$ plane is known as the \textbf{weight space} and the surface is known as the \textbf{error surface}.
+The model that best fits the training data is the model corresponding to the lowest point on the error surface.
+One approach to find this point is the \textbf{gradient descent algorithm} but we will not cover it in this module.
+The same concepts apply to multivariate linear regression, although error surfaces cannot easily be visualised.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/errorsurfaces.png}
+    \caption{ Error surfaces }
+\end{figure}
+
+\subsubsection{Developing a Multivariate Model \& Handling Categorical Features}
+The basic structure of the multivariable linear regression model allows for only continuous descriptive features, so we need a way to handle categorical descriptive features.
+THe mose common approach to handling categorical features uses a transformation which converts a single categorical descriptive feature into a number of continuous descriptive feature values that can encode the levels of the categorical feature.
+An example mutlivariate linear regression model might look like:
+\begin{align*}
+    \textsc{rental price} = w[0] +& w[1] \times \textsc{size} \\
+    +& w[2] \times \textsc{floor} \\
+    +& w[3] \times \textsc{broadband rate} \\
+    +& w[4] \times \textsc{energy rating a} \\
+    +& w[5] \times \textsc{energy rating b} \\
+    +& w[5] \times \textsc{energy rating c} \\
+\end{align*}
+
+\subsection{Evaluating Regression Models}
+In this section, we will introduce some of the most common performance measures used for regression tasks.
+Domain-specific measures of error include: mean squared error (MSE), root mean squared error (RMSE), \& mean absolute error (MAE).
+Domain-independent measures of error include $R^2$.
+The basic evaluation process is the same as for categorical targets / classification tasks:
+maintain separate training \& test sets (i.e., using cross validation), train the regression model on the training set, and compute the performance  measures of interest on both training \& test sets.
+
+\subsubsection{Mean Squarer Error (MSE)}
+\[
+\text{MSE} = \frac{\sum^n_{i=1} \left( t_i - \mathbb{M}(d_i) \right)^2 }{n}
+\]
+
+where $\mathbb{M}(d_1) \dots \mathbb{M}(d_n)$ is a set of $n$ values predicted by the model and $t_1 \dots t_n$ is a set of labels.
+\\\\
+The MSE performance captures the average difference between the expected target values in the test set and the values predicted by the model.
+MSE allows us to rank the performance of multiple models on a regression problem.
+MSE values fall in the range $[0, \infty]$ where smaller values indicate a better model performance.
+However, MSE values are not especially meaningful: there is no sense of how much error occurs on individual predictions due to the squared term.
+
+\subsubsection{Root Mean Squared Error (RMSE)}
+\[
+    \text{RMSE} = \sqrt{ \frac{\sum^n_{i=1} \left( t_i - \mathbb{M}(d_i) \right)^2 }{n} }
+\]
+where $\mathbb{M}(d_1) \dots \mathbb{M}(d_n)$ is a set of $n$ values predicted by the model and $t_1 \dots t_n$ is a set of labels.
+\\\\
+RMSE values are in the same units as the target value and thus allow us to say something more meaningful about what the error for predictions made by the model will be.
+RMSE values can be thought of as the ``average'' error on each prediction made by a regression model.
+Due to the inclusion of the squared term, the root mean squared error tends to overestimate error slightly as it over-emphasises individual large errors.
+
+\subsubsection{Mean Absolute Error}
+\[
+    \text{MAE} = \frac{ \sum^n_{i=1} \text{abs} \left( t_i - \mathbb{M}(d_i) \right)}{n}
+\]
+
+An alternative measure that addressed the problem of large errors dominating the RMSE metric is the \textbf{mean absolute error (MAE)} which does not include a squared term.
+$\text{abs}()$ in the above equation refers to the absolute value, and all other terms have the same meaning as before.
+As with RMSE, MAE values are in the same units as the target variable so we can say that MAE values give an indication of the ``average'' error on each prediction.
+
+\subsubsection{$R^2$}
+RMSE \& MAE give errors that are in the same units as the target variable, which is attractive as they give an intuitive measure of how a model is performing; however, RMSE \& MAE values are not sufficient to judge whether a model is making accurate predictions without having a deep knowledge of the domain (e.g., ``is an error of 1.38mg acceptable?'').
+To make such judgements without deep domain knowledge, a normalise \textbf{domain-independent} measure of error is helpful.
+\\\\
+The \textbf{$R^2$ coefficient} is a domain-independent measure that compares the performance of a model on a test set with the performance of an imaginary model that always predicts the average values from the test set.
+$R^2$ values may be interpreted as the amount of variation in the target feature that is explained by the descriptive features in the model.
+
+
+
+
 
 
 
