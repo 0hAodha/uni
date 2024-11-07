@@ -32,6 +32,8 @@
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
 \usepackage{changepage}     % adjust margins on the fly
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \usepackage{minted}
 \usemintedstyle{algol_nu}
@@ -1334,6 +1336,184 @@ Convolutional networks (most often associated with images) are also used to lear
 Sequential processing has been used in query understanding, retrieval, expansion, etc.
 \\\\
 In summary, neural approaches are powerful, typically more computationally expensive than traditional approaches, have good performance, but have issues with explainability.
+
+\section{Clustering}
+\subsection{Introduction}
+\textbf{Document clustering} is the process of grouping a set of documents into clusters of similar documents.
+Documents within a cluster should be similar, while documents from different clusters should be dissimilar.
+Clustering is the most common form of \textbf{unsupervised learning}, i.e., there is no labelled or annotated data.
+
+\subsubsection{Classification vs Clustering}
+Classification is a supervised learning algorithm in which classes are human-defined and part of the input to the algorithm.
+Clustering is an unsupervised learning algorithm in which clusters are inferred from the data without human input.
+However, there are many ways of influencing the outcome of clustering: number of clusters, similarity measure, representation of documents, etc.
+
+\subsection{Clustering in IR}
+The \textbf{cluster hypothesis} states that documents in the same cluster behave similarly with respect to relevance information needs.
+All applications of clustering in IR are based (directly or indirectly) on the cluster hypothesis.
+Van Rijsbergen's original wording of the cluster hypothesis was ``closely related documents tend to be relevant to the same requests''.
+\\\\
+Applications of clustering include:
+\begin{itemize}
+    \item   Search result clustering: search results are clustered to provide more effective information presentation to the user.
+    \item   Scatter-gather clustering: (subsets of) the collection are clustered to provide an alternative user interface wherein the user can search without typing.
+    \item   Collection clustering: the collection is clustered for effective information presentation for exploratory browsing.
+    \item   Cluster-based retrieval: the collection is clustered to provide higher efficiency \& faster search.
+\end{itemize}
+
+\subsubsection{Clustering for Improving Recall}
+To improve search recall:
+\begin{enumerate}
+    \item   Cluster documents in collection \textit{a priori}.
+    \item   When a query matches a document $d$, also return other documents in the cluster that contains $d$.
+\end{enumerate}
+
+The hope is that if we do this, the query ``car'' will also return documents containing ``automobile'', as  the clustering algorithm groups together documents containing ``car'' with those containing ``automobile''.
+Both types of documents will contain words like ``parts'', ``dealer'', ``mercedes'', ``road trip''.
+
+\subsubsection{Desiderata for Clustering}
+\begin{itemize}
+    \item   The general goal is to put related documents in the same cluster and to put unrelated documents in different clusters.
+    \item   The number of clusters should be appropriate for the data set we are gathering
+    \item   Secondary goals in clustering include:
+            \begin{itemize}
+                \item   Avoid very small \& very large clusters.
+                \item   Define clusters that are easy to explain to the user.
+            \end{itemize}
+\end{itemize}
+
+\subsubsection{Flat vs Hierarchical Clustering}
+\textbf{Flat algorithms} usually start with a random (partial) partitioning of documents into groups and are refined iteratively.
+The main example of this is $k$-means.
+Flat algorithms compute a partition of $n$ documents into a set of $k$ clusters.
+Given a set of documents and the number $k$, the goal is to find a partition into $k$ clusters that optimises the chosen partitioning criterion.
+Global optimisation may be achieved by exhaustively enumerating partitions and picking the optimal one, however this is not tractable.
+The $k$-means algorithm is an effective heuristic method.
+\\\\
+\textbf{Hierarchical algorithms} create a hierarchy: either top down, agglomerative, or top-down, divisive.
+
+\subsubsection{Hard vs Soft Clustering}
+In \textbf{hard clustering}, each document belongs to exactly one cluster.
+This is more common, and easier to do.
+\\\\
+\textbf{Soft clustering:} a document can belong to more than one cluster;
+this makes sense for applications like creating browsable hierarchies.
+For example, you may want to put the word ``sneakers'' in two clusters: sports apparel \& shoes.
+
+\subsection{$k$-Means}
+\textbf{$k$-means} is perhaps the best-known clustering algorithm, as it is simple and works well in many cases.
+It is used as a default / baseline for clustering documents.
+Document representation in clustering are typically done using the vector space model, with the relatedness between vectors being measured by Euclidean distance.
+\\\\
+Each cluster in $k$-means is defined by a \textbf{centroid}, which is defined as:
+\[
+    \overrightarrow{\mu}(\omega) = \frac{1}{| \omega | }\sum_{\overrightarrow{x} \in \omega} \overrightarrow{x}
+\]
+where $\omega$ defines a cluster.
+\\\\
+The partitioning criterion is to minimises the average squared difference from the centroid.
+We try to find the minimum average squared difference by iterating two steps:
+\begin{itemize}
+    \item   \textbf{Reassignment:} assign each vector to its closest centroid.
+    \item   \textbf{Recomputation:} recompute each centroid as the average of the vectors that were assigned to it in reassignmnet.
+\end{itemize}
+
+\begin{algorithm}[H]
+\caption{$k$-means$ (\{ \vec{x}_1, \ldots, \vec{x}_N \}, k)$}
+\begin{algorithmic}[1]
+    \State $(\vec{s}_1, \vec{s}_2, \ldots, \vec{s}_K) \gets \text{SelectRandomSeeds}(\{ \vec{x}_1, \ldots, \vec{x}_N \}, k)$
+    \For{$k \gets 1$ to $k$}
+        \State $\vec{\mu}_k \gets \vec{s}_k$
+    \EndFor
+    \While{stopping criterion has not been met}
+        \For{$k \gets 1$ to $k$}
+            \State $\omega_k \gets \{\}$
+        \EndFor
+        \For{$n \gets 1$ to $N$}
+            \State $j \gets \arg \min_j \| \vec{\mu}_j - \vec{x}_n \|$
+            \State $\omega_j \gets \omega_j \cup \{ \vec{x}_n \}$ \Comment{reassignment of vectors}
+        \EndFor
+        \For{$k \gets 1$ to $k$}
+            \State $\vec{\mu}_k \gets \frac{1}{|\omega_k|} \sum_{\vec{x} \in \omega_k} \vec{x}$ \Comment{recomputation of centroids}
+        \EndFor
+    \EndWhile
+    \State \Return $\{\vec{\mu}_1, \ldots, \vec{\mu}_k\}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Proof that $k$-Means is Guaranteed to Converge}
+\begin{enumerate}
+    \item   RSS is the sum of all squared distances between the document vector and the closest centroid.
+    \item   RSS decreases during each reassignment step because each vector is moved to closer a centroid.
+    \item   RSS decreases during each recomputation step.
+    \item   There is only a finite number of clusterings, thus we must reach a fixed point.
+\end{enumerate}
+
+However, we don't know how long convergence will take.
+If we don't care about a few documents switching back and forth, then convergence is usually fast (around 10-20 iterations).
+However, complete convergence can take many more iterations.
+\\\\
+The great weakness of $k$-means is that \textbf{convergence does not mean that we converge to the optimal clustering}.
+If we start with a bad set of seeds, the resulting clustering can be poor.
+
+\subsubsection{Initialisation of $k$-means}
+Random seed selection is just one of many ways $k$-means can be initialised.
+Random seed clustering is not very robust: it's very easy to get a sub-optimal clustering.
+Better ways of computing initial centroids include:
+\begin{itemize}
+    \item   Select seeds not randomly, but using some heuristic, e.g., filter out outliers or find a set of seeds that has ``good coverage'' of the document space.
+    \item   Use hierarchical clustering to find good seeds.
+    \item   Select $i$ (e.g., $i = 10$ different random sets of seeds), and do a $k$-means clustering for each before selecting the clustering with the lowest RSS.
+\end{itemize}
+
+\subsection{Evaluation}
+Internal criteria for a clustering, e.g. RSS in $k$-means often do not evaluate the actual utility of a clustering in the application.
+An alternative to internal criteria is external criteria, i.e. to evaluate with respect to a human-defined classification.
+
+\subsubsection{External Criteria for Clustering Quality}
+External criteria for clustering quality are based on the ideal ``gold standard'' dataset, where the goal is that clustering should reproduce the classes in the gold standard.
+\\\\
+\textbf{Purity} measures how well we were able to reproduce the classes:
+\[
+    \text{purity}(\Omega, C) = \frac{1}{N} \sum_k \text{max}_j | \omega_k \cap c_j |
+\]
+where $\Omega = \{ \omega_1, \omega_2, \dots, \omega_k \}$ is the set of clusters and $C = \{ c_1, c_2, \dots, c_j \}$ is the set of classes.
+For each cluster $\omega_k$, find the class $c_j$ with the most members $n_{kj}$
+in $\omega_k$.
+Sum all $n_{kj}$ and divide by the total number of points.
+\\\\
+The \textbf{Rand Index} is defined as:
+\[
+    \text{RI} = \frac{ \text{TP} + \text{TN} }{ \text{TP} + \text{FP} + \text{FN} + \text{TN} }
+\]
+It is based on a $2 \times 2$ contingency table of all pairs of documents:
+$\text{TP} + \text{FP} + \text{FN} + \text{TN}$ is the total number of pairs.
+There are $\binom{N}{2}$ pairs for $N$ documents.
+Each pair is either positive or negative as the clustering either puts the documents in the same or in different clusters.
+Each pair is also either ``true'' (correct) or ``false'' (incorrect), i.e., the clustering decision is either correct or incorrect.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+                                & \textbf{same cluster} & \textbf{different clusters} \\ \hline
+    \textbf{same class}         & TP                    & FN         \\ \hline
+    \textbf{different classes}  & FP                    & TN         \\ \hline
+    \end{tabular}
+    \caption{$2 \times 2$ contingency table of all pairs of documents}
+\end{table}
+
+\subsubsection{How Many Clusters?}
+The number of clusters $k$ is given in many applications.
+
+
+
+
+
+
+
+
+
 
 
 
