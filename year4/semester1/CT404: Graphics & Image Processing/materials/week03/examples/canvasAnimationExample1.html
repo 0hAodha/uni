@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <script>
+
+        var x = 0, y = 0;
+        var dx = 4, dy = 5;
+
+        function draw() {
+
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext('2d');
+
+            // remove previous translation if any
+            context.save();
+            // over-write previous content, with a grey rectangle
+            context.fillStyle = "#DDDDDD";
+            context.fillRect(0, 0, 600, 600);
+            // perform movement, and translate to position
+            x += dx;
+            y += dy;
+            if (x <= 0)
+                dx = 4;
+            else if (x >= 550)
+                dx = -4;
+            if (y <= 0)
+                dy = 5;
+            else if (y >= 550)
+                dy = -5;
+            context.translate(x, y);
+            // purple rectangle
+            context.fillStyle = "#CC00FF";
+            context.fillRect(0, 0, 50, 50);
+            context.restore();
+
+            // do it all again in 1/30th of a second
+            window.setTimeout("draw();", 1000 / 30);
+        }
+    </script>
+</head>
+
+<body onload="draw();">
+    <canvas id="canvas" width="600" height="600"></canvas>
+</body>
+
+</html>
