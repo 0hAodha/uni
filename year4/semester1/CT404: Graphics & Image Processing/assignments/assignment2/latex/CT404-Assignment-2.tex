@@ -295,6 +295,39 @@ I chose to go with \mintinline{python}{kernel_size = 25} as it seemed to give th
 
 \subsection{Extraction of Binary Regions of Interest / Connected Components}
 
+\newpage
 
+\section{Filtering of Images in Spatial \& Frequency Domains}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../Task2.jpg}
+    \caption{Original Facial Image}
+\end{figure}
+
+\subsection{Spatial Domain}
+\begin{code}
+\inputminted[firstline=5, lastline=13, linenos, breaklines, frame=single]{python}{../code/task2/task2.py}
+\caption{Task 2.1 section of \mintinline{python}{task2.py}}
+\end{code}
+
+After some experimentation, I chose parameter values of \mintinline{python}{kernel_size = (15,15)} and \mintinline{python}{variance = 2} as, in my opinion, these yielded the best balance between blurring imperfections like wrinkles without causing the entire image to become too blurry.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../code/task2/output/1_spatial_domain.jpg}
+    \caption{Output of \mintinline{python}{1_spatial_domain.jpg}}
+\end{figure}
+
+\subsection{Frequency Domain Filtering}
+\begin{code}
+\inputminted[firstline=15, lastline=29, linenos, breaklines, frame=single]{python}{../code/task2/task2.py}
+\caption{Task 2.2 section of \mintinline{python}{task2.py}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../code/task2/output/2_frequency_domain_low-pass_filter.jpg}
+    \caption{Zero-centered low-pass filter of Gaussian Kernel}
+\end{figure}
 
 \end{document}
