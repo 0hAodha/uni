@@ -1506,6 +1506,117 @@ Each pair is also either ``true'' (correct) or ``false'' (incorrect), i.e., the 
 \subsubsection{How Many Clusters?}
 The number of clusters $k$ is given in many applications.
 
+\section{Query Estimation}
+\textbf{Query difficulty estimation} is used to attempt to estimate the quality of search results for a query from a given collection of documents in the absence of user relevance feedback.
+Understanding what constitutes an inherently \textit{difficult} query is important.
+Even for good systems, the quality for some queries can be very low.
+Benefits of query difficulty estimation include:
+\begin{itemize}
+    \item   We can inform users that it is a difficult query;
+            they can then remodel/reformulate the query or submit the query elsewhere.
+    \item   We can inform the system that it is a difficult query;
+            it can then adopt a different strategy, including: query expansion, log mining, incorporate collaborative filtering, or other evidence.
+    \item   We can inform the system administrator that it is a difficult query; they can then improve the collection.
+    \item   It can also help with specific IR domains, e.g., merging results in distributed IR.
+\end{itemize}
+
+\subsection{Robustness Problem}
+Most IR systems exhibit large variance in performance in answering user queries.
+There are many causes of this:
+\begin{itemize}
+    \item   The query itself.
+    \item   Vocabulary mismatch problem.
+    \item   Missing content queries.
+\end{itemize}
+
+There are also many issues with types of failures in queries:
+\begin{itemize}
+    \item   Failure to recognise all aspects in the query.
+    \item   Failure in pre-processing.
+    \item   Over-emphasis on a particular aspect or term.
+    \item   Query needs expansion.
+    \item   Need analysis to identify intended meaning of query (NLP).
+    \item   Need better understanding of proximity relationship among terms.
+\end{itemize}
+
+\subsubsection{TREC Robust Track}
+50 of the most difficult topics from previous TREC runs were collected into the robust track and new measures of performance were adopted to explicitly measure robustness.
+Human experts were then asked to categorise topics / queries as easy, medium, \& hard:
+there was a low correlation between humans and systems (PC = 0.26) and also a relatively low correlation between humans (PC = 0.39).
+There has also been more recent work illustrating the same phenomenon.
+A difficult query for collection 1 may not be as difficult for collection 2; however, relative difficulty is largely maintained.
+
+\subsection{Approaches to Query Difficulty Estimation}
+Approaches to query difficulty estimation can be categorised as:
+\begin{itemize}
+    \item   \textbf{Pre-retrieval approaches:} estimate the difficulty without running the system.
+    \item   \textbf{Post-retrieval approaches:} run the system again the query and examine the results.
+\end{itemize}
+
+\subsubsection{Pre-Retrieval Approaches}
+\textbf{Linguistic approaches} use some NLP approaches to analyse the query.
+They use external sources of information to identify ambiguity etc.
+Most linguistic features do not correlate well with performance.
+\\\\
+\textbf{Statistical approaches} take into account the distribution of the query term frequencies in the collection, e.g., take into account the idf \& icf of terms.
+They take into account the \textit{specificity} of terms;
+queries containing non-specific terms are considered difficult.
+Statistical approaches include:
+\begin{itemize}
+    \item   \textbf{Term relatedness:} if query terms co-occur frequently in the collection, we expect good performance.
+            Mutual information or Jaccard co-efficient etc. can be used.
+    \item   \textbf{Query scope:} what percentage of documents contain at least on query term: if a lot then this is probably a difficult query.
+    \item   \textbf{Simplified query scope:} measures the difference between language model of collection with language model of query.
+\end{itemize}
+
+\subsubsection{Post-Retrieval Approaches}
+There are three main categories of post-retrieval approaches to query difficulty estimation:
+\begin{itemize}
+    \item   Clarity measures.
+    \item   Robustness.
+    \item   Score analysis.
+\end{itemize}
+
+\textbf{Clarity} attempts to measure the coherence in the result set.
+The language of the result set should be distinct from the rest of the collection.
+We compare the language model induced from the answer set and one induced from the corpus.
+This is related to the cluster hypothesis.
+\\\\
+\textbf{Robustness} explores the robustness of the system in the face of perturbations to:
+\begin{itemize}
+    \item   \textbf{Query:} overlap between the query \& sub-queries.
+            In difficult queries, some terms have little or no influence.
+    \item   \textbf{Documents:} compare the system performance against collection $C$ and some modified version of $C$.
+    \item   \textbf{Retrieval performance:} submit the same query to many systems over the same collection,
+            divergence in results tells us something about the difficulty of the query.
+\end{itemize}
+
+\textbf{Score analysis} analyses the score distributions in the returned ranked list:
+Difficulty can be measured based on the distribution of values; is the cluster hypothesis supported?
+We can look at the distribution of scores in the answer set \& the document set and attempt to gauge the difficulty.
+Relatively simple score analysis measures have been shown to be effective.
+
+\subsection{Exercises}
+We have seen many alternative approaches to predicting difficulty; can you identify an approach to combining them to make another prediction approach?
+In this class, we have considered the prediction of difficulty of queries in \textit{ad hoc} retrieval.
+Can you identify approaches that may be of use in:
+\begin{itemize}
+    \item   Predicting a difficult user in collaborative filtering.
+    \item   Predicting whether a query expansion technique has improved the results.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
