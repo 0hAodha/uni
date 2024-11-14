@@ -285,17 +285,49 @@ As can be seen from the above output, the optimal value chosen was 129.
     \captionof{figure}{\mintinline{python}{kernel_size = 31}}
 \end{minipage}
 
-I chose to go with \mintinline{python}{kernel_size = 25} as it seemed to give the optimal balance between removing noise without significantly reducing the size of the remaining fat globules .
+I chose to open the image with a structuring element that had \mintinline{python}{kernel_size = 17} as it seemed to give the optimal balance between removing noise without significantly reducing the size of the remaining fat globules.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{../code/task1/output/kernel_size_25.jpg}
-    \caption{Chosen noise threshold: \mintinline{python}{kernel_size = 25}}
+    \includegraphics[width=0.5\textwidth]{../code/task1/output/kernel_size_17.jpg}
+    \caption{Chosen noise threshold: \mintinline{python}{kernel_size = 17}}
 \end{figure}
 
 \subsection{Extraction of Binary Regions of Interest / Connected Components}
+\begin{code}
+\inputminted[firstline=1, lastline=9, linenos, breaklines, frame=single]{python}{../code/task1/5-7.py}
+\caption{Task 1.5 section of \mintinline{python}{5-7.py}}
+\end{code}
+
+I'm not sure why, but no matter what level of noise removal I tried the connected components extraction with, the connected components always came out quite jagged.
+To correct for this, I did some additional noise reduction by using a blur on the image to remove some of the white noise that was appearing in.
+I also used a higher value of connectivity with \mintinline{python}{connectivity=8}, keeping components that were touching at all rather than components that just shared an edge.
+
+\subsection{Filtering of Fat Globules}
+\begin{code}
+\inputminted[firstline=11, lastline=29, linenos, breaklines, frame=single]{python}{../code/task1/5-7.py}
+\caption{Task 1.6 section of \mintinline{python}{5-7.py}}
+\end{code}
+
+I filtered the fat globules based off size \& compactness, using the compactness measure to remove globules that were not globule-shaped and the area measure to remove globules that were too small to be a globule.
+I used a maximum compactness of 27 and a minimum area of 300 to filter the globules, resulting in a total of 35 fat globules.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../code/task1/output/filtered_fat_globules.jpg}
+    \caption{Result of fat globule filtering}
+\end{figure}
+
+\subsection{Calculation of the Fat Area}
+\begin{code}
+\inputminted[firstline=31, lastline=40, linenos, breaklines, frame=single]{python}{../code/task1/5-7.py}
+\caption{Task 1.7 section of \mintinline{python}{5-7.py}}
+\end{code}
+
+The percentage of the image covered by fat globules was 15.33\%.
 
 \newpage
+
 
 \section{Filtering of Images in Spatial \& Frequency Domains}
 \begin{figure}[H]
@@ -318,7 +350,7 @@ After some experimentation, I chose parameter values of \mintinline{python}{kern
     \caption{Output of \mintinline{python}{1_spatial_domain.jpg}}
 \end{figure}
 
-\subsection{Frequency Domain Filtering}
+\subsection{Frequency Domain Low-Pass Filter}
 \begin{code}
 \inputminted[firstline=15, lastline=29, linenos, breaklines, frame=single]{python}{../code/task2/task2.py}
 \caption{Task 2.2 section of \mintinline{python}{task2.py}}
@@ -329,5 +361,74 @@ After some experimentation, I chose parameter values of \mintinline{python}{kern
     \includegraphics[width=0.5\textwidth]{../code/task2/output/2_frequency_domain_low-pass_filter.jpg}
     \caption{Zero-centered low-pass filter of Gaussian Kernel}
 \end{figure}
+
+\subsection{Frequency Domain Filtering}
+\begin{code}
+\inputminted[firstline=31, lastline=70, linenos, breaklines, frame=single]{python}{../code/task2/task2.py}
+\caption{Task 2.3 section of \mintinline{python}{task2.py}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../code/task2/output/3_filtered_color_image.jpg}
+    \caption{Frequency domain filtered image}
+\end{figure}
+
+The low pass filter type used was the same as in Section 2.2: a Gaussian filter with \mintinline{python}{(15,15)} and \mintinline{python}{2}.
+
+\subsection{Comparison}
+\noindent
+\begin{minipage}{0.49\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../code/task2/output/1_spatial_domain.jpg}
+    \caption{Spatial domain filtered image}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../code/task2/output/3_filtered_color_image.jpg}
+    \caption{Frequency domain filtered image}
+\end{figure}
+\end{minipage}
+
+The two images are very similar, having shared the same type of low pass filter.
+However, the frequency domain filtered image has retained more colour range, and has an overall less blurred appearance.
+The spatial domain filtering has applied a general blur across the entire image, making the filtering more obvious.
+On the other hand, the frequency domain filtering is more subtle and reduces the visibility of wrinkles while retaining some definition in the eyes, lips, and stubble.
+Overall, I would prefer the frequency domain filtering for this task; despite its increased complexity, it creates a more subtle and convincing effect that would be easily mistakable for an unfiltered image.
+
+\subsection{Unseen Image Testing}
+\noindent
+\begin{minipage}{0.33\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../code/task2/jennifer.jpg}
+    \caption{Original Image}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.33\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../code/task2/output/jennifer_spatial.jpg}
+    \caption{Spatial domain filtered image}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.33\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../code/task2/output/jennifer_freq.jpg}
+    \caption{Frequency domain filtered}
+\end{figure}
+\end{minipage}
+
+Again, the two filtered images are very similar.
+In my opinion, the frequency domain filtered image performed better here again, as it has a more dynamic colour range and more subtle blurring.
+The skin looks very artificially smoothed in the spatial domain filtered image, but more natural in the frequency domain filtered image.
+The hair looks more blurred and out-of-focus in the spatial domain filtered image, but looks sharper and more natural in the frequency domain filtered image.
 
 \end{document}
