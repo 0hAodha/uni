@@ -1600,7 +1600,7 @@ Assuming that each neighbour is given an equal weighting:
     \text{prediction}(q) = \frac{1}{k} \sum^k_{i=1} t_i
 \end{align*}
 
-where $q$ is a vector containing the attribute values for the query instance, $k$ is the number of neighbours, $t_i$ is the target value of neighbour $i.
+where $q$ is a vector containing the attribute values for the query instance, $k$ is the number of neighbours, $t_i$ is the target value of neighbour $i$.
 
 \subsubsection{Distance Weighting}
 Assuming that each neighbour is given a weight based on the inverse square of its distance from the query instance:
@@ -1618,6 +1618,230 @@ This adapation is easily made to the ID3/C4.5 algorithm.
 \\\\
 The aim in regression trees is to group similar target values together at a leaf node.
 Typically, a regression tree returns the mean target value at a leaf node.
+
+\section{Clustering}
+Heretofore, we have mainly looked only at supervised learning tasks where we have labelled data giving ground truths that we can compare predictions against.
+In \textbf{unsupervised learning}, there are no labels.
+Our goal in unsupervised learning is to develop models based on the underlying structure within the descriptive features in a dataset.
+This structure is typically captures in new generated features that can be appended to the original dataset to \textit{augment} or \textit{enrich} it.
+\begin{itemize}
+    \item   \textbf{Supervised learning} is task-drive with pre-categorised data, with the objective of creating predictive models.
+            Examples include the classification task of fraud detection, and the regression task of market forecasting.
+    \item   \textbf{Unsupervised learning} is data-driven with unlabelled data, with the objective of recognising patterns in the data.
+            Examples include the classification task of targeted marketing and the \textbf{association} task of customer recommendations.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/unsupervisedoverview.png}
+    \caption{ Unsupervised learning overview }
+\end{figure}
+
+\subsection{Unsupervised Learning Task Examples}
+\textbf{Clustering} partitions the instances in a dataset into groups or \textit{clusters} that are similar to each other.
+The end result of clustering is a single new generated feature that indicates the cluster than an instance belongs to, and the generation of this new feature is typically the end goal of the clustering task.
+Common applications of clustering include customer segmentation with which organisations attempt to discover meaningful groupings into which they can group their customers so that targeted offers or treatments can be designed.
+Clustering is also commonly used in the domain of information retrieval to improve the efficiency of the retrieval process: documents that are associated with each other are assigned to the same cluster.
+\\\\
+In \textbf{representation learning}, the goal is to create a new way to represent the instances in a dataset, usually with the expectation that this new representation will be more useful for a later, usually supervised, machine learning process. 
+It is usually achieved using specific types of deep learning models called \textbf{auto-encoders};
+this is an advanced topic and so we will not discuss it in detail in this module.
+
+\subsubsection{Clustering Example: How to organise letters?}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/clusteringexample.png}
+    \caption{ Clustering example: how to organise the letters? }
+\end{figure}
+
+The letters can be grouped by different features, e.g., colour, case, or character.
+Is there a ``correct'' grouping?
+We don't have a ground truth available: all groupings are valid in this case as they each highlight different characteristics present in the dataset.
+
+\subsection{Clustering using the $k$-Means Algorithm}
+We have already covered many of the fundamentals required to tackle clustering problems, e.g., feature spaces \& measuring similarity using distance metrics (as we did with $k$-nearest neighbours).
+The \textbf{k-means} clustering algorithm is the most well-known approach to clustering.
+It is:
+\begin{itemize}
+    \item   Relatively easy to understand.
+    \item   Computationally efficient.
+    \item   Simple to implement but also usually very effective.
+\end{itemize}
+
+\begin{align*}
+    \sum^n_{i=1} \underset{c_1, \dots, c_k}{\text{min}} \text{dist}(d_i, c_j)
+\end{align*}
+
+Given a dataset $D$ consisting of $n$ instances $d_1 \dots d_n$ where $d_i$ is a set of $m$ descriptive features:
+\begin{itemize}
+    \item   The goal when applying $k$-means is to divide this dataset into $k$ disjoint clusters $C_1 \dots C_k$.
+    \item   The number of clusters $k$ is an input to the algorithm.
+    \item   The division into clusters is achieved by minimising the result of the above equation.
+    \item   $c_1 \dots c_k$ are the centroids of the clusters; they are vectors containing the co-ordinates in the feature space of each cluster centroid.
+    \item   $\text{dist}()$is a distance metric (defined the same way as we previously defined distance metrics when studying $k$-NN), i.e., a way to measure the similarity between instances in a dataset.
+\end{itemize}
+
+\begin{algorithm}
+\caption{Pseudocode description of the $k$-means clustering algorithm}
+\begin{algorithmic}[1]
+\Require A dataset $D$ containing $n$ training instances, $d_1, \dots, d_n$
+\Require The number of clusters to find $k$
+\Require A distance measure, $\text{dist}()$, to compare instances to cluster centroids
+\State Select $k$ random cluster centroids, $c_1$ to $c_k$, each defined by values for each descriptive feature, $c_i = \langle c_i[1], \dots, c_i[m] \rangle$
+\Repeat
+    \For{each instance $d_i$}
+        \State Calculate the distance of $d_i$ to each cluster centroid $c_1$ to $c_k$, using $Dist$
+        \State Assign $d_i$ to the cluster $C_i$ whose centroid $c_i$ it is closest to
+    \EndFor
+    \For{each cluster $C_i$}
+        \State Update the centroid $c_i$ to the average of the descriptive feature values of instances in $C_i$
+    \EndFor
+\Until{no cluster reassignments are performed during an iteration}
+\end{algorithmic}
+\end{algorithm}
+
+Issues to consider when applying $k$-means include: 
+\begin{itemize}
+    \item   \textbf{Choice of distance metric:} it's common to use Euclidean distance.
+            Other distance metrics are possible, but may break convergence guarantees.
+            Other clustering algorithms, e.g., $k$-medoids, have been developed to address this problem.
+    \item   \textbf{Normalisation of data:} as we are measuring similarity using distance, as with $k$-NN, normalising the data beforehand is very important when the values of the attributes have different ranges, otherwise attributes with the largest ranges will dominate calculations.
+    \item   \textbf{How to identify when convergence happens?:} when no cluster memberships change during a full iteration of the algorithm.
+    \item   \textbf{How to choose a value for $k$?:}  we will discuss this later in the coming slides.
+\end{itemize}
+
+\subsubsection{Mobile Phone Customer Example Dataset}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/mobilephonecustomer.png}
+    \caption{ Example of normalised mobile phone customer dataset with the first 2 iterations of $k$-means }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/mobilephonecustomerplot.png}
+    \caption{ Plot of the mobile phone customer dataset }
+\end{figure}
+
+Large symbols represent clusters, while small symbols represent individual data points.
+It is clear to a human viewer that there are 3 natural clusters within the dataset, but we require an algorithm such as $k$-means clustering to find them automatically.
+Generally, it is not possible to determine the correct number of clusters by eye in real word high-dimensional datasets.
+\\\\
+Each cluster centroid is then updated by calculating the mean value of each descriptive feature for all instances that are a member of the cluster. 
+
+\begin{align*}
+    c_1[\textsc{Data Usage}] =& \frac{(-0.9531 + -1.167 + -1.2329 + -0.8431 + 0.9285 + -1.005 + 0.2021 + -0.7426 + -0.3414)}{9} \\
+    =& -0.5727 \\
+    c_1[\textsc{Call Volume}] =& \frac{(-0.3107 + -0.706 + -0.4188 + 0.1811 + -0.2168 + -0.0337 + 0.4364 + 0.0119 + 0.4215)}{9} \\
+    =& -0.0706
+\end{align*}
+
+Once the algorithm has completed, its two outputs are a vector of assignments of each instance in the dataset to one of the clusters $C_1 \dots C_k$ and the $k$ cluster centroids $c_1 \dots c_k$.
+The assignment of instances to clusters can then be used to enrich the original dataset with a new generated feature: the cluster memberships.
+
+\begin{align*}
+    C_1 =& \{ d_1, d_2, d_3, d_5, d_6, d_{11}, d_{19}, d_{20} \} \\
+    C_2 =& \{ d_4, d_8, d_9, d_{10}, d_{15}, d_{17}, d_{18}, d_{21}, d_{22}\} \\
+    C_3 =& \{ d_7, d_{12}, d_{13}, d_{14}, d_{16}, d_{23}, d_{24}
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/mobilephonecustomerfinal.png}
+    \caption{ Final $k$-means clustering }
+\end{figure}
+
+\subsection{Choosing Initial Cluster Centroids}
+How should we choose the initial set of cluster centroids?
+We could choose $k$ random initial cluster centroids as per the pseudocode.
+The choice of these initial cluster centroids (seeds), unfortunately, can have a big impact on the performance of the algorithm.
+Different randomly selected starting points can lead to different, often sub-optimal, clusterings (i.e., local minima).
+As we will see in the following example, a particularly unlucky clustering could lead to a cluster having no members upon convergence.
+This has an easy fix: choose random instances in the dataset as the seeds.
+An easy way to address this issue is to perform multiple runs of the $k$-means clustering algorithm starting from different initial centroids and then aggregate the results.
+In this way, the most common clustering is chosen as the final result.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/differentseeds.png}
+    \caption{ The effect of different seeds on final clusters }
+\end{figure}
+
+\subsubsection{$k$-means++}
+Our main goals when selecting the initial centroids is to find initial centroids less likely to lead to sub-optimal clusterings and to select initial centroids that allow the algorithm to converge much more quickly than when seeds are randomly chosen.
+\\\\
+The default method for this in scikit-learn is $k$-means++:
+in this approach, an instance is chosen randomly (following a uniform distribution) from the dataset as the first centroid.
+Subsequent centroids are then chosen randomly but following a distribution defined by the square of the distances between an instance and the nearest cluster centroid out of those found so far.
+This means that instances far away from the current set of centroids are much more likely to be selected than those close to already selected centroids.
+\\\\
+As before, we are using the mobile phone customers dataset with $k = 3$.
+Instances from the dataset are being used as cluster centroids.
+Typically, there is good diversity across the feature space in the centroids selected.
+The $k$-means++ algorithm is still stochastic: it does not completely remove the possibility of a poor starting point that leads to a sub-optimal clustering.
+Therefore, we should still try running it multiple times and pick the most common clustering.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/kplusplusseeds.png}
+    \caption{ Examples of initial seeds chosen by $k$-means++ }
+\end{figure}
+
+\begin{algorithm}[H]
+\caption{Pseudocode description of the $k$-means++ algorithm}
+\begin{algorithmic}[1]
+\Require A dataset $D$ containing $n$ training instances, $d_1, \dots, d_n$
+\Require $k$, the number of cluster centroids to find
+\Require A distance measure $Dist$ to compare instances to cluster centroids
+\State Choose $d_i$ randomly (following a uniform distribution) from $D$ to be the position of the initial centroid, $c_1$, of the first cluster, $C_1$
+\For{cluster $C_j$ in $C_2$ to $C_k$}
+    \For{each instance $d_i$ in $D$}
+        \State Let $Dist(d_i)$ be the distance between $d_i$ and its nearest cluster centroid
+    \EndFor
+    \State Calculate a selection weight for each instance $d_i$ in $D$ as
+    \[
+    \frac{Dist(d_i)^2}{\sum_{p=1}^{n} Dist(d_p)^2}
+    \]
+    \State Choose $d_i$ as the position of cluster centroid $c_j$ for cluster $C_j$ randomly following a distribution based on the selection weights
+\EndFor
+\State Proceed with k-means as normal using $\{c_1, \dots, c_k\}$ as the initial centroids.
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Evaluating Clustering}
+Evaluation is more complicated when conducting unsupervised learning compared to supervised learning.
+All performance measures that we have previously discussed for supervised learning relied on having \textbf{ground truth} labels available, which we can use to objectively measure performance using metrics like accuracy, error rate, RMSE, MAE, etc.
+\\\\
+We could use an idealised notion of what a ``good'' clustering looks like, i.e. instances in the same cluster should all be relatively close together and instances belonging to different clusters should be far apart.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/goodvbadclusterings.png}
+    \caption{ (a) Intra-cluster distance, (b) inter-cluster distance, (c) a good clustering, (d) a bad clustering }
+\end{figure}
+
+\subsubsection{Loss function for clustering}
+A \textbf{loss function} is a function we wish to minimise to reduce error on a ML model.
+\textbf{Inertia} is the sum of the squared distances from each data point to its centre; it is alternatively referred to as the sum of squared errors (SSE).
+The ``error'' in this case is the distance between the centroid of the cluster and each data point in that cluster.
+To calculate, simply determine all distances from each data point to the centroid of its assigned cluster, square the distances, and sum them up.
+We can compare different clusterings using inertia values.
+
+\subsubsection{Using the Elbow Method to Determine $k$}
+Plot the inertia/SSE on the $y$-axis against the number of clusters $k$ on the $x$-axis.
+Other more complex methods are available, e.g., silhouette which we will not cover in this module.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/elbowmethod.png}
+    \caption{ The elbow method gives an indication of an appropriate $k$-value — in this case, $k=3$ looks appropriate.}
+\end{figure}
+
+Note that no definitive methods are available to determine the correct number of clusters.
+We may need to be informed by deep knowledge of the problem domain.
+
+
+
+
+
 
 
 
