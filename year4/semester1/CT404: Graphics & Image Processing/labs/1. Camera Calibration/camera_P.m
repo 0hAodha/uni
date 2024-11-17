@@ -2,7 +2,7 @@ close all
 clear all
 clc
 
-filename = "Rubiks.jpg"
+filename = "rubiks.jpg"
 
 % Prompt user to load data or select points manually
 choice = menu('Do you want to load points from the workspace_variables.mat file?', 'Yes', 'No');
