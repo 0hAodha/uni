@@ -1838,6 +1838,147 @@ Other more complex methods are available, e.g., silhouette which we will not cov
 Note that no definitive methods are available to determine the correct number of clusters.
 We may need to be informed by deep knowledge of the problem domain.
 
+\subsection{Picking $k$: Real-World Example}
+Sometimes, we can rely on \textit{domain-specific metrics} to guide the choice of $k$.
+For example:
+\begin{itemize}
+    \item   Cluster heights \& weights of customers with $k = 3$ to design small, medium, \& large shirts.
+    \item   Cluster heights \& weights of customers with $k = 5$ to design XS, S, M, L, \& XL shirts.
+\end{itemize}
+
+To pick $k$ in the examples above, consider the projected costs and sales for the two different $k$ values and pick the value of $k$ that maximises profit.
+
+\subsection{Hierarchical Clustering}
+\textbf{Hierarchical clustering (HC)} is a general family of clustering algorithms that build nested clusters by merging or splitting them successively.
+This hierarchy of clusters is represented as a tree or \textbf{dendrogram}.
+The root of the tree is the unique cluster that gathers all the samples, and the leaves are the clusters that contain only one sample.
+Hierarchical clustering methods can sometimes by more computationally expensive than simpler algorithms (e.g., $k$-means).
+\\\\
+\textbf{Agglomerative hierarchical clustering (AHC)} is an example of a hierarchical clustering method.
+It starts by considering each instance in the dataset as a member of its own individual cluster, then merging the most similar adjacent clusters in each iteration. 
+It can find clusters that are not possible to find with $k$-means.
+We will not cover this algorithm in detail in this module, just illustrate key differences with results given by $k$-means.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/aglglo.png}
+    \caption{ Agglomerative Hierarchical Clustering }
+\end{figure}
+
+$k$-means cannot find the clusters that we might expect when ``eyeballing'' the plots, due to the underlying assumptions that $k$-means makes about how the points in a cluster should be distributed.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/kmeansvsshc.png}
+    \caption{ $k$-means vs AHC on circles dataset }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/halfmoons.png}
+    \caption{ $k$-means vs AHC on half-moons dataset }
+\end{figure}
+
+\section{Neural Networks}
+\subsection{Introduction to Deep Learning}
+\textbf{Deep learning} is an approach to machine learning that is inspired by how the brain is structured \& operates.
+It is a relatively new term that describes research on modern artificial neural networks (ANNs).
+\\\\
+\textbf{Artificial neural network} models are composed of large numbers of simple processing units called \textbf{neurons}  that typically are arranged into layers and are highly interconnected.
+Artificial neural networks are some of the most powerful machine learning models, able to learn complex non-linear mappings from inputs to outputs.
+ANNs generally work well in domains in which there are large numbers of input features (such as image, speech, or language processing), and for which there are very large datasets available for training.
+\\\\
+The history of ANNs dates to the 1940s.
+The term ``deep learning'' became prominent in the mid-200s.
+The term ``deep learning'' emphasises that modern networks are deeper (in terms of \textit{number of layers} of neurons) than previous networks.
+This extra depth enables the networks to learn more complex input-output mappings.
+
+\subsection{Artificial Neurons}
+The fundamental building block of a neural network is a computational model known as an \textbf{artificial neuron}.
+They were first defined by McCulloch \& Pitts in 1943 who were trying to develop a model of the activity in the human brain based on propositional logic.
+They recognised that propositional logic using a Boolean representation and neurons in the brain are similar, as they have an all-or-none character (i.e., they act as a switch that responds to a set of inputs by outputting either a high activation or no activation).
+They designed a computational model of the neuron that would take in multiple inputs and then output either a high signal (1) or a low signal (0).
+The McCulloch \& Pitts model has a two-part structure:
+\begin{enumerate}
+    \item   Calculation of the result of a \textbf{weighted sum} (we refer to the result as $z$).
+            In the first stage of the McCulloch \& Pitts model, each input is multiplied by a weight, and the results of these multiplications are then added together.
+            This calculation is known as a weighted sum because it involves summing the weighted inputs to the neuron.
+    \item   Passing the result of the weighted sum through a \textbf{threshold activation function}.
+\end{enumerate}
+
+\subsubsection{Weighted Sum Calculation}
+\begin{align*}
+    z   =& w[0] \times d[0] + \cdots + w[m] \times d[m] \\
+    =& \sum^m_{j=0} w[j] \times d[j] \\
+    =& w \cdot d \\
+    =& w^{\text{T}}d = [w_0, \dots, w_m]
+    \begin{bmatrix}
+       d_0 \\ \vdots \\ d_m 
+    \end{bmatrix}
+\end{align*}
+
+where $d$ is a vector of size $m+1$ inputs / descriptive features and $d[0]$ is dummy feature that is always equal to 1.
+$w$ is a vector of $m+1$ weight, one weight for each feature and $w[0]$ is the weight for the dummy feature.
+Note the similarity to the linear regression equation, although (networks of) artificial neurons can do much more than just tackle regression tasks.
+
+\subsubsection{Weights}
+The weights can either be:
+\begin{itemize}
+    \item   \textbf{excitatory:} having a positive value which increases the probability of the neuron activating or;
+    \item   \textbf{inhibitory:} having a negative value, which decreases the probability of a neuron firing.
+\end{itemize}
+
+$w[0]$ is the equivalent of the $y$-intercept in the standard equation of a line in that the neuron that this weight captures is constantly effecting.
+This $w[0]$ term is often referred to as the \textbf{bias} parameter because in the absence of any other input, the output of the weighted sum is biased to be the value of $w[0]$.
+Technically, the inclusion of the bias parameter as an extra weight in this operation changes the function from a linear function on the inputs to an \textbf{affine} function: a function that is composed of a linear function followed by a translation (i.e., the inclusion of the bias term means that the straight line would not pass through the origin).
+\\\\
+$d[0]$ is a dummy feature used for notational convenience that is always equal to 1.
+
+\subsubsection{Threshold Activation Function}
+In the second stage of the McCulloch \& Pitts model, the result of the weighted sum calculation $z$ is then converted into a high or low activation by passing $z$ through the \textbf{activation function}.
+\\\\
+McCulloch \& Pitts used a \textbf{threshold activation function:} if $z$ is greater than or equal to the threshold, the artificial neuron outputs a 1 (high activation), otherwise it outputs a 0 (low activation).
+Using the symbol $\theta$ to denote the threshold, the second stage of processing in the McCulloch \& Pitts model can be defined.
+We'll see that the neuron ``fires'' when $z \geq \theta$.
+\[
+    \mathbb{M}_w(d) = 
+    \begin{cases}
+        1 & \text{if } z \geq \theta \\
+        0 & \text{otherwise}
+    \end{cases}
+\]
+
+$\phi$ is the \textbf{activation function} of the neuron.
+\begin{align*}
+    \mathbb{M}_w(d) =& \phi (w[0] \times d[0] + \cdots + w[m] \times d[m]) \\
+    =& \phi \left( \sum^m_{i=0} w_i \times d_i \right) = \phi \left( w \cdot d \right) \\
+    =& \phi \left(  w^{\text{T}}d \right)
+\end{align*}
+
+\subsubsection{Artificial Neuron Schematic}
+Arrows carry activations in the direction the arrow is pointing.
+The weight label on each arrow represents the weight that will be applied to the input carried along the arrow.
+$\phi$ is the activation function of the neuron, also known as the perceptron.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/schematic.png}
+    \caption{ Artificial neuron schematic }
+\end{figure}
+
+The two-part structure of the McCulloch \& Pitts model is the basic blueprint for modern artificial neurons.
+The key differences are:
+\begin{itemize}
+    \item   In the McCulloch \& Pitts model, the weights were manually set (very difficult to do);
+            in modern machine learning, we learn the weights using data.
+    \item   McCulloch \& Pits considered the threshold activation function only; modern artificial neurons use one of a range of different activation functions.
+\end{itemize}
+
+
+
+
+
+
 
 
 
