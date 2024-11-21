@@ -2,7 +2,9 @@ close all
 clear all
 clc
 
-filename = "rubiks.jpg"
+filename = "rubiks2.jpg"
+num_points = 24;  % Set number of points
+
 
 % Prompt user to load data or select points manually
 choice = menu('Do you want to load points from the workspace_variables.mat file?', 'Yes', 'No');
@@ -26,14 +28,13 @@ else
     hold on;  % Keep the image displayed while adding markers
 
     % Initialize matrices to store 2D and 3D homogeneous coordinates
-    num_points = 36;  % Set number of points
     image_points = zeros(num_points, 3);  % For 2D image points in homogeneous coordinates
     world_points = zeros(num_points, 4);  % For 3D world points in homogeneous coordinates
 
     disp('Click on the image to select 96 points and enter their 3D world coordinates.');
 
     for i = 1:num_points
-        % Use ginput to get one image point at a time
+        % Use ginput to get one imJKJKJJKJKJage point at a time
         [x, y] = ginput(1);
 
         % Store the 2D image coordinates in homogeneous form
