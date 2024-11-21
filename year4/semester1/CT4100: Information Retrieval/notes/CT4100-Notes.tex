@@ -1605,7 +1605,266 @@ Can you identify approaches that may be of use in:
     \item   Predicting whether a query expansion technique has improved the results.
 \end{itemize}
 
+\section{Web Search}
+In classical IR, the collection is relatively static.
+The goal is to retrieve documents with content that is relevant to the user's information need.
+Classic measures of relevance tend to ignore both \textit{context} \& \textit{individuals}.
+In web search, the corpus contains both static \& dynamic information.
+The goal is to retrieve high-quality results that are relevant to the current need.
+Information may be:
+\begin{itemize}
+    \item   Informational;
+    \item   Navigational; 
+    \item   Transactional.
+\end{itemize}
 
+Newer problems also emerge with respect to web search:
+\begin{itemize}
+    \item   Distributed data;
+    \item   Volatile data;
+    \item   Large volumes, scaling issues;
+    \item   Redundancy (circa 30-40\% documents are (near) duplicates);
+    \item   Quality (hundreds of millions of pages of spam);
+    \item   Diversity (many languages, encodings);
+    \item   Complex graph structure / topology.
+\end{itemize}
+
+Web search users:
+\begin{itemize}
+    \item   Tend to make ill-defined queries that are short, low-effort, contain imprecise terms, and have sub-optimal syntax;
+    \item   Have a wide variance in terms of needs, expectations, knowledge, \& bandwidth;
+    \item   Have specific behaviour: circa 85\% of people do not look at the second screen of results and circa 80\% of people do not modify the query and instead just follow links.
+\end{itemize}
+
+\subsection{Evolution of Web Search}
+\begin{itemize}
+    \item   First generation: use only ``on-page'' information such as word frequency etc.
+    \item   Second generation: link analysis, click-through data.
+    \item   Third generation: semantic analysis, integrate multiple sources of information, context analysis (spatial, query stream, personal profiling), aiding the user (re-spelling, query refinement, query suggestion), representation of results / query / collection.
+\end{itemize}
+
+\subsection{Anatomy of a Search Engine}
+\begin{itemize}
+    \item   \textbf{Spider} (robot/crawler): builds the corpus by recursively following links.
+    \item   \textbf{The indexer:} processes the data and indexes it (fully inverted list).
+            Different approaches are adopted with respect to stemming, phrases, etc.
+    \item   \textbf{Query processor:} query re-formulation, stemming, handling Boolean operators, finds matching documents and ranks them.
+\end{itemize}
+
+\subsection{History: Citation Analysis}
+Initial work in this area can be traced back to the domain of \textbf{citation analysis}.
+The \textbf{impact factor} of a journal is defined as 
+\[
+    \text{impact factor} = \frac{A}{B}
+\]
+where $A$ is the number of current-year citations to articles appearing in the journal during the previous years two years and $B$ is the number of articles published in the journal during the previous two years.
+\\\\
+\textbf{Co-citation} if a paper cites two papers $A$ \& $B$, then they are related or associated.
+The strength of co-citation between $A$ \& $B$ is the number of times they are co-cited.
+\\\\
+The \textbf{bibliographic coupling} of two documents $A$ \& $B$ is the number of documents cited by \textit{both} $A$ \& $B$.
+
+\subsection{Mining the Web Link Structure}
+The main approach in first generation search engines was the \textbf{indexing approach}.
+Although useful and effective, there are potentially too many links returned -- how does one return the most relevant?
+We usually want to select the most ``authoritative'' pages; hence, the search entails identifying pages that have relevancy \& quality.
+In addition to content, web pages also contain many links that connect one page to another.
+The web structure implicitly contains a large number of human annotations which can be exploited to infer notions of authority (and by extension quality).
+Any link to a page $p$ is considered to be a positive recommendation for that page $p$.
+
+\subsection{The HITS Algorithm}
+The \textbf{HITS algorithm} computes hubs \& authorities for a particular topic specified by a normal query.
+It first determines a set of relevant pages for that query called the \textbf{base set} $S$.
+It then analyses the link structure of the web sub-graph defined by $S$ to find authority \& hub pages in the set.
+\\\\
+The HITS algorithm analyses hyperlinks to identify:
+\begin{itemize}
+    \item   Authoritative pages (best sources);
+    \item   Hubs (collections of links).
+\end{itemize}
+
+We develop algorithms to exploit the implicit social organisation available in the web link structure.
+There exist many problems with identifying authoritative pages:
+\begin{itemize}
+    \item   Authoritative pages do not necessarily refer to themselves as such;
+    \item   Many links are purely for navigational purposes;
+    \item   Advertising links.
+\end{itemize}
+
+Mutually recursive heuristics are used:
+\begin{itemize}
+    \item   A good ``authority page'' is one that is pointed to by a number of sources; 
+    \item   A good ``hub'' is one that contains many links.
+\end{itemize}
+
+\subsubsection{Constructing the Sub-Graph}
+\begin{enumerate}
+    \item   For a specific query $Q$, let the set of documents returned by a standard search engine (e.g., vector space approach) be called the \textit{root set} $R$.
+    \item   Initialise $S$ to $R$.
+    \item   Add to $S$ all pages pointed to by any page in $R$.
+    \item   Add to $S$ all pages that point to any page in $R$.
+\end{enumerate}
+
+\subsubsection{Iterative Algorithm}
+Assign to each page $p \in S$:
+\begin{itemize}
+    \item   An authority score $a_p$ (vector $a$);
+    \item   A hub score $h_p$ (vector $h$).
+\end{itemize}
+
+Initialise all $a_p = h_p$ to some constant value.
+
+\subsubsection{HITS Update Rules}
+Authorities are pointed to by lots of good hubs:
+\[
+    a_p = \sum_{q: q \rightarrow p } h_q
+\]
+
+Hubs point to lots of good authorities:
+\[
+    h_p = \sum_{q: p \rightarrow q} a_q
+\]
+
+Define $M$ to be the adjacency matrix for the sub-graph defined by $S$: $M_{i,j} = 1$ for $i \in S, j \in S$ if and only if $i \rightarrow j$.
+We can calculate the authority vector $a$ from the matrix $M^{\text{T}}M$.
+Similarly, the hub vector $h$ can be calculated from the matrix $MM^{\text{T}}$.
+
+\subsubsection{Other Issues}
+Limitations of a link-only approach include:
+\begin{itemize}
+    \item   On narrowly-focused query topics, there may not be many exact references and the hubs may provide links to more general pages.
+    \item   Potential drift from main topic.
+            All links are treated as being equally important; if there is a range of topics in a hub, the focus of the search may drift.
+    \item   Timeliness of recommendation is hard to identify.
+    \item   Sensitivity of malicious attack.
+    \item   Edges with wrong semantics.
+\end{itemize}
+
+\subsection{PageRank}
+\subsubsection{Markov Chains}
+A \textbf{Markov chain} has two components:
+\begin{itemize}
+    \item   A graph / network structure where each node is called a state.
+    \item   A transition probability of traversing a link given that the chain is in a state.
+\end{itemize}
+
+A sequence of steps through the chain is called a \textit{random walk}.
+
+\subsubsection{Random Surfer Model}
+Assume that the web is a Markov chain.
+Surfers randomly click on links, where the probability of an outlink from page $A$ is $\frac{1}{n}$ where there are $n$ outlinks from $A$.
+The surfer occasionally gets \textit{bored} and is moved to another web page (teleported), say $B$, where $B$ is equally likely to be any page.
+The \textbf{PageRank} of a web page is the probability that the surfer will visit that page.
+
+\subsubsection{Dangling Pages}
+A \textbf{dangling page} is a page with not outgoing links that therefore cannot pass on rank.
+The solution to this is to assume that the page has links to all web pages with equal probability.
+
+\subsubsection{Rank Sink}
+Pages in a loop accumulate rank but do not distribute it; this is called a \textbf{rank sink}.
+The solution to this is ``teleportation'', i.e., with a certain probability, the surfer can jump to any other web pages ot get out of the loop. 
+
+\subsubsection{PageRank Definition}
+\begin{align*}
+    \text{PR}(W) = \frac{T}{N} + \left( 1 - T \right) \left( \frac{\text{PR}(W_1)}{O(W_1)} + \frac{\text{PR}(W_2)}{O(W_2)}  + \cdots + \frac{\text{PR}(W_n)}{O(W_n)} \right)
+\end{align*}
+where 
+\begin{itemize}
+    \item   $W$ is a web page;
+    \item   $W_i$ are the web pages that have a link to $W$;
+    \item   $O(W_i)$ is the number of outlinks from $W_i$;
+    \item   $T$ is the teleportation probability;
+    \item   $N$ is the size of the web.
+\end{itemize}
+
+\subsubsection{Efficiency}
+Early experiments on Google showed convergence in 52 iterations on a collection with 322 million links;
+the number of iterations required for convergence is empirically $O(\log n)$ where $n$ is the number of links.
+This is quite efficient.
+
+\subsubsection{Personalised Page Rank}
+We can bias the behaviour of page rank by changing the notion of random jumps.
+Instead of jumping to a random page on the web, we jump probabilistically to a page chosen from a seed set defined for a user.
+We add rank to pages of interest to the user rather than a random page.
+
+\subsubsection{Semantically / Content-Biased Page Rank}
+Page rank treats all edges as being equally important in its random surfer model (excluding links identified as navigation \& advertising links).
+That is, page rank values are distributed equally across all outgoing edges.
+An extra heuristic is that a surfer is more likely to follow a link relating to the content of the current page or passage.
+\\\\
+The page rank values propagated from a page sum to one; standard page rank gives equal values.
+We can measure a similarity between the context of a link and the linked-to page.
+This gives a measure of semantic relatedness between pages / passages.
+If users are more likely to navigate to a related page, we can assign page rank values in proportion to the relative similarity.
+
+\subsection{Temporal Link Analysis}
+Link-analysis techniques (e.g., PageRank, HITS) do not take into account associated temporal aspects of the web content.
+The goal is to incorporate temporal aspects (e.g., freshness, rate of change) into link-analysis techniques.
+Ranking based on the pages' authority values as that value changes over time.
+\\\\
+Approach:
+\begin{itemize}
+    \item   Add annotations to the graph, i.e., for every edge in the graph and for every vertex of the graph, maintain a set of values regarding the temporal aspects such as:
+            \begin{itemize}
+                \item   Creation time;
+                \item   Modification times;
+                \item   Last modification time.
+            \end{itemize}
+    \item   We can define a window of interest, freshness of an edge or node, and activity of an edge or node.
+\end{itemize}
+
+\subsection{Ranking Signals}
+There are many sources of evidence or \textbf{signals} that can be used to rank a page:
+\begin{itemize}
+    \item   Content signals (BM25 \& variants used);
+    \item   Structural signals (anchor text etc.);
+    \item   Web usage (implicit feedback, temporal context);
+    \item   Link-based ranking.
+\end{itemize}
+
+How best to combine signals is an open question.
+A simple approach is to combine PageRank (link analysis) and BM25 (content signal):
+\[
+    R(p,q) = (a) \text{BM25}(p,q) + (1-a) \text{PR}(p)
+\]
+
+More recently, much attention has been paid to using machine learning to rank approaches.
+Effectively, we attempt to learn the optimal way to combine the signals.
+Many approaches have been adopted:
+\begin{itemize}
+    \item   Learning the ranking (NN, SVM, Bayesian networks);
+    \item   Learning the ranking function (Genetic programming).
+\end{itemize}
+
+\subsubsection{Evaluation}
+In order to compare systems \& algorithms and to be able to guide any learning approaches, we need some means of evaluation.
+Commonly used choices include: Precision@5, Precision@10:
+\begin{itemize}
+    \item   Impossible to obtain recall;
+    \item   Users tend not to care about recall.
+\end{itemize}
+
+In IR, we have test collections \& human evaluations.
+In web search, we can exploit click-through data.
+Issues with this include heavy-tailed distribution of queries and having sufficient evidence.
+A related issue is the evaluation of snippets.
+Other issues in web search include:
+\begin{itemize}
+    \item   How to deal with duplicated data?
+    \item   How to deal with near-duplicates?
+    \item   Query suggestions?
+            \begin{itemize}
+                \item   Diversity?
+                \item   Appropriate suggestions;
+                \item   Predictive accuracy.
+            \end{itemize}
+\end{itemize}
+
+\textbf{Adversarial search} is the conflict between web search engine designers / creators and the ``search engine optimisation'' community:
+\begin{itemize}
+    \item   Recognising spam links;
+    \item   Augmenting link analysis algorithms to deal with such manipulation.
+\end{itemize}
 
 
 
