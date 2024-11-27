@@ -1934,7 +1934,26 @@ Technically, the inclusion of the bias parameter as an extra weight in this oper
 \\\\
 $d[0]$ is a dummy feature used for notational convenience that is always equal to 1.
 
-\subsubsection{Threshold Activation Function}
+\subsubsection{Artificial Neuron Schematic}
+Arrows carry activations in the direction the arrow is pointing.
+The weight label on each arrow represents the weight that will be applied to the input carried along the arrow.
+$\phi$ is the activation function of the neuron, also known as the perceptron.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/schematic.png}
+    \caption{ Artificial neuron schematic }
+\end{figure}
+
+The two-part structure of the McCulloch \& Pitts model is the basic blueprint for modern artificial neurons.
+The key differences are:
+\begin{itemize}
+    \item   In the McCulloch \& Pitts model, the weights were manually set (very difficult to do);
+            in modern machine learning, we learn the weights using data.
+    \item   McCulloch \& Pits considered the threshold activation function only; modern artificial neurons use one of a range of different activation functions.
+\end{itemize}
+
+\subsection{Threshold Activation Function}
 In the second stage of the McCulloch \& Pitts model, the result of the weighted sum calculation $z$ is then converted into a high or low activation by passing $z$ through the \textbf{activation function}.
 \\\\
 McCulloch \& Pitts used a \textbf{threshold activation function:} if $z$ is greater than or equal to the threshold, the artificial neuron outputs a 1 (high activation), otherwise it outputs a 0 (low activation).
@@ -1955,32 +1974,155 @@ $\phi$ is the \textbf{activation function} of the neuron.
     =& \phi \left(  w^{\text{T}}d \right)
 \end{align*}
 
-\subsubsection{Artificial Neuron Schematic}
-Arrows carry activations in the direction the arrow is pointing.
-The weight label on each arrow represents the weight that will be applied to the input carried along the arrow.
-$\phi$ is the activation function of the neuron, also known as the perceptron.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/nonlinearactivationfunctions.png}
+    \caption{ Example \textbf{non-linear} activation functions }
+\end{figure}
+
+\subsubsection{Logistic Activation Function}
+Historically, the \textbf{logistic activation function} was among the most commonly-used choices of activation functions.
+Note that neurons are often referred to as \textit{units}, and they are distinguished by the type of activation function that they use;
+hence, a neuron that uses a logistic activation function is referred to as a \textbf{logistic unit}.
+Logistic activation functions may map any real number input to an output between 0 \& 1.
+
+\[
+    \text{logistic}(z) = \frac{1}{1+e^{-z}}
+\]
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/schematic.png}
-    \caption{ Artificial neuron schematic }
+    \includegraphics[width=0.5\textwidth]{images/logisticactivationfunction.png}
+    \caption{ Logistic activation function }
 \end{figure}
 
-The two-part structure of the McCulloch \& Pitts model is the basic blueprint for modern artificial neurons.
-The key differences are:
+\subsubsection{Rectified Linear Activation Function}
+Today, the most popular choice of activation function is the \textbf{rectified linear activation} function or \textbf{rectifier}.
+A unit that uses the rectifier function is known as a \textbf{rectified linear unit} or \textbf{ReLU}.
+The rectified linear function does not \textit{saturate}, i.e., there is no maximum output value constraint.
+\[
+    \text{rectifier}(z) = \max(0,z)
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/rectifiedlinearactivationfunction.png}
+    \caption{ Rectified linear activation function }
+\end{figure}
+
+\subsection{Artificial Neural Networks}
+An \textbf{artificial neural network} (also called a \textit{multi-layer perceptron} or MLP) consists of a networks of inter-connected artificial neurons.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/artificialneuralnetworks.png}
+    \caption{
+        A \textbf{feedfoward} neural network.
+        The neurons are organised into a sequence of \textit{layers}.
+        \\\\
+        There are two types of neurons in this network: \textit{sensing neurons} \& \textit{processing neurons}.
+        The two squares on the left of the figure represent the two memory locations through which inputs are presented to this network.
+        These locations can be thought of as \textit{sensing} neurons that permit the network to sense the external inputs;
+        although we consider these memory locations as sensing neurons within the network, the inputs presented to the network are not transformed by these sensing neurons.
+        \\\\
+        Circles in the network represent \textit{processing} neurons that transform input using the aforementioned two-step process of a weighted sum followed by an activation function.
+        \\\\
+        Arrows connecting the neurons in the network indicate the flow information through the network.
+        \\\\
+        This artificial neural network is \textbf{fully-connected} because each of the neurons in the network is connected so that it receives inputs from all the neurons in the preceding layer and passes its output activation to all the neurons in the next layer.
+    }
+\end{figure}
+
+An artificial neural network can have any structure, but a layer-based organisation of neurons is common.
+Input to processing neurons can be:
 \begin{itemize}
-    \item   In the McCulloch \& Pitts model, the weights were manually set (very difficult to do);
-            in modern machine learning, we learn the weights using data.
-    \item   McCulloch \& Pits considered the threshold activation function only; modern artificial neurons use one of a range of different activation functions.
+    \item   External input from sensing neurons;
+    \item   The output activation of another processing neuron in the network;
+    \item   A dummy input that is always set to 1 (the input from a black circle).
 \end{itemize}
 
+In feedfowaard networks, there are no loops or cycles in the network connections that would allow the output of a neuron to flow back into the neuron as an input (even indirectly).
+In a feedfoward network, the activations in the network always flow \textit{forward} through the sequence of layers.
+The \textbf{depth} of a neural network is the number of hidden layers plus the output layer.
 
+\subsubsection{When is a Neural Network Considered ``Deep''?}
+The number of layers required for a network to be considered \textbf{deep} is an open question.
+Cybenko (1988) proved that a network with three layers of (processing) neurons (i.e., two hidden layers \& an output layer) can approximate any function to arbitrary accuracy.
+Therefore, we here define the minimum number of hidden layers necessary for a network to be considered deep as \textbf{two}; under this definition, the network shown previously would be described as a deep network.
+However, most deep networks have many more than two hidden layers: some deep networks have tens or even hundreds of layers.
 
+\subsubsection{Notes on Activation Functions}
+It is not a coincidence that the most useful activation functions are non-linear.
+Introducing non-linearity into the input-to-output mappings defined by a neuron enables an artificial neural network to learn complex non-linear mappings.
+This ability to learn complex non-linear mappings makes artificial neural networks such powerful models in terms of their ability to be accurate on complex tasks.
+\\\\
+A multi-layer feedforward network that uses only linear neurons (i.e., neurons that do not include a non-linear activation function) is equivalent to a single-layer network with linear neurons;
+in other words, it can represent only a linear mapping on the inputs.
+This equivalence is true no matter how many hidden layers we introduce into the network.
+Introducing even simple non-linearities in the form of logistic or rectified linear units is sufficient to enable neural networks to represent arbitrarily complex functions, provided the network contains enough layers.
 
+\subsubsection{Linear Separability}
+All three functions shown below have the same structure: they all take two inputs that can be either \textsc{true} (1) or \textsc{false} (0), and they return either \textsc{true} (1) or \textsc{false} (0).
+Solid black dots represent \textsc{false} outputs and clear dots represent the \textsc{true} outputs.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/linearseparability.png}
+    \caption{ Example functions from Boolean logic }
+\end{figure}
 
+\begin{itemize}
+    \item   \textsc{and} returns \textsc{true} if both inputs are \textsc{true} (linearly separable);
+    \item   \textsc{or} returns \textsc{true} if either input is \textsc{true} (linearly separable);
+    \item   \textsc{xor} returns \textsc{true} if only one of the inputs is \textsc{true} (not linearly separable).
+\end{itemize}
 
+\subsubsection{Network Depth versus Learning Rate}
+Adding depth to a network comes with a cost.
+As we will see when we discuss the \textit{vanishing gradient problem}, adding depth to a network can slow down the rate at which a network learns.
+Therefore, when we wish to increase the representational power of a network, there is often a trade-off between making a network deeper and making the layers wider.
+Finding a good equilibrium for a given prediction task involves experimenting with different architectures to see which performs best, i.e., we can treat the neural network architecture as a hyperparameter that must be optimised.
+Overall, there is a general trend that deeper networks have better performance than shallower networks, but as networks become deeper, they can become more difficult to train.
 
+\subsubsection{Training Neural Networks}
+The \textbf{blame assignment problem} is the question of how to calculate how much of the error in the entire network is due to an individual neuron when learning neural network weights.
+The \textbf{backpropagation problem} solves the blame assignment problem:
+at each learning step, once we have used backpropagation to calculate errors for individual neurons, we can then use \textbf{gradient descent} to update the weights for each neuron in the network.
+\\\\
+For example, consider a regression problem wherein we predict a continuous target value based on the values of two independent attributes.
+We could use the feedforward network structure outlined previously to tackle this. 
+An example process could look like:
+\begin{enumerate}
+    \item   We initialise the weights \textit{randomly} at first.
+    \item   We make predictions and the use these to compute the error of the network using a \textbf{loss function}, e.g., sum of squared errors on training data.
+    \item   We use \textbf{back propagation} to compute errors on each neuron.
+    \item   We use \textbf{gradient descent} to update neuron weights.
+    \item   We repeat this for multiple \textbf{epochs} (training steps) until convergence.
+\end{enumerate}
+
+\section{Exam Notes}
+\begin{itemize}
+    \item   Know formula for distance formulas etc.
+    \item   Definitely know formulas for entropy and information gain -- need to be able to calculate them ourselves to answer a question on decision trees.
+    \item   More or less the same format, will not try to throw in questions to catch us off-guard.
+    \item   Stick to learning objectives -- questions will be related to them.
+    \item   Will focus on what we covered in the notes -- no specific algorithms that we studied ourselves.
+    \item   What does it mean to have stratified samples, cross validation, etc could come up.
+    \item   Know pseudocode for all the algorithms and their associated formulas.
+    \item   For KNN, know distance formulae, could be good to know distance-weighted KNN.
+    \item   Know formulae for activation functions, how they work, and different steps.
+    \item   High level is fine for what we covered today.
+    \item   Know difference between classification and regression.
+    \item   Supervised vs unsupervised + examples.
+    \item   Describe different types of supervised vs unsupervised tasks and algorithms that might be used for them.
+    \item   What's K in k-means? Do you have to decide it in advance? How to get good estimate? Using elbow method?
+    \item   Exam format in line with previous years, but will not be cut and paste.
+            Same types of questions in different contexts.
+    \item   Put together your own confusion matrix, true positive rate, false positive rate.
+    \item   Go back to learn objectives and tick them off.
+    \item   $z$-normalisation formula?
+    \item   RMSE.
+\end{itemize}
 
 
 
