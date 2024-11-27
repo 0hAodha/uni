@@ -4,6 +4,3 @@
 [submodule "year4/semester1/CT436: Advanced Professional Skills/project"]
 	path = year4/semester1/CT436: Advanced Professional Skills/project
 	url = git@github.com:JackLennox/CT436-AdvanceProSkills.git
-[submodule "year4/semester1/CT4100: Information Retrieval/assignments/as2"]
-	path = year4/semester1/CT4100: Information Retrieval/assignments/as2
-	url = git@github.com:0hAodha/CT4101_AS2.git
