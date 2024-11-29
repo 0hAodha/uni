@@ -1,0 +1,64 @@
+## Pre-Revision Hints
+- Write the pseudocode or steps to find the HOG feature.
+- What happens if you change the HOG feature from 2x2 to 4x4.
+
+## Exam Info
+- Don't be misled by previous years.
+- Previously 2/3, now 4/5.
+- More questions, same time, less time per question.
+- Q1 is compulsory.
+- More options as there is more to cover.
+- Do one of two coding tasks.
+- More graphics on 2021/2022 paper than our one.
+
+## Exam hints
+- Probably won't be asked for algorithms, but could be asked for general steps.
+- What are steps when detecting faces, steps to follow to compute HOG of descriptor, steps for camera calibration.
+- Very small computations, like how to compute the gradient for a particular pixel in x direction, y direction, etc.
+- One could be canvas 2d, one could be threejs, no guarantee that there won't be two on the same technology.
+    - Can't get away with just studying one technology.
+- Theory questions and application questions.
+    - Doing analysis on an image.
+- Won't be too theoretical, going into mathematics, will be more applied.
+- One is around camera calibration and the other around feature and descriptors.
+    - We did basics like calculating differentials.
+    - These will be the ideas around Q4 and Q5.
+    - Won't be calculating eigenvalues.
+    - Basic mathematics.
+    - Compute the total amount of features you have in HOG.
+- Don't focus on solving mathematics for camera calibration, just need to understand how you create an intrinsic matrix given focal length etc.
+    - Construct K-matrix.
+    - Anatomy of the camera matrix.
+    - What the rows of the P-matrix means.
+- Feature side:
+    - Focus on steps need to follow, why you need to.
+    - Benefit of principal components.
+- Just have to do one image analysis question.
+- Try not to just pick one, the other one could be difficult.
+- Exam won't be easy.
+- Make sure you understand concepts covered in class.
+- Waqar's part is more novel, so he has given us extra info about exam.
+- Nasre's stuff is more overlapping from previous years.
+- Will be given useful methods to refer to, like in Sam's papers.
+    - Answer can be derived from methods given.
+    - For both Canvas and ThreeJS.
+- Definition of surface normal for example, can give formula or describe.
+- Nasre tends to be more applied: might ask more applied questions that theoretical questions.
+    - Analyse this image, write this code.
+- Perfect answer for erosion: no equation, description, example.
+- We didn't do image de-calibration.
+- Hough transform?
+    - Or adaptive thresholding?
+- Think in transforms, draw transforms.
+    - Nasre really likes transforms.
+- It's good to look at previous exam papers.
+    - Possibly taken question from previous years???
+    - Was answering question.
+- Look at last 3/4 exam papers.
+- Wouldn't pass if you only studied last year's paper.
+- Try to remember kernel matrices for filters, e.g., smoothing etc. 
+    - Nasre wants us to know the matrix values.
+    - Can learn how to develop kernel from first principles.
+    - Here is a one directional filter, make a two directional one.
+        - like how you make laplacian of gaussian.
+        - How to convolve filters.
