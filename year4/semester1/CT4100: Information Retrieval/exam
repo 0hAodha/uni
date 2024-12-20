@@ -1,0 +1,107 @@
+Week 12 - Exam hints part 1
+Information retrieval
+Boolean model
+Vector model
+
+-> Weighting schemes
+Tf-idf
+BM25 / Pivot Normalisation
+Take stuff into account - local evidence, normalisation, global (idf), document lenght normalisation
+
+No need to memorise the equations - explain the main components then you're g
+Lookiong at it from an axiomatic approach
+other models
+Neural networks
+extended boolean
+
+
+Evaluation
+Evaluationg different weighting schemes
+precision recall
+precision recall graph
+MAP
+user ones - coverage & novelty (only when we have users that we can study or discuss)
+purity etc.
+
+Learning
+Looked at evolutionary computation
+Looked at clustering
+
+give us ways to generate new weighting schemes
+K -means
+
+Collab filtering
+interesting in evaluating it with coverage and accuracy
+websearch
+HITS algorithm
+Page rank
+
+
+Query expansion
+
+Query difficulty prediction
+how can we tell if a certain query is easy or hard
+preretrieval
+query features
+features of collection
+
+postretreival]
+answer set
+or even just ranking of documents when they come back
+
+
+Preprocessing & indexing
+system efficiently 
+
+PAPER OVERVIEW
+4 questions, do any 3
+3 parts to every question
+
+Q1
+Weighting schemes
+stuff on axiomatic approach (only formal correct way to look at weighting schemes)
+tf - idf -> takes issues on overcoming those
+vector space model (And other approaches)
+
+Q2
+Relevance feedback
+know when to do it
+what features to use
+explicit feedback
+similar to assignment - query expansion (but different obviously lmao)
+
+Q3
+Alternative model to vector space or boolean 
+How we evaluate a system here
+anything to do to apply learning algorithms
+
+Q4
+similarity - overlaps with assignment questions
+recommendation approaches
+clustering approaches
+
+
+Q1. Weighing Schemes
+- tf-idf -> dealing with issues with some of the stuff in vector space model, tf-idf
+- axiometric approach
+-  can determine if a weighting scheme is good or not
+- can also be used to constrain a search
+
+
+Q.2 Relevance feedback
+- often want to know when we can use it and features to use
+- broken, blind feedback, query, increase precision, soemtimes can damage precision
+- want to do query feedback when it is a hard query
+- what features should exist if we want feedback
+- when user says a doc is relevant or not/ give a score in some range
+- query expansion
+
+Q3. Alternatives to Vector Space
+- evaluation - precision, recall, preicision recall graphs
+- apply learning 
+
+
+Q4
+- similarity - borrow ideas from more than one component oin the course
+- clustering approaches
+- recommendation approaches 
