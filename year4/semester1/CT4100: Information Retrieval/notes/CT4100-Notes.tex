@@ -1505,6 +1505,14 @@ Each pair is also either ``true'' (correct) or ``false'' (incorrect), i.e., the 
 
 \subsubsection{How Many Clusters?}
 The number of clusters $k$ is given in many applications.
+For example, there may be an external constraint on $k$; for the scatter-gather algorithm, it was hard to show more than 10-20 clusters on a monitor in the 1990s.
+\\\\
+If there is no external constraint, there is still no ``right'' number of clusters that is empirically correct.
+One approach is to define an optimisation criterion, and find the $k$ for which the optimum is reached.
+We cannot use RSS or average squared distance from the centroid as a criterion as this will always result in $k = N$ clusters.
+The \textbf{elbow method} can be used to get an idea of where the residual sum of squares stops rapidly decreasing when plotted against the number of clusters.
+
+
 
 \section{Query Estimation}
 \textbf{Query difficulty estimation} is used to attempt to estimate the quality of search results for a query from a given collection of documents in the absence of user relevance feedback.
@@ -1866,7 +1874,6 @@ Other issues in web search include:
     \item   Augmenting link analysis algorithms to deal with such manipulation.
 \end{itemize}
 
-\section{Exam Notes}
 
 
 
