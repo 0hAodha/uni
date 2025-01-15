@@ -153,8 +153,155 @@ Parameters of method calls are passed as serialised objects:
     \item   parameters are passed by value (deep copy) and therefore object behaviour can be passed.
 \end{itemize}
 
+The Java Object Model is still supported with distributed (remote) objects.
+A reference to a remote object can be passed to or returned from local \& remote objects.
+Remote object references are passed by reference: therefore, the whole object is not always downloaded.
+Objects that implement the \mintinline{java}{Remote} interface are passed as a remote reference, while other objects are passed by value (using object serialisation).
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/javarmi.png}
+    \caption{Java RMI Architecture}
+\end{figure}
 
+The client obtains a reference for a remote object by calling \mintinline{java}{Naming.lookup(//URL/registered_name)} which is a method which returns a reference to another remote object.
+Methods of the remote object may then be called by the client.
+This call is actually to the \textbf{stub} which represents the remote object.
+The stub packages the arguments (\textbf{marshalling}) into a data stream (to be sent across the network).
+On the implementation side, the skeleton unmarshals the argument, calls the method, marshals the return value, and sends it back.
+The stub unmarshals the return value and returns it to the caller.
+The RMI layer sits on top of the JVM and this allows it to use Java Garbage Collection of remote objects, Java Security (a security manager may be set for the server, now deprecated), and Java class loading.
+
+\subsection{Steps to Creating an RMI Application}
+\begin{enumerate}
+    \item   Define the interfaces to your remote objects.
+    \item   Implement the remote object classes.
+    \item   Write the main client \& server programs.
+    \item   Create the stub \& skeleton classes by running the \textit{rmic} compiler on the remote implementation classes. (No longer needed in later Java versions).
+    \item   Start the \textit{rmiregistry} (if not already started).
+    \item   Start the server application.
+    \item   Start the client (which contains some initial object references).
+    \item   The client application/applet may then call object methods in the remote (server) program.
+\end{enumerate}
+
+\subsection{Example Java RMI Program}
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+// Remote Object has a single method that is passed
+// the name of a country and returns the capital city.
+import java.rmi.*;
+
+public interface CityServer extends Remote
+{
+    String getCapital(String Country) throws
+        RemoteException;
+}
+\end{minted}
+\caption{Example Java RMI Program}
+\end{code}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class CityServerImpl
+    extends UnicastRemoteObject
+    implements CityServer
+{
+    // constructor is required in RMI
+    CityServerImpl() throws RemoteException
+    {
+        super(); // call the parent constructor
+    }
+
+    // Remote method we are implementing!
+    public String getCapital(String country) throws
+        RemoteException
+    {
+        System.out.println("Sending return string now - country requested: " + country);
+        if (country.toLowerCase().compareTo("usa") == 0)
+            return "Washington";
+        else if (country.toLowerCase().compareTo("ireland") == 0)
+            return "Dublin";
+        else if (country.toLowerCase().compareTo("france") == 0)
+            return "Paris";
+        return "Don't know that one!";
+    }
+
+    // main is required because the server is standalone
+    public static void main(String args[])
+    {
+        try
+        {
+            // First reset our Security manager
+            System.setSecurityManager(new RMISecurityManager());
+            System.out.println("Security manager set");
+
+            // Create an instance of the local object
+            CityServerImpl cityServer = new CityServerImpl();
+            System.out.println("Instance of City Server created");
+
+            // Put the server object into the Registry
+            Naming.rebind("Capitals", cityServer);
+            System.out.println("Name rebind completed");
+            System.out.println("Server ready for requests!");
+        } catch(Exception exc)
+        {
+            System.out.println("Error in main - " + exc.toString());
+        }
+    }
+}
+\end{minted}
+\caption{Example Server Implementation}
+\end{code}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+public class CityClient
+{
+    public static void main (String args[])
+    {
+        CityServer cities = (CityServer) Naming.lookup("//localhost/Capitals");
+        try {
+            String capital = cities.getCapital("USA");
+            System.out.println(capital);
+        } catch (Exception e) {}
+    }
+}
+\end{minted}
+\caption{Example Client Implementation}
+\end{code}
+
+No distributed system can mask communication failures: method semantics should include failure possibilities.
+Every RMI remote method must declare the exception \mintinline{java}{RemoteException} in its \mintinline{java}{throw} clause.
+This exception is thrown when method invocation or return fails.
+The Java compiler requires the failures to be handled.
+\\\\
+When implementing a remote object, the implementation class usually extends the RMI class \mintinline{java}{UnicastRemoteObject}: this indicates that the implementation class is used to create a single (non-replicated) remote object that uses RMI's default sockets-based transport for communication.
+If you choose to extend a remote object from a non-remote class, you need to explicitly export the remote object by calling the method \mintinline{java}{UnicastRemoteObject.exportObject()}.
+\\\\
+The main method of the service first needs to create \& install a \textbf{security manager}, either the \mintinline{java}{RMISecurityManager} or one that you have defined yourself.
+A security manager needs to be running so that it can guarantee that the classes loaded do not perform ``sensitive'' operations.
+If no security manager is specified, no class loading for RMI classes is allowed, local or otherwise.
+\\\\
+TO make classes available via a web server (or your classpath), copy them into your public HTML directory.
+Alternatively, you could have compiled your files directly into your public HTML directory:
+\begin{minted}[linenos, breaklines, frame=single]{shell}
+javac -d ~/project_dir/public_html City*.java
+rmic -d ~/project_dir/public_html  CityServerImpl
+\end{minted}
+
+The files generated by \mintinline{shell}{rmic} (in this case) are: \verb|CityServerImpl_Stub.class| \& \verb|CityServerImpl_Skel.class|.
+\\\\
+\textbf{Polymorphic distributed computing} is the ability to recognise (at runtime) the actual implementation type of a particular interface.
+We will use the example of a remote object that is used to computer arbitrary tasks:
+\begin{itemize}
+    \item   Client sends task object to compute server.
+    \item   Compute server runs task and returns result.
+    \item   RMI loads task code dynamically in the server.
+\end{itemize}
+This example shows polymorphism on the server, but it also works on the client, for example the server returns a particular interface implementation.
 
 
 
