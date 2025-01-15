@@ -1,0 +1,156 @@
+% ! TeX program = lualatex
+\documentclass[a4paper,11pt]{article} 
+% packages
+\usepackage{censor}
+\StopCensoring
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+% for tironian et fallback
+% % \directlua{luaotfload.add_fallback
+% % ("emojifallback",
+% %      {"Noto Serif:mode=harf"}
+% % )}
+% % \setmainfont{EB Garamond}[RawFeature={fallback=emojifallback}]
+
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+\usepackage[a4paper,left=2cm,right=2cm,top=\dimexpr15mm+1.5\baselineskip,bottom=2cm]{geometry}
+\setlength{\parindent}{0pt}
+
+\usepackage{fancyhdr}       % Headers and footers 
+\fancyhead[R]{\normalfont \leftmark}
+\fancyhead[L]{}
+\pagestyle{fancy}
+
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{0, 64, 128}
+\usepackage[final, colorlinks = false, urlcolor = linkblue]{hyperref} 
+% \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
+\newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
+
+\usepackage{changepage}     % adjust margins on the fly
+\usepackage{amsmath,amssymb}
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\captionsetup[listing]{skip=0pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{5pt}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{enumitem}
+
+\usepackage{titlesec}
+
+\author{Andrew Hayes}
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \hrule
+        \vspace*{0.6cm}
+        \Huge \textsc{ct437}
+        \vspace*{0.6cm}
+        \hrule
+        \LARGE
+       \vspace{0.5cm}
+       Computer Security \& Forensic Computing
+       \vspace{0.5cm}
+       \hrule
+
+       \vfill
+
+       \hrule
+        \begin{minipage}{0.495\textwidth} 
+            \vspace{0.4em}
+            \raggedright
+            \normalsize 
+            \begin{tabular}{@{}l l}
+                Name: & Andrew Hayes \\
+                Student ID: & 21321503 \\
+                E-mail: & \href{mailto://a.hayes18@universityofgalway.ie}{a.hayes18@universityofgalway.ie} \\
+            \end{tabular}
+        \end{minipage}
+        \begin{minipage}{0.495\textwidth} 
+            \raggedleft
+            \vspace*{0.8cm}
+            \Large
+            \today
+            \vspace*{0.6cm}
+        \end{minipage}
+        \medskip\hrule 
+    \end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\newpage
+\tableofcontents
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\section{Introduction}
+\subsection{Lecturer Contact Information}
+\begin{itemize}
+    \item   Name: Dr. Michael Schukat.
+    \item   E-mail: \href{mailto://michael.schukat@universityofgalway.ie}{michael.schukat@universityofgalway.ie}.
+    \item   Office: CSB-3002.
+\end{itemize}
+
+\subsection{Marking}
+\begin{itemize}
+    \item   2 hours of labs per week from Week 03.
+    \item   30\% Continuous Assessment consisting of 2 assignments, in-class quizzes, \& lab worksheets.
+\item   In-class quizzes will be open-book Canvas MCQs consisting of 5 randomised questions out of a pool of 20+ questions.
+        One question is presented at a time, there is no back-tracking allowed.
+        5minutes duration.
+    \item   70\% exam.
+\end{itemize}
+
+\subsection{Cybersecurity versus Computer Security}
+\textbf{Cybersecurity} is the practice of protecting systems, networks, \& programs from digital attacks.
+These cyberattacks are usually aimed at accessing, changing, or destroying sensitive information; extorting money from users; or interrupting normal business processes.
+\\\\
+\textbf{Computer security} is a historically older term coined at a time when the focus was on individual stand-alone computers rather than entire systems.
+\\\\
+\textbf{Computer forensics} is a branch of digital forensic science pertaining to evidence found in computers \& digital storage media.
+The goal of computer forensics is to examine digital media in a forensically sound manner with the aim of identifying, preserving, recovering, analysing, and presenting facts \& opinions about the digital information. 
+
+\subsection{Definitions, Terminology, \& Case Studies}
+\textbf{Computer security}, cybersecurity, or information technology security (IT security) is the protection of computer systems \& networks from the theft or damage to their hardware, software, or electronic data, as well as from the disruption or misdirection of the services they provide.
+The protection can be on a personal, organisational, or government level.
+Protection from cybercrime of data (from theft or manipulation) and services (from disruption or misuse).
+
+\subsubsection{States of Data}
+\begin{itemize}
+    \item   \textbf{Data at rest} refers to data stored in memory or on a permanent storage device such as a hard drive, solid-state drive, or USB drive. 
+    \item   \textbf{Data in process} refers to data that is being used to perform an operation such as updating a database record.
+    \item   \textbf{Data in transit} refers to data travelling between information systems, e.g., data transfer over a network via TCP/IP.
+\end{itemize}
+
+\subsubsection{How to Provide Protection?}
+\begin{itemize}
+    \item   \textbf{Awareness, training, \& education} are the measures put in place by an organisation to ensure that users are knowledgeable about potential security threats and the actions they can take to protect information systems.
+
+    \item   \textbf{Technology} refers to the software \& hardware-based solutions designed to protection information systems such as firewalls, which continuously monitor your network in search of possible malicious incidents.
+
+    \item   \textbf{Policy \& procedure} refers to the administration controls that provide a foundation for how an organisation implements information assurance, such as incident response plans \& best practice guidelines.
+\end{itemize}
+
+\textbf{Defense in Depth (DiD)} is an approach to cybersecurity in which a series of defensive mechanisms are layered in order to protect assets.
+If one mechanism fails, another one steps up immediately to thwart an attack.
+
+
+
+
+
+\end{document}
