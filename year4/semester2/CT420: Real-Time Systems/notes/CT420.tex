@@ -97,4 +97,75 @@
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
+\section{Introduction}
+\subsection{Lecturer Contact Information}
+\begin{itemize}
+    \item   Name: Dr. Michael Schukat.
+    \item   E-mail: \href{mailto://michael.schukat@universityofgalway.ie}{michael.schukat@universityofgalway.ie}.
+    \item   Office: CSB-3002.
+\end{itemize}
+
+\begin{itemize}
+    \item   Name: Dr. Jawad Manzoor.
+    \item   E-mail: \href{jawad.manzoor@universityofgalway.ie}{jawad.manzoor@universityofgalway.ie}.
+    \item   Office: CSB-3012.
+\end{itemize}
+
+\subsection{Assessment}
+\begin{itemize}
+    \item   2 hours of face-to-face \& virtual labs per week from Week 03.
+    \item   30\% Continuous Assessment:
+            \begin{itemize}
+                \item   2 assignments, 10\% each.
+                \item   2 in-class quizzes between Week 07 \& Week 12, worth 5\%.
+            \end{itemize}
+\end{itemize}
+
+\subsection{Introduction to Real-Time Systems}
+A system is said to be \textbf{real-time} if the total correctness of an operation depends not only upon its logical correctness but also upon the time in which it is performed.
+Contrast functional requirements (logical correctness) versus non-functional requirements (time constraints).
+There are two main categorisation factors:
+\begin{itemize}
+    \item   \textbf{Criticality:}
+            \begin{itemize}
+                \item   \textbf{Hard RTS:} deadlines (responsiveness) is critical.
+                        Failure to meet these have severe to catastrophic consequences (e.g., injury, damage, death).
+                \item   \textbf{Soft RTS:} deadlines are less critical, in many cases significant tolerance can be permitted.
+            \end{itemize}
+
+    \item   \textbf{Speed}
+            \begin{itemize}
+                \item   \textbf{Fast RTS:} responses in microseconds to hundreds of microseconds.
+                \item   \textbf{Slow RTS:} responses in the range of seconds to days.
+            \end{itemize}
+\end{itemize}
+
+A \textbf{safety-critical system (SCS)} or life-critical system is a system whose failure or malfunction may result in death or serious injury to people, loss of equipment / property or severe damage, \& environmental harm.
+
+\section{The Essence of Time: From Measurement to Navigation \& Beyond}
+\textbf{Time} is the continued sequence of existence \& events that occurs in an apparently irreversible succession from past, through the present, into the future.
+Methods of temporal measurement, or chronometry, take two distinct forms:
+\begin{itemize}
+    \item   The \textbf{calendar}, a mathematical tool for organising intervals of term;
+    \item   The \textbf{clock}, a physical mechanism that counts the passage of time.
+\end{itemize}
+
+Global (maritime) exploration requires exact maritime navigation, i.e., longitude \& latitude calculation.
+\textbf{Latitude} (north-south) orientation is straightforward; \textbf{longitude} (east-west orientation) requires a robust (maritime) clock.
+\\\\
+\textbf{Ground-based navigation systems} like LORAN (LOng RAnge Navigation) were developed in the 1940s and were in use until recently, and required fixed terrestrial longwave radio transmitters, and receivers on-board of ships \& planes.
+They are also referred to as hyperbolic navigation or multilateration.
+The principles of ground-based navigation systems is as follows:
+\begin{enumerate}
+    \item   A \textbf{master} with a known location broadcasts a radio pulse.
+    \item   Multiple \textbf{slave} stations with a known distance from the master send their own pulse, upon receiving the master pulse.
+    \item   A \textbf{receiver} receives master \& slave pulses and measures the delay between them.
+    \item   This allows the receiver to deduce the distance to each of the stations, providing a fix.
+\end{enumerate}
+
+
+
+
+
+
 \end{document}
