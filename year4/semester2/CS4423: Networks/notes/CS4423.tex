@@ -29,6 +29,7 @@
 % \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
+\usepackage[most]{tcolorbox}
 \usepackage{changepage}     % adjust margins on the fly
 \usepackage{amsmath,amssymb}
 
@@ -202,6 +203,70 @@ Which measurements \& calculations give meaningful answers for a particular syst
 Another interesting network concept is the \textbf{small-world effect}, which is concerned with the question of how far apart two randomly chosen points in a network typically are.
 Here, \textbf{distance} is usually measured by the number of edges one would need to cross over when travelling along a \textbf{path} from one vertex to another.
 In real-world social networks, the distance between people tends to be rather small.
+
+\section{Graphs}
+A \textbf{graph} can serve as a mathematical model of a network.
+Later, we will use the \mintinline{python}{networkx} package to work with examples of graphs \& networks.
+
+\subsection{Example: The Internet (circa 1970)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/f7dec1970.jpg}
+    \caption{
+        The Internet (more precisely, ARPANET) in December 1970.
+        Nodes are computers, connected by a link if they can directly communicate with each other.
+        At the time, only 13 computers participated in that network.
+    }
+\end{figure}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{text}
+UCSB SRI UCLA
+SRI UCLA STAN UTAH
+UCLA STAN RAND
+UTAH SDC MIT
+RAND SDC BBN
+MIT BBN LINC
+BBN HARV
+LINC CASE
+HARV CARN
+CASE CARN
+\end{minted}
+\caption{\texttt{arpa.adj}}
+\end{code}
+
+The following \textbf{diagram}, built from the adjacencies in \verb|arpa.adj|, contains the same information as in the above figure, without the distracting details of US geography;
+this is actually an important point, as networks only reflect the \textbf{topology} of the object being studied.
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{python}
+H = nx.read_adjlist("../data/arpa.adj")
+opts = { "with_labels": True, "node_color": 'y' }
+nx.draw(H, **opts)
+\end{minted}
+\caption{\texttt{arpa.adj}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/qwe_download.png}
+    \caption{ The ARPA Network as a Graph }
+\end{figure}
+
+\subsection{Simple Graphs}
+A \textbf{simple graph} is a pair $G = (X,E)$ consisting of a finite set $X$ of objects called \textit{nodes}, \textit{vertices}, or \textit{points} and a set of \textit{links} or \textit{edges} $E$ which are each a set of two different vertices. 
+\begin{itemize}
+    \item   We can also write $E \subseteq \binom{X}{2}$, where $\binom{X}{2}$ ($X$ \textit{choose} 2) is the set of all $2$-element subsets of $X$.
+    \item   The \textbf{order} of the graph $G$ is denoted as $n = |X|$, where $n$ is the number of vertices in the graph.
+    \item   The \textbf{size} of the graph is denoted as $m = |E|$, where $m$ is the number of edges in the graph.
+            Naturally, $m \leq \binom{n}{2}$.
+\end{itemize}
+
+\subsubsection{Example}
+$G=(X,E)$ with $X = \{ A, B, C, D \}$ and $E = \{ \{AB\}, \{BC\}, \{BD\}, \{CD\} \}$, so $G$ is a graph of order $4$ and size $4$.
+We can be lazy and write $\{ A, B \}$ as just $AB$, so $E = \{ AB, BC, BD, CD \}$.
+
+
 
 
 \end{document}
