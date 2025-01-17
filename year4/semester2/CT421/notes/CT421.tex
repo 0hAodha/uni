@@ -1,0 +1,318 @@
+% ! TeX program = lualatex
+\documentclass[a4paper,11pt]{article} 
+% packages
+\usepackage{censor}
+\StopCensoring
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+% for tironian et fallback
+% % \directlua{luaotfload.add_fallback
+% % ("emojifallback",
+% %      {"Noto Serif:mode=harf"}
+% % )}
+% % \setmainfont{EB Garamond}[RawFeature={fallback=emojifallback}]
+
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+\usepackage[a4paper,left=2cm,right=2cm,top=\dimexpr15mm+1.5\baselineskip,bottom=2cm]{geometry}
+\setlength{\parindent}{0pt}
+
+\usepackage{fancyhdr}       % Headers and footers 
+\fancyhead[R]{\normalfont \leftmark}
+\fancyhead[L]{}
+\pagestyle{fancy}
+
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{0, 64, 128}
+\usepackage[final, colorlinks = false, urlcolor = linkblue]{hyperref} 
+% \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
+\newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
+
+\usepackage[most]{tcolorbox}
+\usepackage{changepage}     % adjust margins on the fly
+\usepackage{amsmath,amssymb}
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\captionsetup[listing]{skip=0pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{5pt}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{enumitem}
+
+\usepackage{titlesec}
+
+\author{Andrew Hayes}
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \hrule
+        \vspace*{0.6cm}
+        \Huge \textsc{ct421}
+        \vspace*{0.6cm}
+        \hrule
+        \LARGE
+       \vspace{0.5cm}
+       Artificial Intelligence
+       \vspace{0.5cm}
+       \hrule
+
+       \vfill
+
+       \hrule
+        \begin{minipage}{0.495\textwidth} 
+            \vspace{0.4em}
+            \raggedright
+            \normalsize 
+            \begin{tabular}{@{}l l}
+                Name: & Andrew Hayes \\
+                Student ID: & 21321503 \\
+                E-mail: & \href{mailto://a.hayes18@universityofgalway.ie}{a.hayes18@universityofgalway.ie} \\
+            \end{tabular}
+        \end{minipage}
+        \begin{minipage}{0.495\textwidth} 
+            \raggedleft
+            \vspace*{0.8cm}
+            \Large
+            \today
+            \vspace*{0.6cm}
+        \end{minipage}
+        \medskip\hrule 
+    \end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\newpage
+\tableofcontents
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\section{Introduction}
+\subsection{Assessment}
+\begin{itemize}
+    \item   Exam: 60\%.
+    \item   2 projects: 20\% each.
+\end{itemize}
+
+\subsection{Introduction to Artificial Intelligence}
+The field of Artificial Intelligence has evolved \& changed many times over the years, with changes focussing both on the problems \& approaches in the field;
+many problems that were considered typical AI problems are now often considered to belong in different fields.
+There are also many difficulties in defining intelligence: the \textbf{Turing test} attempts to give an objective notion of intelligence and abstracts away from any notions of representation, awareness, etc.
+It attempts to eliminate bias in favour of living beings by focusing solely on content of questions \& answers.
+There are many criticisms of the Turing test:
+\begin{itemize}
+    \item   Bias towards symbolic problem-solving criticisms;
+    \item   Doesn't test many aspects of human intelligence;
+    \item   Possibly constrains notions of intelligence.
+\end{itemize}
+
+\subsubsection{Approaches to AI}
+\begin{itemize}
+    \item   \textbf{Classical AI} uses predicate calculus (\& others) and logical inference to infer or find new information.
+            It is a powerful approach for many domains, but issues arise when dealing with noise or contradictory data.
+
+    \item   \textbf{Machine learning} learns from data and uses a distributed representation of learned information.
+            It is typified by neural networks \& deep learning approaches.
+
+    \item   \textbf{Agent-based systems} view intelligence as a collective emergent behaviour from a large number of simple interacting individuals or \textit{agents}.
+            Social systems provide another metaphor for intelligence in that they exhibit global behaviours that enable them to solve problems that would prove impossible for any of the individual members.
+            Properties of agent-based systems / artificial life include:
+            \begin{itemize}
+                \item   Agents are autonomous or semi-autonomous;
+                \item   Agents are situated;
+                \item   Agents are interactional;
+                \item   Society is structured;
+                \item   Intelligence is emergent.
+            \end{itemize}
+\end{itemize}
+
+\section{Search}
+Many problems can be viewed as a \textbf{search} problem;
+consider designing an algorithm to solve a sudoku puzzle: in every step, we are effectively searching for a move (an action) that takes us to a correct legal state.
+To complete the game, we are iteratively searching for an action that brings us to legal board and so forth until completion.
+Other examples include searching for a path in a maze, word ladders, chess, \& checkers.
+The problem statement can be formalised as follows:
+\begin{itemize}
+    \item   The problem can be in various states.
+    \item   We start in an initial state.
+    \item   There is a set of actions available.
+    \item   Each action changes the state.
+    \item   Each action has an associated cost.
+    \item   We want to reach some goal while minimising cost.
+\end{itemize}
+
+More formally:
+\begin{itemize}
+    \item   Set of states $S$.
+    \item   Start state $s_0 \in S$.
+    \item   Set of actions $A$ and action rules $a(s) \rightarrow s'$.
+    \item   A goal test $g(s) \rightarrow \{0,1\}$.
+    \item   Cost function $C(s,a,s') \rightarrow \mathbb{R}$.
+    \item   Search can be defined by the 5-tuple $(S,s,a,g,C)$.
+\end{itemize}
+
+We can then state the problem as follows:
+find a sequence of actions $a_1 \dots a_n$ and corresponding states $s_0 \dots sn$ such that:
+\begin{itemize}
+    \item   $s_0 = s$
+    \item   $s_i = a_i(S_{i-1})$
+    \item   $g(s_n) = 1$
+\end{itemize}
+while minimising $\sum^n_{i=1} c(a_i)$.
+\\\\
+The problem of solving a sudoku puzzle can be re-stated as:
+\begin{itemize}
+    \item   Sudoku states: all legal sudoku boards.
+    \item   Start state: a particular, partially filled-in, board.
+    \item   Actions: inserting a valid number into the board.
+    \item   Goal test: all cells filled with no collisions.
+    \item   Cost function: 1 per move.
+\end{itemize}
+
+We can conceptualise this search as a \textbf{search tree}: a node represents a state, and the edges from a state represent the possible actions from that state, with the edge pointing to the new resulting state from the action.
+Important factors of a search tree include:
+\begin{itemize}
+    \item   The breadth of the tree (branching factor).
+    \item   The depth of the tree.
+    \item   The minimum solution depth.
+    \item   The size of the tree $O(b^d)$.
+    \item   The \textbf{frontier:} the set of unexplored nodes that are reachable from any currently explored node.
+    \item   Choosing which node to explore next is the key in search algorithms.
+\end{itemize}
+
+\subsection{Uninformed Search}
+In \textbf{uninformed search}, no information is known (or used) about solutions in the tree.
+Possible approaches include expanding the deepest node (depth-first search) or expanding the closest node (breadth-first search).
+Properties that must be considered for uninformed search include completeness, optimality, time complexity (the total number of nodes visited), \& space complexity (the size of the frontier).
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single, escapeinside=||]{python}
+visited = {};
+frontier = {|$s_0$|};
+goal_found = False;
+
+while (not goal_found):
+    node = frontier.next();
+    frontier.delete(node);
+
+    if (g(node)):
+        goal_found = True;
+    else
+        visited.add(node);
+        for child in node.children():
+            if (not visited.contains(child)):
+                frontier.add(child);
+
+\end{minted}
+\caption{Pseudocode for an uninformed search}
+\end{code}
+
+The manner in which we expand the node is key to how the search progresses.
+The way in which we implement \mintinline{python}{frontier.next()} determines the type of search; otherwise the basic approach remains unchanged.
+\\\\
+\textbf{Depth-first search} is good regarding memory cost, but produces suboptimal solutions:
+\begin{itemize}
+    \item   Space: $O(bd)$.
+    \item   Time: $O(b^d)$.
+    \item   Completeness: only for finite trees.
+    \item   Optimality: no.
+\end{itemize}
+
+\textbf{Breadth-first search} produces an optimal solution, but is expensive with regards to memory cost:
+\begin{itemize}
+    \item   Space: $O(b^{m+1})$, where $m$ is the depth of the solution in the tree.
+    \item   Time: $O(b^m)$.
+    \item   Completeness: yes.
+    \item   Optimality: yes (assuming constant costs).
+\end{itemize}
+
+\textbf{Iterative deepening search} attempts to overcome some of the issues of both breadth-first and depth-first search.
+It works by running depth-first search to a fixed depth of $z$ by starting at $d=1$ and if no solution is found, incrementing $d$ and re-running.
+\begin{itemize}
+    \item   Low memory requirements (equal to depth-first search).
+    \item   Not many more nodes expanded than breadth-first search.
+    \item   Note that the leaf level will have more nodes than the previous layers.
+\end{itemize}
+
+Thus far, we have assumed each edge has a fixed cost; consider the case where the costs are not uniform:
+neither depth-first search or breadth-first search are guaranteed to find the least-cost path in the case where action costs are not uniform.
+One approach is to choose the node with the lowest cost: order the nodes in the frontier by cost-so-far (cost of the path from the start state to the current node) and explore the next node with the smallest cost-so-far, which gives an optimal and complete solution (given all positive costs).
+
+\subsection{Informed Search}
+Thus far, we have assumed we know nothing about the search space; what should we do if we know \textit{something} about the search space?
+We know the cost of getting to the current node: the remaining cost of finding the solution is the cost from the current node to the goal state; therefore, the total cost is the cost of getting from the start state to the current node, plus the cost of getting from the current node to the goal state.
+We can use a (problem-specific) \textbf{heuristic} $h(s)$ to estimate the remaining cost: $h(s) = 0$ is $s$ is a goal.
+A good heuristic is fast to compute and close to the real costs.
+\\\\
+Given that $g(s)$ is the cost of the path so far, the \textbf{A* algorithm} expands the node $s$ to minimise $g(s) + h(s)$.
+The frontier nodes are managed as a priority queue.
+If $h$ never overestimates the cost, the A* algorithm will find the optimal solution.
+
+\subsection{Adversarial Search}
+The typical game setting is as follows:
+\begin{itemize}
+    \item   2 player;
+    \item   Alternating turns;
+    \item   Zero-sum (gain for one, loss for another);
+    \item   Perfect information.
+\end{itemize}
+
+A game is said to be \textbf{solved} if an optimal strategy is known.
+\begin{itemize}
+    \item   A \textbf{strong solved} game is one which is solved for all positions;
+    \item   A \textbf{weak solved} game is one which is solved for some (start) positions.
+\end{itemize}
+
+A game has the following properties:
+\begin{itemize}
+    \item   A set of possible states;
+    \item   A start state;
+    \item   A set of actions;
+    \item   A set of end states (many);
+    \item   An objective function;
+    \item   Control over actions alternates.
+\end{itemize}
+
+The \textbf{minimax algorithm} computes a value for each node, going backwards from the end-nodes.
+The \textbf{max player} selects actions to maximise return, while the \textbf{min player} selects actions to minimise return.
+The algorithm assumes perfect play from both players.
+For optimal play, the agent has to evaluate the entire game tree.
+Issues to consider include:
+\begin{itemize}
+    \item   Noise / randomness;
+    \item   Efficiency -- size of the tree;
+    \item   Many game trees are too deep;
+    \item   Many game trees are too broad.
+\end{itemize}
+
+\textbf{Alpha-beta pruning} is a means to reduce the search space wherein sibling nodes can be pruned based on previously found values.
+Alpha represents the best maximum value found so far (for the maximising player), and beta represents the best minimum value found so far (for the minimising player).
+If a node's value proves irrelevant (based on the alpha \& beta values), its entire subtree can be discarded.
+In reality, for many search scenarios in games, even with alpha-beta pruning, the space is much too large to get to all end states.
+Instead, we use an \textbf{evaluation function} which is effectively a heuristic to estimate the value of a state (the probability of a win or a loss).
+The search is ran to a fixed depth and all states are evaluated at that depth.
+Look-ahead is performed from the best states to another fixed depth.
+\\\\
+\textbf{Horizon effects} refer to the limitations that arise when the algorithm evaluates a position based on a finite search depth (the horizon):
+\begin{itemize}
+    \item   What if something interesting / unusual / unexpected occurs at $\text{horizon}+1$?
+    \item   How do you identify that?
+    \item   When to generate and explore more nodes?
+    \item   Deceptive problems.
+\end{itemize}
+
+
+
+\end{document}
