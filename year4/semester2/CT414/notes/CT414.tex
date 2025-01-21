@@ -302,10 +302,108 @@ We will use the example of a remote object that is used to computer arbitrary ta
     \item   RMI loads task code dynamically in the server.
 \end{itemize}
 This example shows polymorphism on the server, but it also works on the client, for example the server returns a particular interface implementation.
+\\\\
+Our example task will be a simple interface that defines an arbitrary task to compute:
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+public interface Task extends Serializable
+{
+    Object run();
+}
+\end{minted}
+\caption{Simple \mintinline{java}{Task} interface}
+\end{code}
 
+We will also define a \mintinline{java}{Remote} interface:
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+import java.rmi.*;
 
+public interface Compute extends Remote
+{
+    Object runTask(Task t) throws RemoteException;
+}
+\end{minted}
+\caption{Simple \mintinline{java}{Task} interface}
+\end{code}
 
+A task may create a \mintinline{java}{Remote} object on the server and return a reference to that object; the \mintinline{java}{Remote} object will be garbage-collected when the returned reference is dropped (assuming that no-one else is given a copy of the reference).
+A task may create a \mintinline{java}{Serializable} object and return a copy of that object; the original object will be locally garbage-collected when the \mintinline{java}{Task} ends.
+If the \mintinline{java}{Task} creates an object that is neither a \mintinline{java}{Remote} nor a \mintinline{java}{Serializable} object, a marshalling exception will be thrown.
 
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class ComputeServer extends UnicastRemoteObject implements Compute
+{
+    public ComputeServer() throws RemoteException {}
+
+    public Object runTask(Task t)
+    {
+        return t.run();
+    }
+}
+\end{minted}
+\caption{Compute server implementation}
+\end{code}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+public static void main(String args[])
+{
+    System.setSecurityManager(new RMISecurityManager());
+    try
+    {
+        ComputeServer cs = new ComputeServer();
+        Naming.rebind("Computer", cs);
+    }
+    catch (Exception e)
+    {
+        // Exception handling
+    }
+}
+\end{minted}
+\caption{Compute server implementation}
+\end{code}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+public class Pi implements Task
+{
+    private int places;
+
+    public Pi (int places)
+    {
+        this.places = places;
+    }
+
+    public Object run()
+    {
+        // Compute Pi
+        return result;
+    }
+}
+\end{minted}
+\caption{Task to compute $\pi$}
+\end{code}
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{java}
+Compute comp = (Compute) Naming.Lookup("//www.t.nuigalway.ie/Computer");
+
+Pi pi = new Pi(100);
+Object piResult = comp.runTask(pi);
+
+// print results
+\end{minted}
+\caption{The client}
+\end{code}
+
+In conclusion, RMI is flexible and allows us to pass objects (both \mintinline{java}{Remote} \& \mintinline{java}{Serializable}) by exact type rather than declared type and download code to introduce extended functionality in both client \& server.
+However, it is Java-only and has been superseded by SOAP \& REST as the de-facto standards for communicating with remote services.
+Nonetheless, RMI is still worth  learning to help understand concepts around distributed objects \& distributed systems architecture. 
 
 
 
