@@ -1,1 +1,2 @@
-java -cp /Users/des/Documents/CT414-Samples/rmicompute/compute.jar:. engine.ComputeEngine 20345
+java -cp /home/andrew/currsem/CT414/materials/code/02-rmicompute:. engine.ComputeEngine 20345
+

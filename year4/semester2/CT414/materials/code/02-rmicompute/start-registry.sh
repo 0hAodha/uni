@@ -1,1 +1,1 @@
-rmiregistry -J-Djava.rmi.server.codebase=file:/Users/des/Documents/CT414-Samples/rmicompute/ 20345
+rmiregistry -J-Djava.rmi.server.codebase=file:/home/andrew/currsem/CT414/materials/code/02-rmicompute/ 20345
