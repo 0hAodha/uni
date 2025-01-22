@@ -405,11 +405,79 @@ In conclusion, RMI is flexible and allows us to pass objects (both \mintinline{j
 However, it is Java-only and has been superseded by SOAP \& REST as the de-facto standards for communicating with remote services.
 Nonetheless, RMI is still worth  learning to help understand concepts around distributed objects \& distributed systems architecture. 
 
+\section{Enterprise Java Beans}
+\subsection{Distributed System Scenario}
+Imagine a worldwide financial company with 10,000 online customers that wants to add a new currency converter software component that is heavily used with 1,0000 hits/second.
+The design will consist of the business logic and the distributed infrastructure.
+The distributed infrastructure includes security, load-balancing, transaction management, \& object-relational mapping; Enterprise Java Beans takes care of this, and provides an API \& framework.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/distributed_system_scenario.png}
+    \caption{
+        Business logic, distribute the object, add security manager, add load balancing agent.
+    }
+\end{figure}
 
+\subsection{EJB}
+\textbf{Enterprise Java Beans (EJB)} is a server-side component architecture that enables and simplifies the process of building enterprise-class distributed object applications in Java.
+It allows you to write scalable, reliable, and secure applications without writing your own complex distributed object frameworks.
+EJB is a \textit{specification}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/the_ejb_proces.png}
+    \caption{
+        The EJB process
+    }
+\end{figure}
 
+The \textbf{EJB Container} is where the EJBs run and is responsible for managing EJBs.
+The \textbf{EJB Server} is a runtime environment for container(s) that manages the low-level system resources.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/ejb_server_and_container.png}
+    \caption{ The EJB server \& containers }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/ejb_bean_types.png}
+    \caption{ EJ Bean types }
+\end{figure}
+
+\textbf{Session beans} are ``business process objects'' (e.g., price quoting, order entry, video compression, stock trades, etc.) and live for as long as the client's session.
+They are usable by 1 client at a time and are \textit{not} shared.
+The EJB server manages the lifetime of beans.
+\textbf{Stateless session beans} are single request with no state kept, e.g., currency converter, compression utility, or credit card verification.
+\\\\
+\textbf{Entity beans / JPA} represent persistent data.
+They are the object-oriented in-memory view of data in an underlying data store.
+They are long-lasting and have shared access.
+Sub-types of entity beans include: bean-managed persisted entity beans and container-manager persistent entity beans.
+\textbf{Bean-managed persistence} must be persisted manually and must look after saving, loading, \& finding.
+They make use of a persistence API such as JDBC or SQL/J.
+\textbf{Container-managed persistence} is automatic persistence wherein the container/server looks after the loading, saving, \& finding of component data.
+You must describe what you want persisted.
+Deployment tools provide support for defining simple object-relational mappings.
+\\\\
+The client never invokes the bean instance, instead it invokes the \textbf{EJB object} by an invocation that is intercepted by the container, delegated to the bean instance.
+The EJB object is a surrogate, network-aware wrapper object that serves as a layer of indirection between the client \& the bean; it is essentially the glue between the client \& the bean.
+EJB objects must clone every business method that your bean class exposes, specified in the remote interface.
+All remote interfaces derive from \mintinline{java}{javax.ejb.EJBObject}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/ejb_objets.png}
+    \caption{ EJB Objects }
+\end{figure}
+
+The \textbf{session bean interface} is implemented by all session beans and specifies lifecycle methods that may be implemented inn the bean such as \mintinline{java}{setSessionContext}, \mintinline{java}{ejbCreate}, \mintinline{java}{ejbRemove}, \mintinline{java}{ejbPassivate}, \& \mintinline{java}{ejbActivate}.
+\\\\
+The \textbf{Java Naming \& Directory Interface} is used to find an object.
+The resource (e.g., a bean) is associated with a nickname when deploying; clients of this bean can then use this nickname to look up the resource across a deployment.
+The client code looks up the reference in JNDI and calls business methods on the EJB object.
 
 
 \end{document}
