@@ -29,6 +29,7 @@
 % \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
+\usepackage{mathtools}
 \usepackage{changepage}     % adjust margins on the fly
 
 \usepackage{minted}
@@ -163,7 +164,104 @@ The principles of ground-based navigation systems is as follows:
     \item   This allows the receiver to deduce the distance to each of the stations, providing a fix.
 \end{enumerate}
 
+NEED TO FINISH
 
+\section{Time Synchronisation in Distributed Systems}
+A \textbf{distributed system (DS)} is a type of networked system wherein multiple computers (nodes) work together to perform a task.
+Such systems may or may not be connected to the Internet.
+Time \& synchronisation are important issues here: think of error logs in distributed systems -- how can error events recorded in different computers be correlated with each other if there is no common time base?
+The problem is that GNSS-based time synchronisation may or may not be available, as GPS signals are absorbed or weakened by building structures.
+There is no other time reference such systems can rely on because in such a distributed system there are just a series of imperfect computer clocks.
+\\\\
+In distributed systems, all the different nodes are supposed to have the same notion of time, but quartz oscillators oscillate at slightly different frequencies.
+Hence, clocks tick at different rates (called \textit{clock skew}), resulting in an increasing gap in perceived time.
+The difference between two clocks at a given pot is called \textit{clock offset}.
+The \textbf{clock synchronisation problem} aims to minimise the clock skew and subsequently the offset between two or more clocks.
+A clock can show a positive or negative offset with regard to a reference clock (e.g., UTC), and will need to be resynchronised periodically.
+One cannot just set the clock to the ``correct'' time: jumps, particularly backwards, can confuse software and operating systems.
+Instead, we aim for gradual compensation by correcting the skew: if a clock runs too fast, make it run slower until correct and if a clock runs too slow, make it run faster until correct.
+\\\\
+Synchronisation can take place in different forms:
+\begin{itemize}
+    \item   Based on \textbf{physical} clocks: absolute to each other by synchronising to an accurate time source (e.g., UTC), absolute to each other by synchronising to locally agreed time (i.e., no link to a global time reference), where the term \textit{absolute} means that the differences in timestamps are proper time intervals.
+
+    \item   Based on \textbf{logical} clocks (i.e., clocks are more like counters): timestamps may be ordered but with no notion of measurable time intervals.
+\end{itemize}
+
+In either case, the DS endpoints synchronise using a shared network.
+For physical clock synchronisation, network latencies must be considered as packets traverse from a sending node to a receiving node.
+In a \textbf{perfect network}, messages \textit{always} arrive, with a propagation delay of \textit{exactly} $d$;
+the sender sends time $T$ in a message, the receiver sets its clock to $T + d$, and synchronisation is exact.
+\\\\
+In a \textbf{deterministic network}, messages arrive with a propagation delay $0 < d \leq D$;
+the sender sends time $T$ in a message, the receiver sets its clock to $T + \frac{D}{2}$, and therefore the synchronisation error is at most $\frac{D}{2}$.
+\textbf{Deterministic communication} is the ability of a network to guarantee that a message will be transmitted in a specified, predictable period of time.  
+
+\subsection{Synchronisation in the Real World}
+Most off-the-shelf networks are \textit{asynchronous}, that is, data is transmitted intermittently on a best-effort basis.
+They are designed for flexibility, not determinism, and as a result, propagation delays are arbitrary and sometimes even unsymmetric (i.e., upstream \& downstream latencies are different).
+Therefore, synchronisation algorithms are needed to accommodate these limitations.
+
+\subsubsection{Cristian's Algorithm}
+\textbf{Cristian's algorithm} attempts to compensate for symmetric network delays:
+\begin{enumerate}
+    \item   The client remembers the local time $T_0$ just before sending a request.
+    \item   The server receives the request, determines $T_S$, and sends it as a reply.
+    \item   When the client receives the reply, it notes the local arrival time $T_1$.
+    \item   The correct time is then approximately $(T_S + \frac{(T_1 - T_0)}{2} )$.
+\end{enumerate}
+
+The algorithm assumes symmetric network latency.
+If the server is synced to UTC< all clients will follow UTC.
+Limitations of Cristian's algorithm include:
+\begin{itemize}
+    \item   Assumes a symmetric network latency;
+    \item   Assumes that timestamps can be taken as the packet hits the wire / arrives at the client;
+    \item   Assumes that $T_S$ is right in the middle of the server process; for example, consider the server process being pre-empted just before it sends the response back to the client, which will corrupt the synchronisation of the client.
+\end{itemize}
+
+\subsubsection{Berkeley Algorithm}
+In the \textbf{Berkeley algorithm}, there is no accurate time server: instead, a set of client clocks is synchronised to their average time.
+The assumption is that offsets / skews of all clocks follow some symmetric distribution (e.g., a normal distribution) with some clocks going faster and others slower, and therefore a mean value close to 0.
+\begin{enumerate}
+    \item   One node is designated to be the \textbf{master node} $M$.
+    \item   The master node periodically queries all other clients for their local time.
+    \item   Each client returns a timestamp or their clock offset to the master.
+    \item   Cristian's algorithm is used to determine and compensate for RTTs, which can be different for each client.
+    \item   Using these, the master computes the average time (thereby ignoring outliers), calculates the difference to all timestamps it has received, and sends an adjustment to each client.
+            Again, each computer gradually adjusts its local clock.
+\end{enumerate}
+
+Client clocks are adjusted to run faster or slower, to be synced to an overall agreed system time.
+The client networks is an intranet, i.e., an isolated system.
+Therefore, the Berkeley algorithm is an \textbf{internal clock synchronisation algorithm}.
+The Berkeley algorithm was implemented in the TEMPO time synchronisation protocol, which was part of the Berkelely UNIX 4.3BSD system.
+
+\subsection{Logical Clocks}
+\textbf{Logical clocks} are another concept linked to internal clock synchronisation.
+Logical clocks only care about their internal consistency, but not about absolute (UTC) time;
+subsequently, they do not need clock synchronisation and take into account the order in which events occur rather than the time at which they occurred.
+In practice, if clients or processes only care that event $a$ happens before event $b$, but don't care about the exact time difference, they can make use of a logical clock.
+\\\\
+We can define the \textbf{happens-before relation} $a \rightarrow b$:
+\begin{itemize}
+    \item   If events $a$ and $b$ are within the same process, then $a \rightarrow b$ if $a$ occurs with an earlier local timestamp: \textbf{process order}.
+    \item   If $a$ is the event of a message being sent by one process, and $b$ is the event of the message being received by another process, then $a \rightarrow b$: \textbf{causal order}.
+    \item   We also have \textbf{transitivity:} if $a \rightarrow b$ and $b \rightarrow c$, then $a \rightarrow c$.
+\end{itemize}
+Note that this only provides a \textit{partial order}:
+if two events $a$ and $b$ happen in different processes that do not exchange messages (not even indirectly), then neither $a \rightarrow b$ nor $b \rightarrow a$ is true.
+In this situation, we say that $a$ and $b$ are \textbf{concurrent} and write $a \sim b$, i.e., nothing can be said about when the events happened or which event happened first.
+\\\\
+Happens-before can be implemented using the \textbf{Lamport scheme:}
+\begin{enumerate}
+    \item   Each process $P_i$ has a logical clock $L_i$, where $L_i$ can be simply an integer variable initialised to 0.
+    \item   $L_i$ is incremented on every local event $e$; we write $L_i(e)$ or $L(e)$ as the timestamp of $e$.
+    \item   When $P_i$ sends a message, it increments $L_i$ and copies its content into the packet.
+    \item   When $P_i$ receives a message from $P_k$, it extracts $L_k$ and sets $L := \text{max}(L_i, L_k)$ and then increments $L_i$.
+\end{enumerate}
+
+This guarantees that if $a \rightarrow b$, then $L_i(a) < L_k(b)$, but nothing else.
 
 
 
