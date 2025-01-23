@@ -262,6 +262,20 @@ Happens-before can be implemented using the \textbf{Lamport scheme:}
 \end{enumerate}
 
 This guarantees that if $a \rightarrow b$, then $L_i(a) < L_k(b)$, but nothing else.
+\\\\
+The primary limitation of Lamport clocks is that they do not capture \textbf{causality}.
+Lamport's logical clocks lead to a situation where all events in a distributed system are ordered, so that if an event $a$ (linked to $P_i$) ``happened before''  event $b$ (linked to $P_k$), i.e., $a \rightarrow b$, then $a$will allso be positioned in that ordering before $b$ such that $L_i(a) < L_k(b)$ or simply $L(a) < L(b)$;
+however, nothing can be said about the relationship between two events $a$ \& $b$ by merely comparing their time values $L_i(a)$ and $L_k(b$.): we can't tell if $a \rightarrow b$ or $b \rightarrow a$ or $a \sim b$ unless they occur in the same process.
+
+\subsubsection{Vector Clocks}
+In practice, causality is captured by means of \textbf{vector clocks}:
+\begin{itemize}
+    \item   There is an ordered list of logical clocks, with one per process.
+    \item   Each process $P_i$ maintains a vector $\vec{V_i}$, initially containing all zeroes.
+    \item   On a local event $e$, $P_i$ increments $\vec{V_i}[i]$ (the $i$\textsuperscript{th} vector component).
+            If the event is ``message send'', a new $\vec{V_i}$ is copied into the packet.
+    \item   If $P_i$ receives a message from $P_m$, then, for all $k$
+\end{itemize}
 
 
 
