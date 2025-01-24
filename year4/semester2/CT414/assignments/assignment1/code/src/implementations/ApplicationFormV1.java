@@ -1,10 +1,12 @@
 package implementations;
 
 import interfaces.*;
+
+import java.io.Serializable;
 import java.util.*;
 import java.rmi.*;
 
-public class ApplicationFormV1 implements ApplicationForm {
+public class ApplicationFormV1 implements ApplicationForm, Serializable {
     private String formInfo = "University of Galway Application Form - Version 1";
     private String[] questions = new String[5];
     private String[] answers = new String[5];

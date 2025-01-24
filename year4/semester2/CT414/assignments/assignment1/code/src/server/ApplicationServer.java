@@ -1,6 +1,7 @@
 package server;
 
 import implementations.ApplicationHandlerImpl;
+import interfaces.ApplicationHandler;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
@@ -14,10 +15,10 @@ public class ApplicationServer {
             Registry registry = LocateRegistry.getRegistry();
 
             // create applicationhandlerstub and bind it
-            ApplicationHandlerImpl applicationHandler = new ApplicationHandlerImpl();
+            ApplicationHandler applicationHandler = new ApplicationHandlerImpl();
             System.out.println("Instance of ApplicationHandlerImpl created");
 
-            ApplicationHandlerImpl stub = (ApplicationHandlerImpl) UnicastRemoteObject.exportObject(applicationHandler, 0);
+            ApplicationHandler stub = (ApplicationHandler) UnicastRemoteObject.exportObject(applicationHandler, 0);
             Naming.rebind("ApplicationHandler", stub);
             System.out.println("Name rebind completed");
 

@@ -21,10 +21,10 @@ public class ApplicationClient {
             System.out.println("ApplicationHandler found in registry");
 
             // login
-            System.out.println("Enter your username\n> ");
+            System.out.printf("Enter your username\n> ");
             String username = scanner.nextLine();
 
-            System.out.println("Enter your password\n> ");
+            System.out.printf("Enter your password\n> ");
             String password = scanner.nextLine();
 
             long sessionID = handler.login(username, password);
@@ -43,7 +43,7 @@ public class ApplicationClient {
             // answer questiosn
             for (int i = 0; i < form.getTotalQuestions(); i++) {
                 System.out.println("Q" + i + ": " + form.getQuestion(i));
-                System.out.println("A> ");
+                System.out.printf("A> ");
                 form.answerQuestion(i, scanner.nextLine());
             }
             System.out.println("Form filled successfully.");

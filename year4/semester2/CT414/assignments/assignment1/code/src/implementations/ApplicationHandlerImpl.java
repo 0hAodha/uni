@@ -38,7 +38,7 @@ public class ApplicationHandlerImpl implements ApplicationHandler {
     @Override
     public void submitApplicationForm(long sessionID, ApplicationForm applicationForm) throws RemoteException, InvalidSessionIDException {
         if (sessions.contains(sessionID)) {
-            String filename = applicationForm.getName().replace("\\s", "_") + ".txt";
+            String filename = applicationForm.getName().replaceAll("\\s", "_") + ".txt";
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 System.out.println("Saving application form to file: " + filename);
