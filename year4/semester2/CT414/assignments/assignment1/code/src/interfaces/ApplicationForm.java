@@ -15,4 +15,7 @@ public interface ApplicationForm extends Remote {
 
      // method to provide a String answer to a question based off its questionNumber
     void answerQuestion(int questionNumber, String answer) throws RemoteException, IllegalArgumentException;
+
+    // method to return the applicant's name, for use in naming application files
+    String getName() throws RemoteException;
 }

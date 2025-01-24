@@ -44,6 +44,11 @@ public class ApplicationFormV1 implements ApplicationForm {
     }
 
     @Override
+    public String getName() throws RemoteException {
+        return answers[0];
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
