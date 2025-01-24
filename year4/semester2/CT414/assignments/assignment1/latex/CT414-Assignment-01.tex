@@ -71,6 +71,31 @@
     Assignment 1: Java RMI
 \end{center}
 \hrule
+\medskip
+
+To run and test the code, I wrote a short shell script based off those provided in RMI Compute Server Example code provided on Canvas which compiles the code and launches three terminals: one running the \mintinline{shell}{rmiregistry}, one running the \mintinline{java}{ApplicationServer}, and one running the \mintinline{java}{ApplicationClient}.
+
+\begin{code}
+\inputminted[texcl, mathescape, linenos, breaklines, frame=single]{shell}{../code/src/run.sh}
+\caption{\mintinline{shell}{run.sh}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/screenshot.png}
+    \caption{Screenshot of all four terminal windows. From left to right, top to bottom: the window running \mintinline{shell}{run.sh}, the window running the \mintinline{shell}{rmiregistry}, the window running the \mintinline{java}{ApplicationServer}, \& the window running the \mintinline{java}{ApplicationClient}}
+\end{figure}
+
+As can be seen in the \mintinline{java}{ApplicationClient} terminal window above, I tested the application by logging in with username \& password \verb|admin|, and filling in application details.
+The details entered were saved into a file called \verb|Michael_D_Higgins.txt|, with the name of the file being the applicant's name with all whitespace replaced with underscores (to avoid any spaces-in-filename headaches).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/michaeld.png}
+    \caption{Contents of the saved application form file}
+\end{figure}
+
+The output file contained all the questions and answers from the application form, as expected.
 
 
 \end{document}
