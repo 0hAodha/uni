@@ -1,0 +1,90 @@
+%! TeX program = lualatex
+\documentclass[a4paper]{article} 
+
+% packages
+\usepackage{microtype}      % Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black]{hyperref} 
+\usepackage{changepage}     % adjust margins on the fly
+
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage{minted}
+\usemintedstyle{algol_nu}
+\usepackage{xcolor}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=\textwidth,compat=1.9}
+
+\usepackage{caption}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\captionsetup[listing]{skip=0pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{5pt}
+
+\usepackage[yyyymmdd]{datetime}
+\renewcommand{\dateseparator}{--}
+
+\usepackage{titlesec}
+% \titleformat{\section}{\LARGE\bfseries}{}{}{}[\titlerule]
+% \titleformat{\subsection}{\Large\bfseries}{}{0em}{}
+% \titlespacing{\subsection}{0em}{-0.7em}{0em}
+%
+% \titleformat{\subsubsection}{\large\bfseries}{}{0em}{$\bullet$ }
+% \titlespacing{\subsubsection}{1em}{-0.7em}{0em}
+
+% margins
+\addtolength{\hoffset}{-2.25cm}
+\addtolength{\textwidth}{4.5cm}
+\addtolength{\voffset}{-3.25cm}
+\addtolength{\textheight}{5cm}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0in}
+% \setcounter{secnumdepth}{0}
+
+\begin{document}
+\hrule \medskip
+\begin{minipage}{0.295\textwidth} 
+    \raggedright
+    \footnotesize 
+    \begin{tabular}{@{}l l}
+        Name: & Andrew Hayes \\
+        Student ID: & 21321503 \\
+        E-mail: & \href{mailto://a.hayes18@universityofgalway.ie}{\texttt{a.hayes18@universityofgalway.ie}} \\
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.4\textwidth} 
+    \centering 
+    \vspace{0.4em}
+    \LARGE
+    \textsc{ct420} \\ 
+\end{minipage}
+\begin{minipage}{0.295\textwidth} 
+    \raggedleft
+    \today
+\end{minipage}
+\medskip\hrule 
+\begin{center}
+    \normalsize
+    Assignment 1: NTP Benchmarking
+\end{center}
+\hrule
+\medskip
+
+\section{NTP Installation}
+As I already use a Linux-based operating system on my personal laptop, I first attempted to run \mintinline{shell}{ntpq} without installing anything, assuming it would be installed;
+to my surprise, Arch Linux is so minimalist that it doesn't even come with the \mintinline{shell}{ntpd} package by default and I had to install it myself!
+That explains why my system clock has always been two minutes behind for the past few years!
+After installing \mintinline{shell}{ntpd} and enabling the daemon, and watching my system clock slowly speed up until it matched UTC, I checked that it was working properly by running \mintinline{shell}{ntpq -p} a few times:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/ntpq-p.png}
+    \caption{Verifying that the NTP daemon is running, via \mintinline{shell}{ntpq}}
+\end{figure}
+
+\section{NTP Configuration}
+
+\end{document}
