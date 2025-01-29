@@ -40,7 +40,7 @@ public class ApplicationClient {
             System.out.println("Number of questions to be answered: " + form.getTotalQuestions());
             System.out.println("------------------------------");
 
-            // answer questiosn
+            // answer questions
             for (int i = 0; i < form.getTotalQuestions(); i++) {
                 System.out.println("Q" + i + ": " + form.getQuestion(i));
                 System.out.printf("A> ");
