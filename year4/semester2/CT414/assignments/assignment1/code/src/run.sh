@@ -14,4 +14,4 @@ $TERM -e java -cp $src_path -Djava.rmi.server.codebase=file:$src_path/ server.Ap
 sleep 1
 
 # start client (in a new terminal)
-$TERM -e java -cp $src_path -Djava.rmi.server.codebase=file:$src_path/ client.ApplicationClient
+$TERM -e bash -c "java -cp $src_path -Djava.rmi.server.codebase=file:$src_path/ client.ApplicationClient ; zsh"

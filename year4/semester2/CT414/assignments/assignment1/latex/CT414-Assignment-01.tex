@@ -71,7 +71,8 @@
     Assignment 1: Java RMI
 \end{center}
 \hrule
-\medskip
+
+\section{Testing}
 
 To run and test the code, I wrote a short shell script based off those provided in RMI Compute Server Example code provided on Canvas which compiles the code and launches three terminals: one running the \mintinline{shell}{rmiregistry}, one running the \mintinline{java}{ApplicationServer}, and one running the \mintinline{java}{ApplicationClient}.
 
@@ -96,6 +97,26 @@ The details entered were saved into a file called \verb|Michael_D_Higgins.txt|, 
 \end{figure}
 
 The output file contained all the questions and answers from the application form, as expected.
+
+\subsection{\mintinline{java}{InvalidCredentialsException}}
+To test that an appropriate exception was thrown when a user attempted to login with invalid credentials, I tried a few invalid logins.
+The desired behaviour, as can be seen in the output screenshot below, was that the \mintinline{java}{ApplicationHandlerImpl} class would throw an \mintinline{java}{InvalidCredentialsException} when the \mintinline{java}{ApplicationClient} invoked its \mintinline{java}{ApplicationHandler.login()} method.
+The \mintinline{java}{ApplicationClient} would then handle this exception gracefully, prompting the user to re-enter their login details until they entered valid details.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/inalidcred.png}
+    \caption{Failed logins with invalid credentials, handled gracefully }
+\end{figure}
+
+\subsection{\mintinline{java}{InvalidSessionIDException}}
+Since my \mintinline{java}{ApplicationHandlerImpl} class would reject session IDs older than 60 seconds (the low value being chosen for testing purposes, a more practical value would be, say, 10 minutes), I simply waited 60 seconds after logging in to answer the very last question, ensuring that the form submission method would be invoked with an expired session ID, the desired behaviour (as can be seen in the output below) being that the client would receive an \mintinline{java}{InvalidSessionIDException}, and gracefully terminate the program.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/invalidsessionid.png}
+    \caption{Session ID expiring after 60 seconds}
+\end{figure}
 
 
 \end{document}

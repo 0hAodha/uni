@@ -1,5 +1,7 @@
 package client;
 
+import exceptions.InvalidCredentialsException;
+import exceptions.InvalidSessionIDException;
 import interfaces.ApplicationForm;
 import interfaces.ApplicationHandler;
 
@@ -21,14 +23,22 @@ public class ApplicationClient {
             System.out.println("ApplicationHandler found in registry");
 
             // login
-            System.out.printf("Enter your username\n> ");
-            String username = scanner.nextLine();
+            long sessionID;
+            while (true) {
+                try {
+                    System.out.printf("Enter your username\n> ");
+                    String username = scanner.nextLine();
 
-            System.out.printf("Enter your password\n> ");
-            String password = scanner.nextLine();
+                    System.out.printf("Enter your password\n> ");
+                    String password = scanner.nextLine();
 
-            long sessionID = handler.login(username, password);
-            System.out.println("Successfully logged in with session ID: " + sessionID);
+                    sessionID = handler.login(username, password);
+                    System.out.println("Successfully logged in with session ID: " + sessionID);
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Username or password incorrect, try again.");
+                }
+            }
 
             // download application form
             ApplicationForm form = handler.downloadApplicationForm(sessionID);
@@ -52,6 +62,8 @@ public class ApplicationClient {
             handler.submitApplicationForm(sessionID, form);
             System.out.println("Successfully submitted application form.");
 
+        } catch (InvalidSessionIDException e) {
+           System.out.println("Invalid session ID, exiting...");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
