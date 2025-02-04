@@ -488,6 +488,55 @@ There are two types of entity EJB:
     \item   Container-managed persistence.
 \end{itemize}
 
+\section{NodeJS}
+\textbf{NodeJS} is a JavaScript runtime environment that runs Google Chrome's V8 engine.
+It is a server-side solution for JavaScript which compiles JavaScript, making it quite fast.
+It was created in 2009 and designed for high concurrency, without threads or new processes.
+It has evented I/O for JavaScript, and never blocks, not even for I/O.
+It's goal is to provide an easy way to build scalable network programs.
+It provides a JavaScript API to access the network \& file system and instead of threads, node uses an event loop with a stack which alleviates the overhead of context switching.
+\begin{itemize}
+    \item   JavaScript on the server-side ensures that communication between the client and the server will happen in the same language, with native JSON objects on both sides.
+    \item   Servers are normally thread-based, but Node is \textbf{event-based}; Node serves each request in an evented loop that can handle simultaneous requests.
+    \item   Node is a platform for writing JavaScript applications outside web browser, and is therefore not quite the same as the JavaScript we are familiar with in web browser: there is no DOM built-in to Node, nor any other browser capability.
+    \item   Node doesn't run in a GUI, but runs in the terminal or as a background process.
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+            \hline
+            \textbf{Threads} & \textbf{Event-Driven} \\
+            \hline
+            Lock application / request with listener-workers threads. & Only one thread, which repeatedly fetches an event. \\
+            \hline
+            Uses incoming-request model. & Uses queue and then process it. \\
+            \hline
+            Multi-threaded server might block the request which might involve multiple events. & Manually saves the state and then goes on to process the next event. \\
+            \hline
+            Uses context switching. & No contention and no context switches.\\
+            \hline
+            Uses multi-threading environments where the listener \& worker threads are used frequently to take an incoming-request lock & Uses asynchronous I/O facilities (callbacks, nor poll/select or \verb|O_NONBLOCK| environments).\\
+            \hline
+        \end{tabular}
+    \caption{Threads versus asynchronous event-driven}
+\end{table}
+
+Ordinarily, a webserver waits for server-side I/O operations to complete while processing a web client request, thus \textbf{blocking} the next request to be processed.
+Servers generally do nothing but I/O, and scripts waiting on I/O requests degrades performance.
+Node processes each request as an event, it doesn't wait for the I/O operation to complete, making it \textbf{non-blocking}; it can therefore handle other requests at the same time.
+When the I/O operation of the first request is completed, it will callback the server to complete the request.
+To avoid blocking, Node makes use of the event-driven nature of JavaScript by attaching callbacks to I/O requests.
+Scripts waiting on I/O waste no space because they get popped off the stack when their non-I/O related code finishes executing.
+
+\subsection{MEAN}
+\textbf{MEAN} is a full stack solution consisting of MongoDB, Express, Angular, \& node.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/mean.png}
+    \caption{ MEAN stack }
+\end{figure}
 
 
 
