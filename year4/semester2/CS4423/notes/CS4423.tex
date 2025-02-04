@@ -29,6 +29,7 @@
 % \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
+\usepackage{amsmath}
 \usepackage[most]{tcolorbox}
 \usepackage{changepage}     % adjust margins on the fly
 \usepackage{amsmath,amssymb}
@@ -266,10 +267,151 @@ A \textbf{simple graph} is a pair $G = (X,E)$ consisting of a finite set $X$ of 
             Naturally, $m \leq \binom{n}{2}$.
 \end{itemize}
 
-\subsubsection{Example}
-$G=(X,E)$ with $X = \{ A, B, C, D \}$ and $E = \{ \{AB\}, \{BC\}, \{BD\}, \{CD\} \}$, so $G$ is a graph of order $4$ and size $4$.
-We can be lazy and write $\{ A, B \}$ as just $AB$, so $E = \{ AB, BC, BD, CD \}$.
+\subsection{Subgraphs \& Induced Subgraphs}
+Given $G = (X,E)$, a \textbf{subgraph} of $G$ is $H=(Y, E_H)$ with $Y \subseteq X$ and $E_H \subseteq  E \cap \binom{Y}{s}$;
+therefore, all the nodes in $H$ are also in $G$ and any edge in $H$ was also in $G$, and is incident only to vertices in $Y$.
+\\\\
+One of the most important subgraphs of $G$ is the \textbf{induced subgraph} on $Y \subseteq X$: $H = (Y, E \cap \binom{Y}{2})$;
+that is, given a subset $Y$ of $X$, we include all possible edges from the original graph $G$ too.
+Each node has a list of \textbf{neighbours} which are the nodes it is directly connected to by an edge of the graph.
 
-\subsection{\mintinline{python}{networkx}}
+\subsection{Important Graphs}
+The \textbf{complete graph} on a vertex set $X$ is the graph with edge set $\binom{X}{2}$.
+For example, if $X = \{0,1,2,3 \}$, then $E = \{01,02,03,12,13,23\}$
+\\\\
+The \textbf{Petersen graph} is a graph on 10 vertices with 15 edges.
+It can be constructed as the complement of the line graph of the complete graph $K_5$, that is, as the graph with the vertex set $X = \binom{ \{0,1,2,3,4\} }{2}$ (the edge set of $K_5$) and with an edge between $x,y \in X$ whenever $x \cap y = \emptyset$.
+\\\\
+A graph is \textbf{bipartite} if we can divide the node set $X$ into two subsets $X_1$ and $X_2$ such that:
+\begin{itemize}
+    \item   $X_1 \cap X_2 = \emptyset$  (the sets have no edge in common);
+    \item   $X_1 \cup X_2 = X$.
+\end{itemize}
+
+For any edge $(u_1, u_2)$, we have $u_1 \in X_1$ and $u_2 \in X_2$; that is, we only ever have edges between nodes from different sets.
+Such graphs are very common in Network Science, where nodes in the network represent two different types of entities; for example, we might have a graph wherein nodes represent students and modules, with edges between students and modules they were enrolled in, often called an \textbf{affiliation network}.
+\\\\
+A \textbf{complete bipartite graph} is a particular bipartite graph wherein there is an edge between every node in $X_1$ and every node in $X_2$.
+Such graphs are denoted $K_{m,n}$, where $|X_1| = m$ and $|X_2|=n$.
+\\\\
+The \textbf{path graph} with $n$ nodes, denoted $P_n$, is a graph where two nodes have degree 1, and the other $n-2$ have degree 2.
+\\\\
+The \textbf{cycle graph} on $n \geq 3$ nodes, denoted $C_n$ (slightly informally) is formed by adding an edge between the two nodes of degree 1 in a path graph.
+
+\subsection{New Graphs from Old}
+The \textbf{complement} of a graph $G$ is a graph $H$ with the same nodes as $G$ but each pair of nodes in $H$ are adjacent if and only if they are \textit{not adjacent} in $G$.
+The complement of a complete graph is an empty graph.
+\\\\
+A graph $G$ can be thought of as being made from ``things'' that have connection to each other: the ``things'' are nodes, and their connections are represented by an edge.
+However, we can also think of edges as ``things'' that are connected to any other edge with which they share a vertex in common.
+This leads to the idea of a line graph:
+the \textbf{line graph} of a graph $G$, denoted $L(G)$ is the graph where every node in $L(G)$ corresponds to an edge in $G$, and for every pair of edges in $G$ that share a node, $L(G)$ has an edge between their corresponding nodes.
+
+\section{Matrices of Graphs}
+There are various was to represent a graph, including the node set, the edge set, or a drawing of the graph;
+one of the most useful representations of a graph for computational purposes is as a \textbf{matrix}; the three most important matrix representations are:
+\begin{itemize}
+    \item   The \textbf{adjacency matrix} (most important);
+    \item   The \textbf{incidence matrix} (has its uses);
+    \item   The \textbf{graph Laplacian} (the coolest).
+\end{itemize}
+
+\subsection{Adjacency Matrices}
+The \textbf{adjacency matrix} of a graph $G$ of order $n$ is a square $n \times n$ matrix $A = (a_{i,j})$ with rows \& columns corresponding to the nodes of the graph, that is, we number the nodes $1, 2, \dots, n$.
+Then, $A$ is given by:
+\begin{align*}
+    a_{i,j} =
+    \begin{cases}
+        1 & \text{if nodes } i \text{ and } j \text{ are joined by an edge,} \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+Put another way, $a_{i,j}$ is the number of edges between node $i$ and node $j$.
+Properties of adjacency matrices include:
+\begin{itemize}
+    \item   $\sum^N_{i=1} \sum^N_{j=1} a_{i,j} = \sum_{u \in X}\text{deg}(u)$ where $\text{deg}(u)$ is the degree of $u$.
+    \item   All graphs that we've seen hitherto are \textit{undirected}: for all such graphs, $A$ is symmetric.
+            $A = A^T$ and, equivalently, $a_{i,j} = a{j,i}$.
+    \item   $a_{i,i} = 0$ for all $i$.
+    \item   In real-world examples, $A$ is usually \textbf{sparse} which means that $\sum^N_{i=1} \sum^N_{j=1} a_{i,j} \ll n^2$, that is, the vast majority of the entries are zero.
+            Sparse matrices have huge importance in computational linear algebra: an important idea is that is much more efficient to just store the location of the non-zero entities in a sparse matrix.
+\end{itemize}
+
+Any matrix $M = (m_{i,j})$ with the properties that all entries are zero or one and that the diagonal entries are zero (i.e., $m_{i,j}=0$) is an adjacency matrix of \textit{some} graph (as long as we don't mind too much about node labels).
+In a sense, every square matrix defines a graph if:
+\begin{itemize}
+    \item   We allow loops (an edge between a node and itself).
+    \item   Every edge has a weight: this is equivalent to the case for our more typical graphs that every potential edge is weighted 0 (is not in the edge set)  or 1 (is in the edge set).
+    \item    There are two edges between each node (one in each direction) and they can have different weights.
+\end{itemize}
+
+\subsubsection{Examples of Adjacency Matrices}
+Let $G = G(X,E)$ be the graph with $X = \{a,b,c,d,e\}$ nodes and edges $\{a \leftrightarrow b, b \leftrightarrow c, b \leftrightarrow d, c \leftrightarrow d, d \leftrightarrow e \}$.
+Then:
+\begin{align*}
+    A =
+    \begin{pmatrix}
+        0 & 1 & 0 & 0 & 0 \\
+        1 & 0 & 1 & 1 & 0 \\
+        0 & 1 & 0 & 1 & 0 \\
+        0 & 1 & 1 & 0 & 1 \\
+        0 & 0 & 0 & 1 & 0 \\
+    \end{pmatrix}
+\end{align*}
+
+The adjacency matrix of $K_4$ is:
+\begin{align*}
+    A =
+    \begin{pmatrix}
+        0 & 1 & 1 & 1 \\
+        1 & 0 & 1 & 1 \\
+        1 & 1 & 0 & 1 \\
+        1 & 1 & 1 & 0 \\
+    \end{pmatrix}
+\end{align*}
+
+\subsection{Degree}
+The \textbf{degree} of a node in a simple graph is the number of nodes to which it is adjacent, i.e., its number of neighbours.
+For a node $v$ we denote this number $\text{deg}(v)$.
+The degree of a node can serve as a (simple) measure of the importance of a node in a network.
+Recall that one of the basic properties of an adjacency matrix is $\sum^n_{i=1} \sum^n_{j=1} a_{i,j} = \sum_{u \in X} \text{deg}(u)$, where $\text{deg}(u)$ is the degree of $u$ and $n$ is the order of the graph;
+this relates to a (crude) measure of how connected a network is: the \textbf{average degree}:
+\begin{align*}
+    \text{Average degree} = \frac{1}{n} \sum_{u \in X} \text{deg}(u) = \frac{1}{n}\sum^n_{i,j} a_{i,j}
+\end{align*}
+However, if the size of the network (the number of edges) is $m$, then the total sum of degrees is $2m$ (since each edge contributes to the degree count of two nodes), meaning that the average degree is $\frac{2m}{n}$.
+
+\subsection{Walks}
+A \textbf{walk} in a graph is a series of edges (perhaps with some repeated) $\{ u_1 \leftrightarrow v_1, u_2 \leftrightarrow u_2, \dots, u_p \leftrightarrow v_p\}$ with the property that $v_i = u_{i+1}$.
+If $v_p = u_1$, then it is a \textbf{closed walk}.
+The \textbf{length} of a walk is the number of edges in it.
+\\\\
+Adjacency matrices can be used to enumerate the number of walks of a given length between a pair of vertices.
+Obviously, $a_{i,j}$ is the number of walks of length 1 between node $i$ and node $j$.
+We can extract that information for node $j$ by computing the product of $A$ and $e_j$ (column $j$of the identity matrix).
+
+\section{Connectivity \& Permutations}
+To start, let's decide on our notation:
+\begin{itemize}
+    \item   If we write $A = (a_{i,j})$, we mean that $A$ is a matrix and $a_{i,j}$ is its entry row $i$, column $j$.
+    \item   We also write such entries as $(A)_{i,j}$;
+            the reason for this slightly different notation is to allow us to write, for example, $(A^2)_{i,j}$ is the entry in row $i$, column $j$ of $B = A^2$.
+    \item   The \textbf{trace} of a matrix is the sum of its diagonal entries, that is, $\text{tr}(A) = \sum^n_{i=1}a_{i,i}$. (Very standard).
+    \item   When we write $A > 0$, we mean that all entries of $A$ are positive.
+\end{itemize}
+
+Recall that the \textbf{adjacency matrix} of a graph $G$ of order $N$ is a square $n \times n$ matrix $A = (a_{i,j})$ with rows and columns corresponding to the nodes of the graph.
+$a_{i,j}$ is set to be the number of edges between nodes $i$ and $j$.
+We learned previously that:
+\begin{itemize}
+    \item   If $e_j$ is the $j^\text{th}$ column of the 
+\end{itemize}
+
+
+
+
+
+
 
 \end{document}
