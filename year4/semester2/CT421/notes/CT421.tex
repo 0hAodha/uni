@@ -313,6 +313,136 @@ Look-ahead is performed from the best states to another fixed depth.
     \item   Deceptive problems.
 \end{itemize}
 
+\subsection{Monte Carlo Tree Search}
+Minimax and alpha-beta pruning are both useful approaches, and alpha-beta pruning effectively results in computing the square root of the branching factor.
+In many cases, however, game trees have too high a \textbf{blocking factor} and evaluating the leaf nodes is not possible; instead, an \textbf{estimation function} is used instead.
+\\\\
+\textbf{Monte Carlo tree search} continually estimates the value of tree nodes.
+It combines ideas from classical tree search with ideas from machine learning, and balances the exploration of unseen space with exploitation of the best known move.
+Monte Carlo tree search works by exploring all potential options at the time. 
+The best move is identified and other option are searched for while validating how good the current action is.
+It uses \textbf{play out}, which is simulation considering random actions.
+\begin{enumerate}
+    \item   \textbf{Selection:} pick a suitable path.
+    \item   \textbf{Expansion:} expand from that path.
+    \item   \textbf{Simulation:} simulation / play outs.
+    \item   \textbf{Back propagation:} update states.
+\end{enumerate}
+
+There is a trade-off between exploration and exploitation; the balance is usually controlled by the number of parameters / factors, including the number of wins, simulations, \& exploration cost.
+Monte Carlo grid search is used in a large number of domains, including AlphaGo, DeepMind, \& many video games.
+
+\subsection{Local Search Algorithms}
+In many domains, we are only interested in the goal state: the path to finding the goal is irrelevant.
+The main idea in \textbf{local search algorithms} is to maintain the current state and repeatedly try to improve upon the current state.
+This results in little memory overhead and can find reasonable solutions even in large or infinite spaces.
+Local search algorithms are suitable only for certain classes of problems in which maximising (or minimising) certain criteria among a number of candidate solutions is desirable.
+Local search algorithms are \textbf{incomplete algorithms}, as they may not find the optimal solution.
+
+\subsection{Hill Climbing}
+\textbf{Hill climbing} involves moving in the direction of increasing value and stopping when a peak is reached.
+There is no look-ahead involved, and only the current state \& the objective function are maintained.
+One problem with hill climbing algorithms is local maxima \& minima; therefore, the success of the algorithm depends on the shape of the search space.
+One approach to solve this problem is \textbf{random restart}.
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single, escapeinside=||]{python}
+current_node = initial_state;
+
+while (stopping_criteria):
+    neighbour = current_node.fittest_neighbour;
+
+    if neighbour.value > current_node.value:
+        current_node = neighbour;
+\end{minted}
+\caption{Hill climbing pseudocode}
+\end{code}
+
+One problem that can be solved with a hill climbing algorithm is the \textbf{8 queens problem}: place 8 queens on a chess board so that no two queens are attacking each other.
+The problem can be stated more formally as: given an 8 $\times$ 8 grid, identify 8 squares so that no two squares are on the same row, column, or diagonal.
+The problem can also be generalised to an $N \times N$ board.
+An algorithm can be generated using hill climbing to find a solution.
+However, it must be noted that the algorithm may get caught at a local maximum.
+\\\\
+\textbf{Simulated annealing} attempts to avoid getting stuck in local maxima by randomly moving to another state.
+The move is based on the fitness of the current state, the new state, and the \textbf{temperature} (a parameter which decreases over time and reduces the probability of changing states).
+
+\subsection{Well-Known Optimisation Problems}
+\subsubsection{Knapsack Problem}
+There are a set of items, each with a value \& a weight.
+The goal is to select a subset of items such that the weight of these items is below a threshold and the sum of the values is optimised / maximised.
+The problem is how to select those items.
+More formally, given two $n$-tuples of values $< v_0, v_1, \dots, v_n>$ and $<w_0, w_1, \dots, w_n>$, choose a set of items $i$ from the $n$items such that $\sum_i v(i)$ is maximised and $\sum_iw(i) \leq T$.
+\\\\
+The brute force approach is to enumerate all subsets and keep the subset that gives the greatest payoff: $O(2^n)$.
+The greedy approach is more efficient but won't give the best solution.
+\\\\
+There are many variations on the knapsack problem; the variation described above is the 0/1 knapsack problem;
+there are other scenarios where part of an item may be taken, variations wherein there are constraints over the items where the value of an item is dependent on another item being chosen or not, and variations with multiple knapsacks.
+
+\subsection{Travelling Salesman Problem}
+Given $N$ cities, devise a tour that involves visiting every city once.
+The distance, or \textit{cost}, between pairs of cities is known and the goal is to minimise the cost of the tour.
+There are many applications of this problem in scheduling \& optimisation.
+\\\\
+The brute force approach is to enumerate all tours and choose the cheapest, and is computationally intractable.
+
+\section{Genetic Algorithms}
+\textbf{Genetic algorithms} are directed search algorithms inspired by biological evolution, developed by John Holland in the 1970s to study the adaptive processes occurring in natural systems.
+They have been used as search mechanisms to find good solutions for a range of problems.
+At a high level, the algorithm is as follows:
+\begin{enumerate}
+    \item   Produce an initial population of individuals.
+    \item   Evaluate the fitness of all individuals.
+    \item   While the termination condition is not met, do:
+            \begin{enumerate}[label=\arabic*.]
+                \item   Select the fitter individuals for reproduction.
+                \item   Recombine between individuals.
+                \item   Mutate individuals.
+                \item   Evaluate the fitness of the modified individuals.
+                \item   Generate a new population.
+            \end{enumerate}
+\end{enumerate}
+
+There are many potential options for the representation of chromosomes, including bit strings, integers, real numbers, lists of rules/instructions, \& programs.
+To initialise the population, we typically start with a population of randomly generated individuals, but we can also use a previously-saved population, a set of solutions provided by a human expert, or a set of solutions provided by another algorithm.
+As rules of thumb, we generally use a data structure as close as possible to the natural representation, write appropriate genetic operators as needed, and, if possible, ensure that all genotypes correspond to feasible solutions.
+Selection can be fitness-based (roulette wheel), rank-based, tournament selection, or elitism.
+\\\\
+\textbf{Crossover} is a vital component of genetic algorithms that allows the recombination of good sub-solutions and speeds up search early in evolution.
+\textbf{Mutation} represents a change in the gene; the main purpose is to prevent the search algorithm from becoming trapped in a local maxima.
+\\\\
+As a simple example, suppose that one wishes to maximise the number of \verb|1|s in a string of $l$ binary digits.
+Similarly, we could set the target to be an arbitrary string of \verb|1|s and \verb|0|s.
+An individual can be represented as a string of binary digits.
+The fitness of a candidate solution is the number of \verb|1|s in its genetic code.
+A related problem, maintaining the same representation as before, is to modify the fitness function as follows:
+for strings of length $l$ with $x$ \verb|1|s, if $x > 1$, then fitness is equal to $x$; else, fitness is equal to $l+k$ for $k>0$.
+
+\subsection{Schema Theorem}
+Consider a genetic algorithm using only a binary alphabet.
+$\{0,1,*\}$ is the alphabet, where $*$ is a special wildcard symbol which can be either $0$ or $1$.
+A \textbf{schema} is any template comprising a string of these three symbols;
+for example the schema $[1*1*]$ represents the following four strings: $[1010]$, $[1011]$, $[1110]$, $[1111]$.
+\\\\
+The \textbf{order} of a schema $S$ is the number of fixed positions ($0$ or $1$) presented in the schema.
+For example, $[01*1*]$ has order $3$, $[1*1*10*0]$ has order $5$.
+The order of a schema is useful in estimating the probability of survival of a schema following a mutation.
+\\\\
+The \textbf{defining length} of a schema $S$ is the distance between the first and last fixed positions in the schema.
+For example, the schema $S_1 = [01*1*]$ has defining length $3$.
+The defining length of a schema indicates the survival probability of the schema under crossover.
+\\\\
+Given selection based on fitness, the expected number of individuals belonging to a schema $S$ at generation $i+1$ is equal to the number of them present at generation $i$ multiplied by their fitness over the average fitness.
+An ``above average'' schema receives an exponentially increasing number of strings over the evolution.
+The probability of a schema $S$ surviving crossover is dependent on the defining length: schemata with above-average fitness with short defining lengths will still be sampled at exponentially increasing rates.
+The probability of a schema $S$ surviving mutation is dependent on the order of the schema: schemata with above-average fitness with low orders will still be sampled at exponentially increasing rates.
+\\\\
+The \textbf{schema theorem} states that short, low-order, above-average schemata receive exponentially increasing representation in subsequent generations of a genetic algorithm.
+The \textbf{building-block hypothesis} states that a genetic algorithm navigates the search space through the re-arranging of short, low-order, high-performance schemata, termed \textit{building blocks}.
+
+
+
 
 
 \end{document}
