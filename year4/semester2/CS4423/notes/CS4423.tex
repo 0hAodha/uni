@@ -392,6 +392,7 @@ Obviously, $a_{i,j}$ is the number of walks of length 1 between node $i$ and nod
 We can extract that information for node $j$ by computing the product of $A$ and $e_j$ (column $j$of the identity matrix).
 
 \section{Connectivity \& Permutations}
+\subsection{Notation}
 To start, let's decide on our notation:
 \begin{itemize}
     \item   If we write $A = (a_{i,j})$, we mean that $A$ is a matrix and $a_{i,j}$ is its entry row $i$, column $j$.
@@ -401,16 +402,332 @@ To start, let's decide on our notation:
     \item   When we write $A > 0$, we mean that all entries of $A$ are positive.
 \end{itemize}
 
+\subsection{Counting Walks}
 Recall that the \textbf{adjacency matrix} of a graph $G$ of order $N$ is a square $n \times n$ matrix $A = (a_{i,j})$ with rows and columns corresponding to the nodes of the graph.
 $a_{i,j}$ is set to be the number of edges between nodes $i$ and $j$.
 We learned previously that:
 \begin{itemize}
-    \item   If $e_j$ is the $j^\text{th}$ column of the 
+    \item   If $e_j$ is the $j^\text{th}$ column of the identity matrix $I_n$, then $(Ae_j)_i$ is the number of walks of length 1 from node $i$ to node $j$.
+            Also, it is the same as $a_{i,j}$.
+
+    \item   Moreover, $(A(Ae_j))_i = (A^2e_j)$ is the number of walks of length 2 from node $i$ to node $j$.
+            We can conclude that, if $B=A^2$, then $b_{i,j}$ is the number of walks of length 2 between nodes $i$ and $j$.
+            Note that $b_{i,i}$ is the degree of node $i$.
+
+    \item   In fact, if $B=A^k$, then $b_{i,j}$ is the number of walks of length $k$ between nodes $i$ and $j$.
 \end{itemize}
 
+\subsection{Paths}
+A \textbf{trail} is  walk with no repeated edges.
+A \textbf{cycle} is a trail in which the first and last nodes are the same, but no other node is repeated;
+a \textbf{triangle} is a cycle of length 3.
+A \textbf{path} is a walk in which no nodes (and so no edges) are repeated.
+(The idea of a path is hugely important in network theory, and we will return to it often).
+\\\\
+The \textbf{length} of a path is the number of edges in that path.
+A path from node $u$ to node $v$ is a \textbf{shortest path} if there is no path between them that is shorter (although there could be other paths of the same length).
+Finding shortest paths in a network is a major topic that we will return to at another time.
+\begin{itemize}
+    \item   Every path is also a walk.
+    \item   If a particular walk is the shortest walk between two nodes then it is also the shortest path between two nodes.
+    \item   If $k$ is the smallest natural number of which $(A^k)_{i,j} \neq 0$, then the shortest walk from node $i$ to node $j$ is of length $k$.
+    \item   It follows that $k$ is also the length of the shortest path from node $i$ to node $j$.
+\end{itemize}
 
+For example, consider the following adjacency matrix and its powers:
+\begin{align*}
+A =
+\begin{pmatrix}
+    0 & 1 & 0 & 0 & 0 \\
+    1 & 0 & 1 & 0 & 0 \\
+    0 & 1 & 0 & 1 & 1 \\
+    0 & 0 & 1 & 0 & 1 \\
+    0 & 0 & 1 & 1 & 0
+\end{pmatrix}
+\end{align*}
 
+\begin{align*}
+A^2 =
+\begin{pmatrix}
+    1 & 0 & 1 & 0 & 0 \\
+    0 & 2 & 0 & 1 & 1 \\
+    1 & 0 & 3 & 0 & 0 \\
+    0 & 1 & 1 & 2 & 1 \\
+    0 & 1 & 1 & 1 & 2
+\end{pmatrix}
+\end{align*}
 
+\begin{align*}
+A^3 =
+\begin{pmatrix}
+    0 & 2 & 0 & 1 & 1 \\
+    2 & 0 & 4 & 1 & 1 \\
+    0 & 4 & 2 & 4 & 4 \\
+    1 & 1 & 4 & 2 & 3 \\
+    1 & 1 & 4 & 3 & 2
+\end{pmatrix}
+\end{align*}
+
+We can observe that, where $A$ is the adjacency matrix of the graph $G$:
+\begin{itemize}
+    \item   $(A^2)_{i,i}$ is the degree of node $i$.
+    \item   $\text{tr}(A^2)$ is the degree sum of the nodes in $G$.
+    \item   $(A^3)_{i,i} \neq 0 $ if node $i$ is in a triangle.
+    \item   $\frac{\text{tr}(A^3)}{6}$ is the number of triangles in $G$.
+    \item   If $G$ is bipartite, then $(A^3)_{i,j} = 0$ for all $i,j$.
+\end{itemize}
+
+\subsection{Connectivity}
+Let $G$ be a graph and $A$ its adjacency matrix:
+in $G$, node $i$ can be \textbf{reached} from node $j$ if there is a path between them.
+If node $i$ is reachable from node $j$, then $(A^k)_{i,j} \neq 0$ for some $k$.
+Also, note that $k \leq n$.
+Equivalently, since each power of $A$ is non-negative, we can say that $(I + A + A^2 + A^3 + \cdots + A^k) > 0$.
+\\\\
+A graph/network is \textbf{connected} if there is a path between every pair of nodes.
+That is, every node is reachable from every other node.
+If a graph is not connected, we say that it is \textbf{disconnected}.
+Determining if a graph is connected or not is important; we'll see later that this is especially important with directed graphs.
+A graph $G$ of order $n$ is connected if and only if, for each $i,j$, there is some $K \leq n$ for which $(A^k)_{i,j} \neq 0$.
+
+\subsection{Permutation Matrices}
+We know that the structure of a network is not changed by labelling its nodes.
+Sometimes, it is useful to re-label the nodes in order to expose certain properties, such as connectivity.
+Since we think of the nodes as all being numbered from 1 to $n$, this is the same as \textbf{permuting} the numbers of some subset of the nodes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/permexampe.png}
+    \caption{ Example wherein nodes are re-labelled to expose certain properties of the graph }
+\end{figure}
+
+When working with the adjacency matrix of a graph, such a permutation is expressed in terms of a \textbf{permutation matrix} $P$;
+this is a $0$-$1$ matrix (also known as a Boolean or a binary matrix) where this is a single $1$ in every row \& column.
+If the nodes of a graph $G$ (with adjacency matrix $A$) are listed as entries in a vector ${q}$, then:
+\begin{itemize}
+    \item   $Pq$ is a permutation of the nodes.
+    \item   $PAP^T$ is the adjacency matrix of the graph with that node permutation applied.
+\end{itemize}
+
+In many examples, we will have a symmetric $P$ for the sake of simplicity, but in general, $P \ neq P^T$.
+However, $P^TAP = PAP^T$and $P^T = P^{-1}$ so $PAP^T = PAP^{-1}$.
+\\\\
+A graph with adjacency matrix $A$ is \textbf{disconnected} if and only if there is a permutation matrix $P$ such that
+\begin{align*}
+A &= P \begin{pmatrix} X & O \\ O^T & Y \end{pmatrix} &
+PAP^T &= P \begin{pmatrix} X & O \\ O & Y \end{pmatrix}
+\end{align*}
+where $O$ represents the zero matrix with the same number of rows as $X$ and the same number of columns as $Y$.
+
+\section{Permutations \& Bipartite Networks}
+\subsection{Graph Connectivity}
+Recall that a graph is \textbf{connected} if there is a path between every pair of nodes.
+If the graph is not connected, we say that it is \textbf{disconnected}.
+We now know how to check if a graph is connected by looking at powers of its adjacency matrix.
+However, that is not very practical for large networks.
+Instead, we can determine if a graph is connected by just looking at the adjacency matrix, provided that we have ordered the nodes properly.
+
+\subsection{Connected Components}
+If a network is not connected, then we can divide it into \textbf{components} which \textit{are} connected.
+The number of connected components is the number of blocks in the permuted adjacency matrix.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/connectedcomponents.png}
+    \caption{ Connected components example }
+\end{figure}
+
+\section{Bipartite Networks: Colours \& Computations}
+\subsection{Class Survey Example}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/suverydata.png}
+    \caption{ Final survey data }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/suverygaaph.png}
+    \caption{ Final survey graph, with order 39 and size 87 }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/surveysubgrap.png}
+    \caption{ Subgraph of the survey network based on 7 randomly chosen people, with order 16 and size 24 }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/surveymatrix.png}
+    \caption{ Adjacency matrix where the nodes for people are listed first }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/surveymatrix2.png}
+    \caption{ $B = A^2$ }
+\end{figure}
+
+Since we know from before that $(A^k)_{i,j}$ is the number of walks of length $k$between nodes $i$ and $j$, we can see that in this context:
+\begin{itemize}
+    \item   For the first 7 rows \& columns, $b_{i,j}$ is the number of programmes in common between person $i$ and person $j$.
+            (This even works for $i=j$, but the number of programmes a person has in common with themselves is just the number they watch).
+    \item   For the last 9 rows \& columns, $b_{i,j}$ is the number of people who watch both programmes $i$ and $j$.
+\end{itemize}
+
+\subsection{Projections}
+Given a bipartite graph $G$ whose node set $V$ has parts $V_1$ \& $V_2$, and \textbf{projection} of $G$ onto (for example) $V_1$ is the graph with:
+\begin{itemize}
+    \item   Node set $V_1$;
+    \item   An edge between a pair of nodes in $V_1$ if they share a common neighbour in $G$.
+\end{itemize}
+
+In the context of our survey example, a projection onto $V_1$ (people/actors) gives us the graph of people who share a common programme.
+To make such a graph:
+\begin{itemize}
+    \item   Let $A$ be the adjacency matrix of $G$.
+    \item   Let $B$ be the submatrix of $A^2$ associated with the nodes in $V_1$.
+    \item   Let $C$ be the adjacency matrix with the property:
+            \begin{align*}
+                c_{i,j} =
+                \begin{cases}
+                    1 & b_{i,j} > 0 \text{ and } i \neq j \\
+                    0 & \text{otherwise}
+                \end{cases}
+            \end{align*}
+            That is, $b_{i,j} = 0 $ or $i=j$.
+    \item   Let $G_{V_1}$ be the graph on $V_1$ with adjacency matrix $C$.
+            Then, $G_{V_1}$ is the \textbf{projection of $G$ onto $V_1$}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/surveygv1.png}
+    \caption{ $G_{V_1}$ computed for our survey data }
+\end{figure}
+
+\subsection{Colouring}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/colouredsurvey.png}
+    \caption{ The original survey graph is more easily digestible if coloured }
+\end{figure}
+
+For any bipartite graph, we can think of the nodes in the two sets as \textbf{coloured} with different colours.
+For instance, we can think of nodes in $X_1$ as white nodes and those in $X_2$ as black nodes.
+A \textbf{vertex-colouring} of a graph $G$is an assignment of (finitely many) colours to the nodes of $G$ such that any two nodes which are connected by an edge have different colours.
+A graph is called \textbf{$N$-colourable} if it has a vertex colouring with at most $N$ colours.
+The \textbf{chromatic number} of a graph $G$ is the \textit{smallest $N$} for which a graph $G$ is $N$-colourable.
+The following statements about a graph $G$ are equivalent:
+\begin{itemize}
+    \item   $G$ is bipartite;
+    \item   $G$ is 2-colourable;
+    \item   Each cycle in $G$ has even length.
+\end{itemize}
+
+\section{Trees}
+A \textbf{cycle} in a simple graph provides, for any two nodes on that cycle, at least two different paths from node $a$ to node $b$.
+It can be useful to provide alternative routes for connectivity in case one of the edges should fail, e.g., in an electrical network.
+\\\\
+A graph is called \textbf{acyclic} if it does not contain any cycles.
+A \textbf{tree} is a simple graph that is \textit{connected} \& \textit{acyclic}.
+In other words, between any two vertices in a tree there is exactly one simple path.
+Trees can be characterised in many different ways.
+\\\\
+\textbf{Theorem:} Let $G=(X,E)$ be a (simple) graph of order $n=|X|$ and size $m=|E|$.
+Then, the following are equivalent:
+\begin{itemize}
+    \item   $G$ is a tree (i.e., acyclic \& connected);
+    \item   $G$ is connected and $m=n-1$.
+    \item   $G$ is a minimally connected graph (i.e., removing any edge will disconnect $G$).
+    \item   $G$ is acyclic and $m=n-1$.
+    \item   $G$ is a maximally acyclic graph (i.e., adding any edge will introduce a cycle in $G$);
+    \item   There is a unique path between each pair of nodes in $G$.
+\end{itemize}
+
+All trees are \textbf{bipartite}:
+there are a few ways of thinking about this;
+one is that a graph is bipartite if it has no cycles of odd length -- since a tree has no cycles, it must be bipartite.
+
+\subsection{Cayley's Formula}
+\textbf{Theorem:} there are exactly $n^{n-2}$ distinct (labelled) trees on the $n$-element vertex set $X=\{0,1,2, \dots, n-1\}$ if $n>1$.
+
+\subsubsection{Pr\"ufer Codes}
+The \textbf{Pr\"fer code} of a tree can be determined (destructively) as follows:
+\begin{enumerate}
+    \item   Start with a tree $T$ with nodes labelled $0, 1, \dots, n-1$ and an empty list $a$.
+    \item   Find the \textbf{leaf node} $x$ with the smallest label (with a ``leaf node'' being a node of degree 1. Every tree must have at least two leaf nodes).
+    \item   Append the label of its unique neighbour $y$to the list $a$.
+    \item   Remove $x$ (and the edge $x \leftrightarrow y$) from $T$.
+    \item   Repeat steps 2-3 until $T$ has only two ndoes left.
+            We now have the code as a list of length $n-2$.
+\end{enumerate}
+
+A tree can be re-constructed from its Pr\"ufer code as the degree of a node $x$ is $1$ plus the number of entries $x$ in the Pr\"ufer code of $T$.
+A tree can be computed from a Pr\"ufer code $a$ (where the list $a$ is a list of length $n-2$ with all entries numbered $0$ to $n-1$) as follows:
+\begin{enumerate}
+    \item   Set $G$ to be a graph with node list $[0,1,2, \dots, n-1]$ and no edges yet.
+    \item   Compute the list of node degrees $d$ from the code.
+    \item   For $k=0,1,\dots, n-2$: 
+            \begin{enumerate}[label=\arabic*.]
+                \item   Set $y = a[k]$.
+                \item   Set $x$to be the node with the smallest degree in $d$.
+                \item   Add the edge $(x,y)$ to $G$.
+                \item   Set $d[x]=d[x]-1$and $d[y]=d[y]-1$ (that is, decrease the degrees of both $x$ and $y$ by one).
+            \end{enumerate}
+    \item   Finally, connect the remaining two nodes of degrees 1 by an edge.
+\end{enumerate}
+
+Since we know now that there is a bijection between labelled trees and Pr\"ufer codes, we can prove Cayley's theorem easily:
+\begin{enumerate}
+    \item   A tree with $n$ nodes has a Pr\"ufer code of length $n-2$.
+    \item   There are $n$ choices for each entry in the code.
+    \item   So, there are $n^{n-2}$ possible codes for a tree with $n$ nodes.
+    \item   So, there are $n^{n-2}$ possible trees with $n$ nodes.
+\end{enumerate}
+
+\subsection{Graph \& Tree Traversal}
+Often, one has to search through a network to check properties of nodes such as to find the node with the largest degree.
+For large unstructured networks, this can be challenging;
+fortunately, there are simple \& efficient algorithms to achieve this:
+\begin{itemize}
+    \item   DFS.
+    \item   BFS.
+\end{itemize}
+
+\subsubsection{Depth-First Search}
+\textbf{Depth-first search (DFS)} works by starting at a root node and travelling as far along one of its branches as it can, then returning to the last unexplored branch.
+The main data structure needed to implement DFS is a \textbf{stack}, also known as a Last-In-First-Out (LIFO) queue.
+Given a rooted tree $T$ with root $x$, to visit all nodes in the tree:
+\begin{enumerate}
+    \item   Start with an empty stack $S$.
+    \item   Push $x$ onto $S$.
+    \item   While $S \neq \emptyset$:
+            \begin{enumerate}[label=\arabic*.]
+                \item   Pop node $y$ from the stack.
+                \item   Visit $y$.
+                \item   Push $y$'s children onto the stack.
+            \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Breadth-First Search}
+\textbf{Breadth-first search (BFS)} works by starting at a root node and exploring all the neighbouring nodes (on the same level) first.
+Next, it searches their neighbours (level 2), etc.
+The main data structure needed to implement BFS is a \textbf{queue}, also known as a First-In-First-Out (FIFO) queue. 
+Given a rooted tree $T$ with root $x$, to visit all nodes in the tree:
+\begin{itemize}
+    \item   Start with an empty queue $Q$.
+    \item   Push $x$ onto $Q$.
+    \item   While $Q \neq \emptyset$:
+            \begin{enumerate}[label=\arabic*.]
+                \item   Pop node $y$ from $Q$.
+                \item   Visit node $y$.
+                \item   Push $y$'s children onto $Q$.
+            \end{enumerate}
+\end{itemize}
+
+Many questions on networks regarding distance \& connectivity can be answered by a versatile strategy involving a subgraph which is a tree and then searching that; such a tree is called \textbf{spanning tree} of the underlying graph.
 
 
 
