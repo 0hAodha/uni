@@ -729,6 +729,27 @@ Given a rooted tree $T$ with root $x$, to visit all nodes in the tree:
 
 Many questions on networks regarding distance \& connectivity can be answered by a versatile strategy involving a subgraph which is a tree and then searching that; such a tree is called \textbf{spanning tree} of the underlying graph.
 
+\subsubsection{Graph Diameter}
+A natural problem arising in many practical applications is the following: given a pair of nodes $x,y$, find one or all the paths from $x$ to $y$ with the fewest number of edges possible.
+This is a somewhat complex measure on a network (compared to, say, statistics on node degrees) and we will therefore need a more complex procedure, that is, an algorithm, in order to solve such problems systematically.
+\\\\
+\textbf{Definition:} let $G=(X,E)$ be a simple graph and let $x,y \in X$.
+Let $P(x,y)$ be the set of all paths from $x$ to $y$.
+Then:
+\begin{itemize}
+    \item   The \textbf{distance} $d(x,y)$ from $x$ to $y$ is
+            \begin{align*}
+                d(x,y) = \text{min}\{ l(p) : p \in P(x,y) \},
+            \end{align*}
+            the shortest possible length of a path from $x$ to $y$, and a \textbf{shortest path} from $x$ to $y$ is a path $p \in P(x,y)$ of length $l(p) = d(x,y)$.
+
+    \item   The \textbf{diameter} $\text{diam}(G)$ of the network $G$ is the length of the longest shortest path between any two nodes:
+            \begin{align*}
+                \text{diam}(G) = \text{max}\{ l(p) : p \in P(x,y) \}
+            \end{align*}
+\end{itemize}
+
+
 
 
 \end{document}
