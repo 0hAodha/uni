@@ -441,6 +441,73 @@ The probability of a schema $S$ surviving mutation is dependent on the order of 
 The \textbf{schema theorem} states that short, low-order, above-average schemata receive exponentially increasing representation in subsequent generations of a genetic algorithm.
 The \textbf{building-block hypothesis} states that a genetic algorithm navigates the search space through the re-arranging of short, low-order, high-performance schemata, termed \textit{building blocks}.
 
+\subsection{Landscapes}
+A \textbf{landscape} is a visualisation of the relationship between genotype \& fitness;
+it can give an insight into the complexity of the problem at hand.
+Landscapes can be adaptive.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/landscape.png} \caption{Fitness landscape example. The peaks on the landscape represent high fitness and hence the ability of the genotype to survive. The valleys or troughs indicate low fitness.}
+\end{figure}
+
+An \textbf{NK fitness landscape} is a model of genetic interactions, developed to explain \& explore the effects of local features on the ruggedness of a fitness landscape -- \textit{ruggedness} plays a key roles in ascertaining how difficult it is to find the global optimum.
+NK landscapes allow us to tune the ruggedness.
+Each component (gene) of the solution space makes a contribution to the fitness;
+the contribution to the landscape depends on the value of that gene itself but also on the state of $K$ other nodes, where $K$ can be changed to give different landscapes.
+If $K=0$, all genes are independent and this is typically a smooth multi-modal landscape; as $K$ increases, the landscape becomes more rugged.
+\\\\
+One approach to create NK fitness landscapes is to use a \textit{lookup table} of size $2^K$ where each row in the lookup table represents the neighbourhood values and the fitness achieved.
+Variations on NK fitness landscapes can be made by using non-uniform interaction sizes or allowing non-adjacent genes to influence each other's fitness.
+\\\\
+\textbf{Fitness clouds} can be created by randomly sampling the population, generating $K$ mutated versions of the sampled genotypes, measuring their fitness, and plotting their fitness over time, thus giving insight into the landscape.
+
+\subsection{Objective/Fitness Functions}
+We usually specify the objective in the fitness function, for example, the thing we are trying to maximise or minimise or some constraint that we want to satisfy.
+This can be very difficult, and sometimes we don't even know how to specify the function;
+furthermore, fitness functions can be costly to evaluate.
+Issues arise with this:
+\begin{itemize}
+    \item   ``Most ambitious objectives don't illuminate a path to themselves.''
+    \item   ``Many great discoveries are not the result of objective-driven search.''
+    \item   ``Natural evolution innovates through an open-ended process that lacks a final objective.''
+    \item   ``Searching for a fixed objective, the dominant paradigm in EC and ML, may ultimately limit what can be achieved.''
+\end{itemize}
+
+The more ambitious the objective fitness function, the less likely it is that evolution will solve it.
+The two big issues with fitness landscapes (neutral plains and ruggedness) can both be attributed, at least in part, to the fitness function
+
+\subsection{Diversity}
+It's important to maintain diversity in the population for genetic algorithms.
+Once a population converges on a local optima, it can be difficult to introduce sufficient diversity to climb out of local optima.
+Many approaches have been proposed to maintain diversity.
+If diversity decreases, then a big increase in mutation levels called \textbf{hypermutation} can be used in the hopes of introducing novelty.
+Then, we need some measure of diversity: it can be measured at the genotypic, phenotypic, or fitness levels.
+\\\\
+\textbf{Co-evolution} is often used as a means to help diversity where interactions between individuals contribute to the fitness with the goal that a form of competition will lead to better performance.
+Alternative representations can also be used to encourage greater diversity by building redundancy into the representation:
+\begin{itemize}
+    \item   \textbf{Multi-layered GA:} add an extra layer or layers between the genotype and the phenotype, thus allowing multiple genotypes to map to a phenotype.
+            This can allow multiple mutations to occur which aren't immediately represented in the phenotype, maintaining increased diversity.
+
+    \item   \textbf{Diploid representations:} represent each chromosome by two genetic sequences, one of which is subject to evolutionary pressures, the pother following a random walk.
+            Periodically, a small percentage of chromosomes swap their sequences.
+
+    \item   \textbf{Island models for the GA:} partition the population of solutions into sub-groups, with each sub-group evolving separately.
+            Periodically, some solutions are swapped among the separate populations.
+\end{itemize}
+
+Several approaches have been attempted to make the rates of mutation and crossover subject to evolution itself: \textbf{self-adaptation}.
+For example, add a gene to each chromosome which represents the rate at which mutation should be applied to that chromosome or solution.
+The goal is that the evolutionary process itself will find a suitable mutation rate.
+
+\subsection{Novelty Search}
+The central thesis of \textbf{novelty search} is that by solely evolving according to an objective function, we decrease creativity, novelty, \& innovation.
+It argues that this is because many objective functions are deceptive and that we should instead reward solutions (or sub-solutions) that are unique and phenotypically novel.
+It has been successfully applied in a range of domains including the evolution of movement for robots.
+In many domains, novelty search has out-performed searching directly for an objective.
+The standard approach to novelty search involves maintaining an archive of previously-found novel solutions.
+To decide are the size of the archive, the similarity measure, and the balance between novelty \& fitness.
 
 
 
