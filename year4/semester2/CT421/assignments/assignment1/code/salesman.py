@@ -101,19 +101,13 @@ def get_current_best(population, fitnesses, generation):
     return current_best
 
 
-# function to randomly remove individuals for the population, with good solutions less likely to be removed and bad solutions more likely
-# the number to be removed is defined by how many offspring were produced in this generation, to keep population stable
-def deselect(population, fitnesses, num_to_remove):
-    # Compute survival probabilities in a single pass
-    total_inverse_fitness = sum(1.0 / fitness for fitness in fitnesses)
-    survival_probabilities = [(1.0 / fitness) / total_inverse_fitness for fitness in fitnesses]
+# function to perform monte carlo (roulette wheel) selection on a population
+def select(population, fitnesses, number_to_select):
+    total_fitness = sum(fitnesses)
+    weights = [ 1 - (fitness / total_fitness) for fitness in fitnesses] # subtract the relative fitness of each solution from one so that bigger number = worse fitness = more likely to die
 
-    # Select individuals to remove using weighted random sampling
-    indices_to_remove = set(random.choices( range(len(population)), weights=[1 - p for p in survival_probabilities], k=num_to_remove))
+    return random.choices(population, weights, k=number_to_select)
 
-    survivors = [solution for index, solution in enumerate(population) if index not in indices_to_remove]
-
-    return survivors
 
 # general crossover function
 def crossover(population, crossover_rate, number_to_replace):
@@ -136,28 +130,49 @@ def crossover(population, crossover_rate, number_to_replace):
 
     return offspring
 
-# function to perform partially mapped crossover on two parents
+# function to perform partially mapped crossover (as defined on wikipedia) on two parents
 def pmx_crossover(parent1, parent2):
     size = len(parent1)
     child = [None] * size
 
-    # choose random crossover points
-    crossover_point1 = random.randint(0, size // 2)
-    crossover_point2 = random.randint(crossover_point1, size)
+    # generate random crossover points between 0 and the size of the parent, inclusive
+    crossover_point1 = random.randint(0, size)
+    crossover_point2 = random.randint(0, size)
 
-    # copy the middle segment defined by the crossover points from parent1 to the child
-    for index in range(crossover_point1, crossover_point2):
-        child[index] = parent1[index]
+    # swap crossover points if second is before first
+    if crossover_point2 < crossover_point1:
+        crossover_point1, crossover_point2 = crossover_point2, crossover_point1
 
-    # fill in the remaining positions using parent2 and the pmx mapping
-    for index in range(size):
-        if child[index] is None:
-            gene = parent2[index]
-            while gene in child:
-                gene = parent2[child.index(None)]
-            child[index] = gene
+    # copy selected section to child chromosome in same position
+    child[crossover_point1:crossover_point2] = parent1[crossover_point1:crossover_point2]
+
+    # unmapped_indices = list(range(crossover_point2, size)) + list(range(0, crossover_point1))
+    # unmapped_indices = [index for index, value in enumerate(child) if value == None]
+
+    # look for genes that have not been copied in the corresponding segment of parent2 starting at the first crossover point
+    # for each gene found m, look up in the child which element n was copied in its place from parent1. copy m to the position held by n in parent2 if not occupied, else continue
+    for index in range(crossover_point1, crossover_point2): 
+        m = parent2[index]
+        if m not in child:
+            n = child[index]
+            index_n = parent2.index(n)
+            if child[index_n] == None:
+                child[index_n] = m
+            # if the place taken by n in parent2 is already occupied by an element k in the child, m is put in the place taken by k in parent2
+            else: 
+                k = child[index_n]
+                child[parent2.index(k)] = m
+
+    # after processing the genes from the selected segment in parent2, the remaining positions in the child are filled with the genes from parent2 that have not yet been copied in the order of their appearance
+    child_index = 0
+    for parent_index in range(size):
+        if parent2[parent_index] not in child:
+            while child[child_index] != None:
+                child_index += 1
+            child[child_index] = parent2[parent_index]
 
     return child
+
 
 # function to perform order crossover on two parents
 def ox_crossover(parent1, parent2):
@@ -197,7 +212,7 @@ def main():
     parser.add_argument("-s", "--size", type=int, help="Initial population size", required=False, default=100)
     parser.add_argument("-g", "--num-generations", type=int, help="Number of generations", required=False, default=500)
     parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=100)
-    parser.add_argument("-d", "--deselection-proportion", type=float, help="The proportion of the population to be deselected on each generation", required=False, default=0.7)
+    parser.add_argument("-p", "--selection-proportion", type=float, help="The proportion of the population to be selected (survive) on each generation", required=False, default=0.2)
     parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
     parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.2)
     args=parser.parse_args()
@@ -206,7 +221,7 @@ def main():
     print("Initial population size: " + str(args.size))
     print("Number of generations: " + str(args.num_generations))
     print("Will give up after: " + str(args.give_up_after) + " generations")
-    print("Deselection proportion: " + str(args.deselection_proportion))
+    print("Selection proportion: " + str(args.selection_proportion))
     print("Crossover rate: " + str(args.crossover_rate))
     print("Mutation rate: " + str(args.crossover_rate))
 
@@ -219,22 +234,19 @@ def main():
     current_best = get_current_best(population, fitnesses, 0)
 
     # appending results to an array of strings rather than to a string as it's more efficient
-    results = ["timestamp,generation,population_size,avg_fitness,generation_best,current_best"]
-    results.append(str(time.time()) + "," + "0," + str(len(population)) + "," + str(sum(fitnesses)/len(fitnesses)) + "," + str(current_best["fitness"]) + "," + str(current_best["fitness"]))
-
-    number_to_replace = int(len(population) * args.deselection_proportion)
+    results = ["timestamp\tgeneration\tpopulation_size\tavg_fitness\tgeneration_best\tcurrent_best"]
+    results.append(str(time.time()) + "\t" + "0\t" + str(len(population)) + "\t" + str(sum(fitnesses)/len(fitnesses)) + "\t" + str(current_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
     # this is where efficiency gets critical lol
-    for generation in range(args.num_generations):
+    for generation in range(1, args.num_generations):
         print("Generation " + str(generation) + " of " + str(args.num_generations))
         # deselect solutions from population probabilistically
-        population = deselect(population, fitnesses, number_to_replace)
+        population = select(population, fitnesses, int(len(population) * args.selection_proportion))
 
         # create a number of offspring with crossover to replace the number deselected
-        offspring = crossover(population, args.crossover_rate, number_to_replace)
+        offspring = crossover(population, args.crossover_rate, args.size - len(population))
 
         # mutate offspring and add them to the original population to restore size
-        # population.append(mutate(offspring, args.mutation_rate))
         population += offspring
 
         # calculate fitnesses
@@ -245,7 +257,7 @@ def main():
         if generation_best["fitness"] < current_best["fitness"]:
             current_best = generation_best
 
-        results.append(str(time.time()) + "," + str(generation) + "," + str(len(population)) + "," + str(sum(fitnesses)/len(fitnesses)) + "," + str(generation_best["fitness"]) + "," + str(current_best["fitness"]))
+        results.append(str(time.time()) + "\t" + str(generation) + "\t" + str(len(population)) + "\t" + str(sum(fitnesses)/len(fitnesses)) + "\t" + str(generation_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
         if (generation - current_best["generation"]) >= args.give_up_after:
             print("Best solution has not changed in " + str(args.give_up_after) + " generations. Giving up.")
@@ -255,7 +267,7 @@ def main():
     print("Fitness of best solution: " + str(current_best["fitness"]))
     print("Best solution found in generation: " + str(current_best["generation"]))
 
-    with open("output.csv", "w") as file:
+    with open("output.tsv", "w") as file:
         for line in results:
             file.write(line + "\n")
 
