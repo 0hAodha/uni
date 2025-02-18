@@ -538,6 +538,49 @@ Scripts waiting on I/O waste no space because they get popped off the stack when
     \caption{ MEAN stack }
 \end{figure}
 
+\section{Virtualisation}
+KVM stuff
+\\\\
+\textbf{QEMU (Quick Emulator)} is an open-source hosted hypervisor that performs hardware virtualisation.
+It emulates CPUs through dynamic binary translation and provides a set of device models, enabling it to run a variety of unmodified guest operating systems.
+It uses KVM Hosting mode in Proxmox where QEMU deals with the setting-up and migration of KVM images.
+It is still involved in the emulation of hardware, but the execution of the guest is done by the KVM as requested by QEMU.
+It uses the KVM to run virtual machines at near-native speed (requiring hardware virtualisation extensions on x86 machines).
+When the target architecture is the same as the host architecture, QEMU can make use of KVM particular features, such as acceleration.
+\\\\
+\textbf{LXC (Linux Containers)} is an operating-system-level virtualisation method for running multiple isolated Linux systems (containers) on a control host using a single Linux kernel.
+The Linux kernel provides the cgroups (control groups) functionality that allows limitation \& prioritisation of resources (CPU, memory, block I/O, network, etc.) without the need for starting any virtual machines.
+It provides namespace isolation functionality that allows complete isolation of an application's view of the operating environment, including process tress, networking, user IDs, and mounted file systems.
+LXC combines the kernel's cgroups and support for isolated namespaces to provide an isolated environment for applications.
+Docker can also use LXC as one of its execution drivers, enabling image management and providing deployment services.
+\\\\
+\textbf{Ceph} is a storage platform that implements object storage on a single distributed computer cluster, and provides interfaces for object-level, block-level, \& file-level storage.
+Ceph aims for completely distributed operation without a single point of failure, scalable to the exabyte level.
+Ceph's software libraries provide client applications with direct access to the Reliable Autonomic Distributed Object Store (RADOS) object-based storage system.
+Ceph replicates data and makes it fault-tolerant, using commodity hardware and requiring no specific hardware support.
+As a result of its design, the system is both self-healing and self-managing, aiming to minimise administration time and other costs.
+When an application writes data to Ceph using a block device, Ceph automatically striped and replicates the data across the cluster.
+It works well with the KVM.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
