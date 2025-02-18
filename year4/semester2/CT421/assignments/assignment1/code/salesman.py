@@ -108,6 +108,15 @@ def select(population, fitnesses, number_to_select):
 
     return random.choices(population, weights, k=number_to_select)
 
+# tournament
+def tournament_select(population, fitnesses, number_to_select, tournament_size=3):
+    selected = []
+    for _ in range(number_to_select):
+        tournament = random.sample(list(zip(population, fitnesses)), tournament_size)
+        winner = min(tournament, key=lambda x: x[1])  # Assuming lower fitness is better
+        selected.append(winner[0])
+    return selected
+
 
 # general crossover function
 def crossover(population, crossover_rate, number_to_replace):
@@ -122,16 +131,16 @@ def crossover(population, crossover_rate, number_to_replace):
         if random.random() < crossover_rate:
             # randomly alternate between the two crossover operators (50-50)
             if random.random() < 0.5:
-                child = pmx_crossover(parent1, parent2)
+                child = pmx(parent1, parent2)
             else:
-                child = ox_crossover(parent1, parent2)
+                child = ox(parent1, parent2)
 
             offspring.append(child)
 
     return offspring
 
 # function to perform partially mapped crossover (as defined on wikipedia) on two parents
-def pmx_crossover(parent1, parent2):
+def pmx(parent1, parent2):
     size = len(parent1)
     child = [None] * size
 
@@ -175,7 +184,7 @@ def pmx_crossover(parent1, parent2):
 
 
 # function to perform order crossover on two parents
-def ox_crossover(parent1, parent2):
+def ox(parent1, parent2):
     size = len(parent1)
     child = [None] * size
 
@@ -202,21 +211,56 @@ def ox_crossover(parent1, parent2):
 
 # general mutation function
 def mutate(offspring, mutation_rate):
-    offspring = []
+    for index in range(len(offspring)):
+        if random.random() < mutation_rate:
+            # randomly alternate between the two mutation operators (50-50)
+            if random.random() < 0.5:
+                offspring[index] = rsm(offspring[index])
+            else:
+                offspring[index] = psm(offspring[index])
+
     return offspring
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Program to solve the travelling salesman problem for a given TSP file using a genetic algorithm.")
-    parser.add_argument("-i", "--input-file", type=str, help="Path to input file in TSP format", required=True)
-    parser.add_argument("-s", "--size", type=int, help="Initial population size", required=False, default=100)
-    parser.add_argument("-g", "--num-generations", type=int, help="Number of generations", required=False, default=500)
-    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=100)
-    parser.add_argument("-p", "--selection-proportion", type=float, help="The proportion of the population to be selected (survive) on each generation", required=False, default=0.2)
-    parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
-    parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.2)
-    args=parser.parse_args()
+# reverse sequence mutation
+def rsm(tour):
+    size = len(tour)
 
+    # pick two random indices to define our subsequence
+    start = random.randint(0, size)
+    end = random.randint(0, size)
+
+    # swap them if start is after end
+    if end < start:
+        start, end = end, start
+
+    # reverse subsequence
+    tour[start:end] = tour[start:end][::-1]
+
+    return tour
+
+
+# partial shuffle mutation
+def psm(tour):
+    size = len(tour)
+
+    # pick two random indices to define our subsequence
+    start = random.randint(0, size)
+    end = random.randint(0, size)
+
+    # swap them if start is after end
+    if end < start:
+        start, end = end, start
+
+    subsequence = tour[start:end]
+    random.shuffle(subsequence)
+    tour[start:end] = subsequence
+
+    return tour
+
+
+# function to run the genetic algorithm over a number of generations
+def evolve(graph, adjacency_matrix, args):
     print("Input file: " + str(args.input_file))
     print("Initial population size: " + str(args.size))
     print("Number of generations: " + str(args.num_generations))
@@ -225,9 +269,6 @@ def main():
     print("Crossover rate: " + str(args.crossover_rate))
     print("Mutation rate: " + str(args.crossover_rate))
 
-    graph = graph_from_file(args.input_file)
-    adjacency_matrix = adjacency_matrix_from_graph(graph)
-
     # get initial population & its details
     population = initialise_population(args.size, graph)
     fitnesses = list_of_fitnesses(population, adjacency_matrix)
@@ -235,19 +276,19 @@ def main():
 
     # appending results to an array of strings rather than to a string as it's more efficient
     results = ["timestamp\tgeneration\tpopulation_size\tavg_fitness\tgeneration_best\tcurrent_best"]
-    results.append(str(time.time()) + "\t" + "0\t" + str(len(population)) + "\t" + str(sum(fitnesses)/len(fitnesses)) + "\t" + str(current_best["fitness"]) + "\t" + str(current_best["fitness"]))
+    results.append(str(time.time()) + "\t" + "0\t" + str(len(population)) + "\t" + str(sum(fitnesses) / len(fitnesses)) + "\t" + str(current_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
     # this is where efficiency gets critical lol
     for generation in range(1, args.num_generations):
         print("Generation " + str(generation) + " of " + str(args.num_generations))
         # deselect solutions from population probabilistically
-        population = select(population, fitnesses, int(len(population) * args.selection_proportion))
+        population = tournament_select(population, fitnesses, int(len(population) * args.selection_proportion))
 
         # create a number of offspring with crossover to replace the number deselected
         offspring = crossover(population, args.crossover_rate, args.size - len(population))
 
         # mutate offspring and add them to the original population to restore size
-        population += offspring
+        population += mutate(offspring, args.mutation_rate)
 
         # calculate fitnesses
         fitnesses = list_of_fitnesses(population, adjacency_matrix)
@@ -257,7 +298,7 @@ def main():
         if generation_best["fitness"] < current_best["fitness"]:
             current_best = generation_best
 
-        results.append(str(time.time()) + "\t" + str(generation) + "\t" + str(len(population)) + "\t" + str(sum(fitnesses)/len(fitnesses)) + "\t" + str(generation_best["fitness"]) + "\t" + str(current_best["fitness"]))
+        results.append(str(time.time()) + "\t" + str(generation) + "\t" + str(len(population)) + "\t" + str(sum(fitnesses) / len(fitnesses)) + "\t" + str(generation_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
         if (generation - current_best["generation"]) >= args.give_up_after:
             print("Best solution has not changed in " + str(args.give_up_after) + " generations. Giving up.")
@@ -267,9 +308,30 @@ def main():
     print("Fitness of best solution: " + str(current_best["fitness"]))
     print("Best solution found in generation: " + str(current_best["generation"]))
 
-    with open("output.tsv", "w") as file:
+    with open(args.output_file, "w") as file:
         for line in results:
             file.write(line + "\n")
+
+
+def main():
+    # parse command line arguments and flags
+    parser = argparse.ArgumentParser(description="Program to solve the travelling salesman problem for a given TSP file using a genetic algorithm.")
+    parser.add_argument("-i", "--input-file", type=str, help="Path to input file in TSP format", required=True)
+    parser.add_argument("-s", "--size", type=int, help="Initial population size", required=False, default=100)
+    parser.add_argument("-g", "--num-generations", type=int, help="Number of generations", required=False, default=500)
+    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=100)
+    parser.add_argument("-p", "--selection-proportion", type=float, help="The proportion of the population to be selected (survive) on each generation", required=False, default=0.2)
+    parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
+    parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.2)
+    parser.add_argument("-o", "--output-file", type=str, help="File to write TSV results to", required=False, default="output.tsv")
+    args=parser.parse_args()
+
+    # read in files and generate graph + adjacency matrix:w
+    graph = graph_from_file(args.input_file)
+    adjacency_matrix = adjacency_matrix_from_graph(graph)
+
+    # run the genetic algorithm
+    evolve(graph, adjacency_matrix, args)
 
 
 if __name__ == "__main__":
