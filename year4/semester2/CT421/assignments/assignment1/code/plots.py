@@ -21,12 +21,11 @@ def plot_fitness_trends(file_path):
     plt.show()
 
 
-# Main function
 def main():
     parser = argparse.ArgumentParser(description='Plot fitness trends from a TSV file.')
     parser.add_argument('file_path', type=str, help='Path to the TSV file')
     args = parser.parse_args()
-    
+
     plot_fitness_trends(args.file_path)
 
 if __name__ == "__main__":
