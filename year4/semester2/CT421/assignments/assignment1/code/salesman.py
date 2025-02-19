@@ -4,12 +4,13 @@ import argparse
 import random
 import math
 import time
+import logging
 
 # function to read a TSP file in and construct a dictionary of its attributes
 def graph_from_file(input_file):
     graph = {}
 
-    print("Reading cities data from: " + input_file)
+    logging.info("Reading cities data from: " + input_file)
 
     with open(input_file, "r") as file: lines=file.readlines()
 
@@ -133,7 +134,8 @@ def crossover(population, crossover_rate, number_to_replace):
             if random.random() < 0.5:
                 child = pmx(parent1, parent2)
             else:
-                child = ox(parent1, parent2)
+                child = pmx(parent1, parent2)
+                # child = ox(parent1, parent2)
 
             offspring.append(child)
 
@@ -260,35 +262,35 @@ def psm(tour):
 
 
 # function to run the genetic algorithm over a number of generations
-def evolve(graph, adjacency_matrix, args):
-    print("Input file: " + str(args.input_file))
-    print("Initial population size: " + str(args.size))
-    print("Number of generations: " + str(args.num_generations))
-    print("Will give up after: " + str(args.give_up_after) + " generations")
-    print("Selection proportion: " + str(args.selection_proportion))
-    print("Crossover rate: " + str(args.crossover_rate))
-    print("Mutation rate: " + str(args.crossover_rate))
+def evolve(graph, adjacency_matrix, population_size, num_generations, give_up_after, selection_proportion, crossover_rate, mutation_rate, output_file):
+    logging.info("Initial population size: " + str(population_size))
+    logging.info("Number of generations: " + str(num_generations))
+    logging.info("Will give up after: " + str(give_up_after) + " generations")
+    logging.info("Selection proportion: " + str(selection_proportion))
+    logging.info("Crossover rate: " + str(crossover_rate))
+    logging.info("Mutation rate: " + str(mutation_rate))
 
     # get initial population & its details
-    population = initialise_population(args.size, graph)
+    population = initialise_population(population_size, graph)
     fitnesses = list_of_fitnesses(population, adjacency_matrix)
     current_best = get_current_best(population, fitnesses, 0)
+    start_time = time.time()
 
     # appending results to an array of strings rather than to a string as it's more efficient
     results = ["timestamp\tgeneration\tpopulation_size\tavg_fitness\tgeneration_best\tcurrent_best"]
-    results.append(str(time.time()) + "\t" + "0\t" + str(len(population)) + "\t" + str(sum(fitnesses) / len(fitnesses)) + "\t" + str(current_best["fitness"]) + "\t" + str(current_best["fitness"]))
+    results.append(str(start_time) + "\t" + "0\t" + str(len(population)) + "\t" + str(sum(fitnesses) / len(fitnesses)) + "\t" + str(current_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
     # this is where efficiency gets critical lol
-    for generation in range(1, args.num_generations):
-        print("Generation " + str(generation) + " of " + str(args.num_generations))
+    for generation in range(1, num_generations):
+        logging.info("Generation " + str(generation) + " of " + str(num_generations))
         # deselect solutions from population probabilistically
-        population = tournament_select(population, fitnesses, int(len(population) * args.selection_proportion))
+        population = tournament_select(population, fitnesses, int(len(population) * selection_proportion))
 
         # create a number of offspring with crossover to replace the number deselected
-        offspring = crossover(population, args.crossover_rate, args.size - len(population))
+        offspring = crossover(population, crossover_rate, population_size - len(population))
 
         # mutate offspring and add them to the original population to restore size
-        population += mutate(offspring, args.mutation_rate)
+        population += mutate(offspring, mutation_rate)
 
         # calculate fitnesses
         fitnesses = list_of_fitnesses(population, adjacency_matrix)
@@ -300,18 +302,39 @@ def evolve(graph, adjacency_matrix, args):
 
         results.append(str(time.time()) + "\t" + str(generation) + "\t" + str(len(population)) + "\t" + str(sum(fitnesses) / len(fitnesses)) + "\t" + str(generation_best["fitness"]) + "\t" + str(current_best["fitness"]))
 
-        if (generation - current_best["generation"]) >= args.give_up_after:
-            print("Best solution has not changed in " + str(args.give_up_after) + " generations. Giving up.")
+        if (generation - current_best["generation"]) >= give_up_after:
+            logging.info("Best solution has not changed in " + str(give_up_after) + " generations. Giving up.")
             break
 
-    print("Best solution found: " + str(current_best["tour"]))
-    print("Fitness of best solution: " + str(current_best["fitness"]))
-    print("Best solution found in generation: " + str(current_best["generation"]))
+    end_time = time.time()
 
-    with open(args.output_file, "w") as file:
-        for line in results:
-            file.write(line + "\n")
+    if output_file != None:
+        with open(output_file, "w") as file:
+            for line in results:
+                file.write(line + "\n")
 
+    return current_best, end_time - start_time 
+
+
+# function to search a range of parameters to find the best
+def grid_search(graph, adjacency_matrix, num_generations, give_up_after, selection_proportion, population_sizes, crossover_rates, mutation_rates):
+    results = []
+
+    for population_size in population_sizes:
+        for crossover_rate in crossover_rates:
+            for mutation_rate in mutation_rates:
+                print("Performing grid search with population_size="+str(population_size) + ", crossover_rate=" + str(crossover_rate) + ", & mutation_rate=" + str(mutation_rate))
+                iteration_best, time_taken = evolve(graph, adjacency_matrix, population_size, num_generations, give_up_after, selection_proportion, crossover_rate, mutation_rate, None)
+
+                results.append({
+                    "population_size": population_size,
+                    "crossover_rate": crossover_rate,
+                    "mutation_rate": mutation_rate,
+                    "time_taken": time_taken,
+                    "iteration_best": iteration_best
+                })
+
+    return results
 
 def main():
     # parse command line arguments and flags
@@ -319,19 +342,47 @@ def main():
     parser.add_argument("-i", "--input-file", type=str, help="Path to input file in TSP format", required=True)
     parser.add_argument("-s", "--size", type=int, help="Initial population size", required=False, default=100)
     parser.add_argument("-g", "--num-generations", type=int, help="Number of generations", required=False, default=500)
-    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=100)
+    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=200)
     parser.add_argument("-p", "--selection-proportion", type=float, help="The proportion of the population to be selected (survive) on each generation", required=False, default=0.2)
     parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
     parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.2)
     parser.add_argument("-o", "--output-file", type=str, help="File to write TSV results to", required=False, default="output.tsv")
+    parser.add_argument("--quiet", action="store_true", help="Don't print output")
+    parser.add_argument("--grid-search", action="store_true", help="Perform a grid search for optimal population size, crossover rate, & mutation rate")
     args=parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO if not args.quiet else logging.ERROR, format="%(message)s")
+    logging.info("Input file: " + str(args.input_file))
 
     # read in files and generate graph + adjacency matrix:w
     graph = graph_from_file(args.input_file)
     adjacency_matrix = adjacency_matrix_from_graph(graph)
 
     # run the genetic algorithm
-    evolve(graph, adjacency_matrix, args)
+    if args.grid_search:
+        # hardcoded for testing purposes / too cumbersome to supply from cli
+        population_sizes = [50, 100, 200, 300, 500]
+        crossover_rates = [0.6, 0.7, 0.8, 0.9, 1]
+        mutation_rates = [0.01, 0.05, 0.1, 0.15, 0.2]
+
+        logging.getLogger().setLevel(logging.ERROR) # disable print statements
+        results = grid_search(graph, adjacency_matrix, args.num_generations, args.give_up_after, args.selection_proportion, population_sizes, crossover_rates, mutation_rates)
+
+        best = min(results, key=lambda result: result["iteration_best"]["fitness"])
+
+        print("Best solution: " + str(best["iteration_best"]["tour"]))
+        print("Best solution fitness: " + str(best["iteration_best"]["fitness"]))
+        print("Population size: " + str(best["population_size"]))
+        print("Crossover rate: " + str(best["crossover_rate"]))
+        print("Mutation rate: " + str(best["mutation_rate"]))
+        print("Time taken: " + str(best["time_taken"]))
+
+    else:
+        best_solution, time_taken = evolve(graph, adjacency_matrix, args.size, args.num_generations, args.give_up_after, args.selection_proportion, args.crossover_rate, args.mutation_rate, args.output_file)
+        logging.info("Best solution found: " + str(best_solution["tour"]))
+        logging.info("Fitness of best solution: " + str(best_solution["fitness"]))
+        logging.info("Best solution found in generation: " + str(best_solution["generation"]))
+        logging.info("Time taken: " + str(time_taken))
 
 
 if __name__ == "__main__":
