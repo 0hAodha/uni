@@ -103,13 +103,13 @@ def get_current_best(population, fitnesses, generation):
 
 
 # function to perform monte carlo (roulette wheel) selection on a population
-def select(population, fitnesses, number_to_select):
+def monte_carlo_select(population, fitnesses, number_to_select):
     total_fitness = sum(fitnesses)
     weights = [ 1 - (fitness / total_fitness) for fitness in fitnesses] # subtract the relative fitness of each solution from one so that bigger number = worse fitness = more likely to die
 
     return random.choices(population, weights, k=number_to_select)
 
-# tournament
+# function to perform tournament selection on a population
 def tournament_select(population, fitnesses, number_to_select, tournament_size=3):
     selected = []
     for _ in range(number_to_select):
@@ -134,8 +134,7 @@ def crossover(population, crossover_rate, number_to_replace):
             if random.random() < 0.5:
                 child = pmx(parent1, parent2)
             else:
-                child = pmx(parent1, parent2)
-                # child = ox(parent1, parent2)
+                child = ox(parent1, parent2)
 
             offspring.append(child)
 
@@ -190,13 +189,16 @@ def ox(parent1, parent2):
     size = len(parent1)
     child = [None] * size
 
-    # select a two random indexes from parent1 to create a segment for crossover
-    crossover_point1 = random.randint(0, size // 2)
-    crossover_point2 = random.randint(crossover_point1, size)
+    # generate random crossover points between 0 and the size of the parent, inclusive
+    crossover_point1 = random.randint(0, size)
+    crossover_point2 = random.randint(0, size)
+
+    # swap crossover points if second is before first
+    if crossover_point2 < crossover_point1:
+        crossover_point1, crossover_point2 = crossover_point2, crossover_point1
 
     # copy the segment from parent1 to the offspring
-    for index in range(crossover_point1, crossover_point2):
-        child[index] = parent1[index]
+    child[crossover_point1:crossover_point2] = parent1[crossover_point1:crossover_point2]
 
     # fill remaining positions with parent2, avoiding duplicates
     current_position = crossover_point2
