@@ -33,7 +33,6 @@ options:
 Example usages include:
 - `python3 salesman.py -i berlin52.tsp`
 - `python3 salesman.py -i berlin52.tsp --grid-search`
-- ``
 - `python3 salesman.py -i ../materials/berlin52.tsp  --size 300 --crossover-rate 0.8 --mutation-rate 0.1`
 
 ## `plots.py`
