@@ -7,12 +7,12 @@ import argparse
 # Load TSV file
 def plot_fitness_trends(file_path):
     df = pd.read_csv(file_path, sep='\t')
-    
+
     plt.figure(figsize=(10, 5))
     plt.plot(df['generation'], df['avg_fitness'], label='Avg Fitness', marker=None)
     plt.plot(df['generation'], df['generation_best'], label='Generation Best', marker=None)
     plt.plot(df['generation'], df['current_best'], label='Current Best', marker=None)
-    
+
     plt.xlabel('Generation')
     plt.ylabel('Fitness')
     plt.title('Fitness Trends Across Generations')

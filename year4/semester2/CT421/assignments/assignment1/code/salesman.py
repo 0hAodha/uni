@@ -134,7 +134,7 @@ def crossover(population, crossover_rate, number_to_replace):
             if random.random() < 0.5:
                 child = pmx(parent1, parent2)
             else:
-                child = ox(parent1, parent2)
+                child = pmx(parent1, parent2)
 
             offspring.append(child)
 
