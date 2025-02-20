@@ -178,6 +178,7 @@ Tournament selection maintained the diversity I was looking for, giving an oppor
 
 \subsubsection{Crossover}
 Crossover is performed on the survivors of the selection process using a generalised \texttt{crossover(population, crossover\_rate, number\_to\_replace)} function which randomly alternates between Partially Mapped Crossover (PMX) and Order Crossover (OX), the algorithmic steps for which I took from Wikipedia\supercite{crossover}; while not a scholarly source for a reference, I feel that it's reasonable to use for the algorithmic steps in this case as they evidently produce the desired the results or do not and can be quite easily verified.
+The generalised crossover function randomly alternated between the PMX and OX operators with equal probability.
 \\\\
 The PMX operator works as follows:
 first, two indices within the two parent solutions are selected at random to serve as crossover points.
@@ -193,13 +194,189 @@ Thus, high-quality sub-sequences that have evolved in the parents have a chance 
 The partial mapping allows us to ensure that the child solution remains a valid solution with no duplication of cities.
 \\\\
 The OX operator works as follows:
-like the PMX operator, two crossover points are selected at random and the sub-sequence defined by these crossover points is copied directly into the child.
+like the PMX operator, two crossover points are selected at random and the sub-sequence defined by these crossover points is copied directly from the first parent into the child.
+Then, each index in the second parent is iterated over, and if the city and that index in the second parent does not occur in the child, it is copied into the child into the first empty index after the second crossover point, wrapping around and starting from the 0\textsuperscript{th} index of the child once the end of the child list is reached.
+The OX operator was chosen as it is slightly simpler than the PMX operator, preserving only the order of cities in the tour, rather than relative mappings, thus introducing more randomness into the child solution and therefore increasing the diversity of the gene pool.
+However, during testing I came to realise that I tended to get better fitnesses using just the PMX operator and no OX, so I stopped using OX in the generalised crossover function and used only PMX.
+During the course of development, I ran two test runs with my default, untuned parameters on the \verb|berlin52.tsp| dataset for the PMX-only crossover and the PMX+OX crossover.
+PMX-only yielded a best fitness of 8207 while PMX+OX yielded a significantly worse best fitness of 13317.
+The reason for this is probably that the OX operator was introducing too much randomness into the crossover and losing important mappings from the evolved solutions, this conjecture being supported by the fitness graphs for the two runs:
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/berlin52_defaults_pmxox.png}
+\caption{Fitness achieved with PMX+OX crossover on \texttt{berling52.tsp} using the default parameters}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/berlin52_defaults_pmxonly.png}
+\caption{Fitness achieved with PMX crossover alone on \texttt{berling52.tsp} using the default parameters}
+\end{figure}
+
+As can be seen from the above diagrams, the OX operator seemed to be destroying learned good paths as the average fitness started to fluctuate wildly and improve very little after a short period of learning.
+With PMX crossover only however, the learning curve was much closer to the expected asymptotic curve, with average fitness steadily falling over generations and slowly bottoming-out.
+Interestingly, even on the small \verb|berlin52.tsp| dataset, the effect of the relatively more simply OX operator being used could be seen, as the PMX+OX run took about half a second less.
+This may be partially due to the fact that the PMX+OX crossover gave up after 452 generations while PMX-only ran the full 500 generations but the small difference in number of generations alone doesn't fully account for this discrepancy.
+
+\subsubsection{Mutation}
+Mutation was implemented much in the same way as crossover, with a generalised \mintinline{python}{mutate(offspring, mutation_rate)} function which accepted a list of the offspring produced via crossover and returned that list with mutations applied.
+This function also randomly alternated between two mutation operators: Reverse Sequence Mutation (RSM) and Partial Shuffle Mutation (PSM).
+I took the algorithmic steps for these functions from a paper titled \citetitle{adboun}.\supercite{adboun}
+\\\\
+The RSM operator was implemented as follows:
+first, two random start and end indices are selected from the tour to delimit the sub-sequence to be reversed.
+If the start index occurs after the end, they are swapped.
+Then, that sub-sequence is simply reversed and the tour returned.
+This simple operator maintains city adjacency while inserting some variance into a tour, thus increasing diversity without sacrificing what has already been learned by the algorithm.
+\\\\
+The PSM operator was implemented as follows:
+again, two random start and end indices are selected as in the RSM operator, and the sub-sequence delimited by these indices is randomly shuffled by Python's \mintinline{python}{random.shuffle()} function, and the tour is returned.
+This operator is both computationally and functionally more complex than RSM, and introduces a great deal more variability and helps to avoid early convergence.
+
+\subsection{Grid Search}
+The entire genetic algorithm logic was implemented in a function named \texttt{evolve(graph, adjacency\_matrix, population\_size, num\_generations, give\_up\_after, selection\_proportion, crossover\_rate, mutation\_rate, output\_file)}
+which allowed for it to be called with different parameters for testing purposes.
+A function named \texttt{grid\_search(graph, adjacency\_matrix, num\_generations, give\_up\_after, selection\_proportion, population\_sizes, crossover\_rates, mutation\_rates)} was then implemented which accepts lists of population sizes, crossover rates, \& mutation rates instead of single values, and iterates over each possible combination to find the combination which produces the best results.
+I decided to hard-code these list values into the \mintinline{python}{main()} function of the script, as passing several lists of options to the program via command-line flags proved far more cumbersome than simply editing the file.
+If the flag \texttt{--grid-search} is passed to the script, it runs the \texttt{grid\_search()} function instead of just the \texttt{evolve()} function.
+
+\subsection{Plotting}
+As previously mentioned, I chose to implement the plotting of fitness over generations in its own script named \verb|plots.py| which accepts a single TSV file as an argument and plots the fitness.
+I also wrote a script called \verb|map.py| that plots a given hard-coded tour around cities defined in a TSP file, each located at their relative co-ordinates for visualisation purposes.
+However, I wrote this script in a very quick and dirty way so it accepts no command-line arguments and must be edited to run on different files or with different tours.
 
 \section{Experimental Results \& Analysis}
-\subsection{Performance Comparison with Known Optimal Solution}
+\subsection{\texttt{berlin52.tsp}}
+I ran a grid search for \verb|berlin52.tsp| using \texttt{population\_sizes = [50, 100, 200, 300, 500]}, \texttt{crossover\_rates = [0.6, 0.7, 0.8, 0.9, 1]}, and \texttt{mutation\_rates = [0.01, 0.05, 0.1, 0.15, 0.2]}, which I felt gave a reasonable range of possible combinations for the dataset without taking prohibitively long to run.
+I ran the grid search a few times to weed out very lucky or unlucky runs:
+the best solution found with the grid search was as follows, but I struggled to replicate it:
+\begin{itemize}
+    \item   Best solution: \texttt{[33, 43, 10, 9, 8, 41, 19, 45, 3, 17, 7, 2, 42, 21, 31, 18, 22, 1, 32, 49, 39, 36, 35, 34, 44, 50, 20, 23, 30, 29, 16, 46, 48, 37, 40, 38, 24, 5, 15, 6, 4, 25, 12, 28, 27, 26, 47, 14, 13, 52, 11, 51]}.
+    \item   Best solution fitness: 7842.999708659402.
+    \item   Population size: 300.
+    \item   Crossover rate: 0.8.
+    \item   Mutation rate: 0.1.
+    \item Time taken: 5.580028772354126 seconds.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/berlin52besttour.png}
+    \caption{Path taken by the best solution found for \texttt{berlin52.tsp} (fitness: 7842.999708659402)}
+\end{figure}
+
+However, in general, the best fitness found tended to be in the low 8000s with those parameters.
+A more representative run yielded the following results:
+\begin{itemize}
+    \item   Best solution found: \texttt{[45, 19, 41, 8, 9, 10, 33, 43, 15, 38, 40, 37, 48, 24, 5, 6, 4, 25, 12, 51, 11, 52, 14, 13, 27, 28, 26, 47, 29, 50, 20, 23, 30, 2, 7, 42, 21, 17, 3, 18, 31, 22, 1, 44, 16, 46, 34, 39, 36, 35, 49, 32]}.
+    \item   Fitness of best solution: 8012.642652424814.
+    \item   Best solution found in generation: 386.
+    \item   Time taken: 4.9562294483184814 seconds.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/berlin52rep.png}
+    \caption{Fitness over generations for \texttt{berlin52.tsp} (best fitness: 8012.642652424814)}
+\end{figure}
+
+The algorithm behaved largely as expected, with improvements in fitness bottoming out towards the end of the run.
+The best known fitness for the \texttt{berlin52.tsp} dataset is 7542, and since the average fitness of random permutation can be seen in the above diagram to be around 30,000, I am quite happy with this result.
+The best solution we found ended up being only 300 out from the best possible solution.
+
+\subsection{\texttt{kroA100.tsp}}
+I noticed that the graph of the results wasn't bottoming-out as expected and that the algorithm wasn't giving up but was just reaching the end of its allotted number of generations, which indicated to me that the number of generations specified was restricting the algorithm.
+To remedy this, I set the number of generations arbitrarily high, and relied on the give-up-after value to terminate the program when improvements were no longer being made.
+I also found that using a much larger population size (1000) gave good, albeit slow results.
+A run with these values yielded the following results:
+\begin{itemize}
+    \item   Best solution found: \texttt{[81, 25, 87, 51, 61, 58, 93, 28, 67, 89, 42, 31, 80, 56, 97, 75, 19, 4, 65, 26, 66, 70, 22, 94, 16, 88, 18, 24, 38, 99, 36, 59, 74, 21, 72, 10, 84, 79, 53, 90, 49, 6, 63, 92, 8, 1, 47, 11, 17, 15, 32, 45, 91, 98, 23, 60, 62, 35, 86, 27, 20, 77, 57, 9, 7, 12, 55, 83, 34, 29, 46, 43, 3, 14, 71, 41, 100, 48, 52, 78, 96, 13, 76, 33, 37, 5, 39, 30, 85, 68, 73, 50, 44, 82, 95, 2, 54, 40, 64, 69]}.
+    \item   Fitness of best solution: 23931.38351530833.
+    \item   Best solution found in generation: 1303.
+    \item   Time taken: 154.4610664844513.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/betterkroaplot.png}
+    \caption{Fitness over generations for \texttt{kroA100.tsp} (best fitness: 23931.38351530833)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/beterkroapath.png}
+    \caption{Path taken by the best solution found for \texttt{kroA100.tsp}}
+\end{figure}
+
+It is worth noting here that as the population size and number of generations are increased, it gets closer and closer to just being a really bad brute-force search and this could be argued to be part of the reason for the greater success with higher values.
+However, I would argue that this does not account for the results seen in the fitness-over-generations plot, as the average fitness is steadily decreasing right up until the end which can only happen if the algorithm is indeed learning.
+The best known solution for this problem has a fitness of 21,282 and the best result I achieved was 23,931 which is just 2,649 or so out, which I am happy with as a randomly generated solution has an average fitness in excess of 160,000 for this dataset.
+
+\subsection{\texttt{pr1002.tsp}}
+I didn't conduct a grid search on the \texttt{pr1002.tsp} dataset because it took prohibitively long to run:
+I attempted once but it was showing no signs of stopping hours later so I gave up.
+I performed a single run with a population size of 300, a crossover rate of 0.8, and a mutation rate of 0.1 for 5000 generations.
+Originally, I had chosen the number 5000 as an arbitrarily large number that would never be reached, as the algorithm would give up after 200 generations of no change; 
+however, the program kept running for the entire 5000 generations, taking just over 3 hours to complete.
+The results were quite interesting:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/pr1002fitness.png}
+    \caption{Fitness over generations for \texttt{pr1002} (best fitness: 1,401,503.549568915)}
+\end{figure}
+
+The best fitness in question was found in the 4979\textsuperscript{th} generation: clearly, the  graph has not yet flattened out even after 5000 generations which indicates that it was still learning and improving and was cut short.
+The average fitness over the generations is also quite interesting: despite trending steadily downwards, it fluctuates greatly within a narrow range.
+This suggests to me that there was always a great deal of diversity within the solution pool, which is probably in no small part due to the fact that the dataset had so many points that a great deal of permutations were possible.
+I would be inclined to think that the number of generations required to converge on a solution for a dataset would scale with the number of possible paths through the network, $N!$, and therefore I would guess that this particular dataset would require thousands of more iterations before converging on a good solution.
+\\\\
+The best known fitness for this dataset is 259,045: clearly our result was quite a bit out, but this is more as a result of the evolution process being cut short before convergence.
+For the sake of completeness, I'll include the best path found during that search, but anyone can tell just by looking at it that it is very far from the shortest possible path:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{./images/pr1002path.png}
+    \caption{Path taken by the best solution found for \texttt{pr1002.tsp}}
+\end{figure}
+
+
+
 \section{Potential Improvements}
+There are a great deal of potential improvements that could be made to my implementation, the majority of which I unfortunately did not have time to implement.
+These include:
+\begin{itemize}
+    \item   Writing it in a different programming language: while I previously referred to how parsing the input TSP files would be much easier using Perl due to its convenient \& powerful regex, if I were to write this program again I would probably opt for C.
+            When I set out to write this program I didn't really know what I was in for, so I chose Python because it would allow me a great deal of flexibility and because it would be relatively fast to write.
+            However, I don't really make great use of any Python-specific features and I repeatedly found myself attempting to strip back the layers of abstraction built into Python to find the big-O complexity of certain operations.
+            For example, I didn't use any fancy data structure to represent the graph, just an adjacency matrix using arrays.
+            Furthermore, there are a great number of ``gotchas'' that one can easily fall into when writing performance-critical Python code, such as some function that will be run on every possible tour in every generation, where time-step complexity multiplies fast.
+            For example, a simple line of code to find the index of the lowest fitness in a list of fitnesses such as \mintinline{python}{best_index = fitnesses.index(min(fitnesses))} which appears simple \& elegant has a big-O complexity of $O(2n)$ because the \mintinline{python}{min()} function searches the entire unsorted list for the minimum value and the \mintinline{python}{list.index()} function also searches the entire unsorted list for the value given.
+            Thus, if you were running this line of code every generation, the program would quickly become very inefficient, and there are so many ``gotchas'' like this which I came across when writing my code.
+
+    \item   The initial population could be created by some heuristic-based mechanism rather than by random permutations, which could potentially speed up convergence.
+
+    \item   It's not unlikely that the same tours were evolved independently on multiple occasions during a single run of the genetic algorithm, and the fitness for these independently-evolved twins would be re-calculated every time they appeared. 
+            Instead, it would possibly be more efficient to hash each tour and store its fitness in a hash table instead of re-calculating it every time, although this is dependent on how often we expect the same tour to appear in each run.
+
+    \item   A greater number of mutation and crossover operators could be implemented and tested to find optimal ones.
+
+    \item   There was no distinction between different stages of the search in my implementation;
+            adapting behaviour based on the stage of the search could improve performance.
+            For example, as the average fitness of each generation starts to stagnate and improvement grinds to a halt, the algorithm could become increasingly reckless, increasing the mutation rate to increase diversity and attempt to burst out of the potential local maxima in which it was getting stuck.
+            Different crossover and mutation operators could be employed at different stages of the search.
+
+    \item   Grid search with more parameters: many parameters went relatively untuned throughout this assignment, such as the number of generations, the probabilities of different crossover \& mutation operators, and the selection proportion.
+
+    \item   I potentially lost out on the benefits of Monte Carlo selection by not taking the time to fine-tune a fitness-based weighting scheme for the probabilistic selection.
+            More selection algorithms could have been tried \& tested as well, such as elitism.
+
+    \item   Some kind of parallelisation could have been implemented to speed up the execution time.
+
+    \item   Some kind of technique like simulated annealing could have been used to try and find the global optimum for the problem.
+
+\end{itemize}
 
 \nocite{*}
 \printbibliography
