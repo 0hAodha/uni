@@ -749,6 +749,65 @@ Then:
             \end{align*}
 \end{itemize}
 
+% MISSING WEEK06-01 shit
+
+\section{Centrality Measures}
+Key nodes in a network can be identified through \textbf{centrality measures}: a way of assigning ``scores'' to nodes that represents their ``importance''.
+However, what it means to be central depends on the context;
+accordingly, in the context of network analysis, a variety of different centrality measures have been developed.
+Measures of centrality include:
+\begin{itemize}
+    \item   \textbf{Degree centrality:} just the degree of the nodes, important in transport networks for example.
+    \item   \textbf{Eigenvector centrality:} defined in terms of properties of the network's adjacency matrix.
+    \item   \textbf{Closeness centrality:} defined in terms of a node's \textbf{distance} to other nodes in the network.
+    \item   \textbf{Betweenness centrality:} defined in terms of \textbf{shortest paths}.
+\end{itemize}
+\subsection{Degree Centrality}
+In a (simple) graph $G=(X,E)$ with $X=\{ 0, 1, \dots, n-1 \}$ and adjacency matrix $A=(a_{i,j})$, the \textbf{degree centrality} $c_i^D$ of node $i \in X$ is defined as:
+\[
+    c_i^D = k_i = \sum_j a_{i,j}
+\]
+
+where $k_i$ is the degree of node $i$.
+\\\\
+In some cases, this measure can be misleading since it depends (among other things) on the order of the graph.
+A better measure is the \textbf{normalised degree centrality}: the normalised degree centrality $C_I^D$ of node $i \in X$ is defined as:
+\[
+    C_i^D = \frac{k_i}{n-1} = \frac{c_i^D}{n-1} \left( = \frac{\text{degree of centrality of node } i}{\text{number of potential neighbours of } i} \right)
+\]
+
+Note that in a directed graph, one distinguishes between the \textbf{in-degree} and the \textbf{out-degree}o f a node and defines the in-degree centrality and the out-degree centrality accordingly.
+
+\subsection{Eigenvector Centrality}
+Let $A$ be a square $n \times n$ matrix.
+An $n$-dimensional vector, $v$, is called an \textbf{eigenvector} of $A$ if :
+\[
+    Av = \lambda v
+\]
+
+for some scalar $\lambda$ which is called an \textbf{eigenvalue} of $A$.
+\\\\
+When $A$ is a real-valued matrix, one usually finds that $\lambda$ and $v$ are \textit{complex-valued}.
+However, if $A$ is \textbf{symmetric}, then they are \textit{real-valued}.
+$A$ may have up to $n$ eigenvalues $\lambda_1, \lambda_2, \dots, \lambda_n$.
+The \textbf{spectral radius} of $A$ is $\rho(A) := \text{max}(|\lambda_1|, \lambda_2|, \dots, |\lambda_n|)$.
+If $v$ is an eigenvector associated with the eigenvalue $\lambda$, so too is any non-zero multiple of $v$.
+\\\\
+The basic idea of eigenvector centrality is that a node's ranking in a network should relate to the rankings of the nodes it is connected to.
+More specifically,  up to to some scalar $\lambda$, the centrality $c_i^E$ of node $i$ should be equal to the sum of the centralities $c_j^E$ of its neighbouring nodes $j$.
+In terms of the adjacency matrix $A = (a_{i,j})$, this relationship is expressed as:
+\[
+    \lambda c_i^E = \sum_j a_{i,j} c_j^E
+\]
+
+which, in turn, in matrix language is:
+\[
+    \lambda c^E = Ac^E
+\]
+
+for the vector $c^E = (c_i^E)$ which then is an eigenvector of $A$.
+So $c^E$ is an eigenvector of $A$ (but which one?).
+
 
 
 
