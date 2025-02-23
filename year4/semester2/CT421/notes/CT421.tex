@@ -509,6 +509,32 @@ In many domains, novelty search has out-performed searching directly for an obje
 The standard approach to novelty search involves maintaining an archive of previously-found novel solutions.
 To decide are the size of the archive, the similarity measure, and the balance between novelty \& fitness.
 
+\section{Game Theory}
+\subsection{Reasoning about Interactions}
+Assume that we have just two agents, $i$ and $j$, and that these agents are self-interested.
+Let there be a set of ``outcomes'' $\Omega = \{ \Omega_1, \Omega_2, \dots, \Omega_n \}$ over which the agents have preferences.
+Preferences are expressed by utility functions:
+\begin{align*}
+    u_i& : \Omega \rightarrow \mathbb{R} \\
+    u_j& : \Omega \rightarrow \mathbb{R} \\
+\end{align*}
+
+These functions lead naturally to preference orderings over outcomes:
+\begin{align*}
+    \Omega \geq u_i \Omega' \rightarrow u_i(\Omega) \geq u_i(\Omega')
+\end{align*}
+
+We need a model of the environment in which agents can act.
+Let us assume agents act simultaneously to choose an action to perform, and as a result of the actions an outcome will result.
+The actual outcome depends on the combination of actions.
+This can be represented as a \textbf{state transformation function}:
+\begin{align*}
+    \tau: \text{Action}_i \times \text{Action}_j \rightarrow \Omega
+\end{align*}
+
+For the time being, we will make the simplifying assumption that an agent can make one of two actions: to co-operate $C$ or to defect $D$.
+We say a certain move is \textbf{rational} if the outcomes that arise through the action are better than all outcomes that arise from the alternative action.
+
 
 
 
