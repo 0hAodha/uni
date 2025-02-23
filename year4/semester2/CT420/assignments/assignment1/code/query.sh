@@ -12,7 +12,7 @@ for i in $(seq 1 24); do
             gsub(/ +/, "\t");
             print(timestamp "\t" $0);
         }
-    ' | tee "$file"
+    ' | tee --append "$file"
 
     # do nothing for 20 minutes
     sleep 20m
