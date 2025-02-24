@@ -84,8 +84,38 @@
 \end{frame}
 
 \begin{frame}{Exploit 2: Samba}
-    
+    If you run \texttt{use exploit/multi/samba/usermap\_script} and then \texttt{show payloads} to see what payloads are available, 
+    you will get a list of 44 payloads.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/sambapayloads.png}
+    \caption{Available payloads}
+\end{figure}
+
 \end{frame}
 
+\begin{frame}{Exploit 2: Samba}
+I chose the payload \texttt{payload/cmd/unix/bind\_netcat}, which spawns a shell on the target machine and binds it to a port with \texttt{netcat}, allowing the attacker to connect.
+I then set the \texttt{RHOST} and ran the exploit.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/sambaexploit.png}
+    \caption{Running the exploit with \texttt{bind\_netcat} payload}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Exploit 2: Samba}
+    \begin{itemize}
+        \item   As can be seen from the output on the previous slide, this backdoor also gives us remote root access to the target machine.
+        \item   This exploit works because Samba allows administrators to map incoming usernames to different local users using the \texttt{username map} feature, which processes the incoming usernames using a shell command.
+        \item   In certain vulnerable versions of Samba, the user input is not sanitised properly and an attacker can insert special characters to inject arbitrary shell commands, such as spawning a \texttt{netcat} shell on a specific port.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Exploit 3: \texttt{distcc}}
+    
+\end{frame}
 
 \end{document}
