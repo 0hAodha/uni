@@ -1,18 +1,19 @@
 %! TeX program = lualatex
 \documentclass[]{beamer} 
+\usetheme{SimpleDarkBlue}
 
-\setbeamercolor{title}{fg=black}
-\setbeamercolor{frametitle}{fg=black}
-\setbeamercolor{caption}{fg=black}
-\setbeamercolor{caption name}{fg=black}
+% \setbeamercolor{title}{fg=black}
+% \setbeamercolor{frametitle}{fg=black}
+% \setbeamercolor{caption}{fg=black}
+% \setbeamercolor{caption name}{fg=black}
 
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{itemize item}{\color{black}$\bullet$}
+% \setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{itemize item}{\color{black}$\bullet$}
 
 % packages
 \usepackage{fontspec}
-\setmainfont{EB Garamond}
-\usefonttheme{serif}
+% \setmainfont{EB Garamond}
+% \usefonttheme{serif}
 \setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
 
 \usepackage{microtype}      % Slightly tweak font spacing for aesthetics
@@ -37,8 +38,76 @@
 \institute{Student ID: 21321503}
 
 \begin{document}
-
 \frame{\titlepage}
+
+\begin{frame}{Introduction}
+    \textbf{Metasploit} is an open-source penetration testing framework that is widely used for:
+    \begin{itemize}
+        \item Developing and testing exploits;
+        \item Conducting security assessments;
+        \item Gaining unauthorized access to systems (for ethical hacking purposes).
+    \end{itemize}
+
+    It was developed by H. D. Moore in 2003 and is now maintained by Rapid7.
+\end{frame}
+
+\begin{frame}{How Metasploit Works}
+    The workflow of Metasploit generally involves the following steps:
+    \begin{enumerate}
+        \item Scanning the target for vulnerabilities, using a tool like \texttt{nmap} to see what services the target is running.
+        \item Selecting an appropriate Metasploit exploit.
+        \item Selecting \& configuring the payload to be delivered.
+        \item Executing the exploit to gain access to the target system.
+        \item Performing post-exploitation activities, such as sabotage or data extraction.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Key Features}
+    Metasploit provides several key features that make it powerful:
+    \begin{itemize}
+        \item A large repository of exploit modules;
+        \item A wide variety of payloads for different scenarios;
+        \item Auxiliary modules for scanning and enumeration;
+        \item Post-exploitation modules for maintaining access.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Tools \& Interfaces}
+    Metasploit includes several tools \& interfaces:
+    \begin{itemize}
+        \item \textbf{\texttt{msfconsole}}: the main command-line interface for interacting with Metasploit;
+        \item \textbf{\texttt{msfvenom}}: used for creating custom payloads;
+        \item \textbf{Armitage}: a graphical front-end for Metasploit.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Modules}
+    Metasploit is built using modular components, including:
+    \begin{itemize}
+        \item \textbf{Exploits:} code that targets specific vulnerabilities;
+        \item \textbf{Payloads:} scripts delivered to the target after exploitation;
+        \item \textbf{Auxiliary:} tools for scanning, fuzzing, and enumeration;
+        \item \textbf{Encoders:} used to obfuscate payloads to bypass security measures;
+        \item \textbf{Post:} modules for maintaining access and collecting information.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Plugins \& Libraries}
+    Metasploit’s functionality can be extended by the use of:
+    \begin{itemize}
+        \item \textbf{Plugins:} enhance capabilities (e.g., database integration, automation);
+        \item \textbf{Libraries:} reusable code libraries that facilitate exploit and payload development.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item Metasploit is a powerful tool for penetration testing and vulnerability exploitation.
+        \item It is modular, flexible, and continually updated.
+        \item The framework is widely used by security professionals for ethical hacking.
+    \end{itemize}
+\end{frame}
+
 
 \begin{frame}{Finding Exploits}
     The first thing I did to see what kind of vulnerabilities might exist in the Metasploitable2 virtual machine was to run a \mintinline{shell}{nmap} on the virtual machine's IP address to see what ports are in use and what services are on those ports:
@@ -89,7 +158,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{./images/sambapayloads.png}
+    \includegraphics[width=0.8\textwidth]{./images/sambapayloads.png}
     \caption{Available payloads}
 \end{figure}
 
@@ -115,7 +184,43 @@ I then set the \texttt{RHOST} and ran the exploit.
 \end{frame}
 
 \begin{frame}{Exploit 3: \texttt{distcc}}
-    
+The final exploit that I tested was one that exploited a command injection vulnerability in the program \texttt{distcc}, a program which allows the distributed compilation of C/C++ programs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/distccsearch.png}
+    \caption{Output of \texttt{search distcc}}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Exploit 3: \texttt{distcc}}
+There are 14 payloads to choose from with this exploit, both that bind shells and that create reverse shells.
+I chose the \texttt{cmd/unix/bind\_perl} payload, as it binds a shell allowing arbitrary execution of commands.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/distccpayloads.png}
+    \caption{Output of \texttt{show payloads}}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Exploit 3: \texttt{distcc}}
+Once I had selected my payload, I set the \texttt{RHOST} variable and ran the exploit:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/distccexploit.png}
+    \caption{Running the exploit with the \texttt{bind\_perl} exploit}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Exploit 3: \texttt{distcc}}
+\begin{itemize}
+    \item   As can be seen from the output on the previous slide, this vulnerability establishes a connection to shell running on the target machine from which arbitrary commands can be executed.
+    \item   However, as can also be seen from the previous slide, the output of the \texttt{whoami} command is not \texttt{root}, but rather \texttt{daemon};
+            this user has fewer privileges than \texttt{root} and therefore is not as serious as the other two exploits.
+    \item   Nonetheless, the vulnerability is still rather serious, and is possible on any version of \texttt{distcc} if input is not sanitised properly.
+\end{itemize}
 \end{frame}
 
 \end{document}
