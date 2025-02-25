@@ -538,22 +538,40 @@ Scripts waiting on I/O waste no space because they get popped off the stack when
     \caption{ MEAN stack }
 \end{figure}
 
-\section{Virtualisation}
-KVM stuff
-\\\\
+\section{Proxmox Virtualisation Environment}
+\textbf{Proxmox} is an open-source hyper-converged virtualisation environment.
+It has a bare-metal installer, a web-based remote management GUI, a HA cluster stack, unified cluster storage, and a flexible network setup.
+It has commercial support packages available at a reasonable cost.
+Proxmox uses the following underlying technologies:
+\begin{itemize}
+    \item   KVM (type 1 hypervisor module for Linux).
+    \item   QEMU hardware emulation.
+    \item   LXC Linux containers.
+    \item   Ceph replicated storage.
+    \item   Corosync cluster engine.
+\end{itemize}
+
+\subsection{KVM}
+\textbf{Kernel-based Virtual Machine (KVM)} is a virtualisation infrastructure for the Linux kernel that turns it into a hypervisor.
+KVM requires a processor with hardware virtualisation extensions and a wide variety of guest operating systems work with KVM.
+It supports a paravirtual Ethernet card, a paravirtual disk I/O controller using VitrIO, a balloon device for adjusting guest memory usage, and a VGA graphics interface.
+
+\subsection{QEMU}
 \textbf{QEMU (Quick Emulator)} is an open-source hosted hypervisor that performs hardware virtualisation.
 It emulates CPUs through dynamic binary translation and provides a set of device models, enabling it to run a variety of unmodified guest operating systems.
 It uses KVM Hosting mode in Proxmox where QEMU deals with the setting-up and migration of KVM images.
 It is still involved in the emulation of hardware, but the execution of the guest is done by the KVM as requested by QEMU.
 It uses the KVM to run virtual machines at near-native speed (requiring hardware virtualisation extensions on x86 machines).
 When the target architecture is the same as the host architecture, QEMU can make use of KVM particular features, such as acceleration.
-\\\\
+
+\subsection{LXC}
 \textbf{LXC (Linux Containers)} is an operating-system-level virtualisation method for running multiple isolated Linux systems (containers) on a control host using a single Linux kernel.
 The Linux kernel provides the cgroups (control groups) functionality that allows limitation \& prioritisation of resources (CPU, memory, block I/O, network, etc.) without the need for starting any virtual machines.
 It provides namespace isolation functionality that allows complete isolation of an application's view of the operating environment, including process tress, networking, user IDs, and mounted file systems.
 LXC combines the kernel's cgroups and support for isolated namespaces to provide an isolated environment for applications.
 Docker can also use LXC as one of its execution drivers, enabling image management and providing deployment services.
-\\\\
+
+\subsection{Ceph}
 \textbf{Ceph} is a storage platform that implements object storage on a single distributed computer cluster, and provides interfaces for object-level, block-level, \& file-level storage.
 Ceph aims for completely distributed operation without a single point of failure, scalable to the exabyte level.
 Ceph's software libraries provide client applications with direct access to the Reliable Autonomic Distributed Object Store (RADOS) object-based storage system.
@@ -561,6 +579,153 @@ Ceph replicates data and makes it fault-tolerant, using commodity hardware and r
 As a result of its design, the system is both self-healing and self-managing, aiming to minimise administration time and other costs.
 When an application writes data to Ceph using a block device, Ceph automatically striped and replicates the data across the cluster.
 It works well with the KVM.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/ceph.png}
+    \caption{ Ceph architecture }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/cephinternal.png}
+    \caption{ Ceph internal organisation }
+\end{figure}
+
+\subsubsection{Ceph Network}
+To create a Ceph \verb|ring0| network, each node must be reachable on \verb|rin0|.
+The firewalls on each node will need to be checked to verify this.
+Proxmox distribute their own Ceph package as of version 5.1:
+\begin{itemize}
+    \item   \verb|pveceph install| will install the latest stable repositories \& packages -- must be run on each node individually.
+    \item   \verb|ceph init --network x.x.x.x/y| must be run on the first node only.
+    \item   \verb|ceph createmon| must be ran on each node.
+\end{itemize}
+
+\subsubsection{Ceph OSDs}
+We can add disks as \textbf{Object Storage Devices (OSD)s} on each node.
+The accurate network time is also very important to avoid ``clock skew''.
+The latest network time system daemon \verb|system.time?| is much better than \verb|ntpdate|.
+QEMU has a new time source driver which can be run in guests needing accurate time.
+\\\\
+\textbf{Pools} are individual storage blocks:
+\begin{itemize}
+    \item   \verb|size| is the number of replications (OSDs) per block.
+    \item   \verb|min-size| is the minimum number of OSDs (replications) each block must be on to allow read-write status.
+    \item   \verb|add-storage| option automatically adds the storage block to the hosts rather than having to manually copy the Ceph keys to each host to allocate the storage.
+\end{itemize}
+
+The client (Proxmox) interacts with one OSD only.
+This OSD then write to and confirms write on each OSD in the block before confirming write completion.
+Writes are actually made to the journal rather than the block level device for speed.
+This primary OSD manages all interactions with both the client and the replication OSDs.
+In case the primary manager is lost, a backup OSD will take over as primary.
+\\\\
+\textbf{Crush maps} define the actual storage blocks (these are very complicated so don't change the default settings!).
+As new OSDs are added, Ceph will attempt to re-allocate data across blocks to improve access \& availability.
+If an OSD gets removed, Ceph will rebalance data once the OSD is marked as OUT (300 seconds by default).
+Use \verb|ceph noout| to avoid rebalancing, e.g., for maintenance.
+
+\subsection{VM Installation}
+\subsubsection{Hard Drives}
+For hard drives, \verb|virtio-scsi| and \verb|scsi| are the best-performance options.
+On Windows VMs, this can be a chore as it is necessary to use a second boot CD to install \verb|virtio| drivers.
+No-cache is the best compromise option for local disks, as the write-back is the fastest, although it is unsafe on Ceph.
+
+\subsubsection{Memory}
+Fixed allocation with ballooning is the best way to allocate RAM.
+Over-provisioning is possible but dangerous as guests may crash if RAM is not available.
+Auto-allocation of memory means that required RAM may take up to 30 seconds to be available;
+it is best to leave swap enabled as this way, swap is a last option before crashing.
+
+\subsubsection{VM Backups}
+There are two types of backup types:
+\begin{itemize}
+    \item   \textbf{Snapshot} leaves the guest running and intercepts all write operations, writes them to the backup if the block is already backed up, then to the guest.
+            This slows the guest I/O down to the speed of the backup medium.
+    \item   \textbf{Stop} causes the guest to shutdown, then restarts and does backup before making the guest available.
+\end{itemize}
+
+\subsubsection{VM Migration}
+For guests on local storage, migration must done offline.
+Any storage used in the guest (e.g., ZFS) must be available on the target node.
+guests can be live moved to shared storage (e.g., NFS or Ceph) and then live migrated.
+
+\subsubsection{VM Cloning}
+\textbf{Linked clones} allow the fast spin-up of machines as only diverging blocks need to be written to the disk.
+Linked clones require file-level storage system, i.e., snapshot-able storage.
+The conversion of a VM to a template sets the image as read-only.
+
+\subsubsection{VM Imports}
+To perform \textbf{OVA import}, first unpack the OVA, for example onto a NAS.
+Then run \verb|qm help importovf| for details of the import command.
+To perform \textbf{disk import}, run \verb|qm help importdisk|.
+\verb|vmdebootstrap| can be used to build Debian disk images programmatically.
+\verb|qm help create| can be ran for details on creating VMs programmatically.
+\\\\
+Note that Windows disk images will not have any \verb|virtio| drivers installed by default:
+the hard disk types must be SATA, the network devices must be E1000.
+Spice-space spice-guest-tools can be used to install all \verb|virtio| drivers into Windows images.
+The Spice repository on GitHub has the source code for the installation tools.
+
+\subsubsection{User Authentication}
+\textbf{PAM authentication} can be used for per-machine authentication (may be possible to integrate radius).
+\textbf{Proxmox authentication server} replicates authentication across all nodes.
+
+\subsection{Proxmox Cluster}
+The \textbf{Proxmox VE cluster manager \texttt{pvecm}} is a tool to create a group of physical servers called a \textbf{cluster}.
+It uses the Corosync Cluster Enginer for reliable group communicaiton, and such clusters can consist of up to 32 physical nodes or more, dependent on the network latency (must be less than 2 milliseconds).
+\verb|pvecm| can be used to create a new cluster, join nodes to a cluster, leave the cluster, get status information, and do various other cluster-related tasks.
+\\\\
+Grouping Proxmox hosts into a cluster has the following advantages:
+\begin{itemize}
+    \item   Centralised, web-based management of a multi-master cluster: each node can do all management tasks.
+    \item   \verb|pmxcfs|: a database-driven file system for storing configuration files, replicated in real-time on all nodes using the corosync cluster engine.
+    \item   Migration of VMs \& containers between physical hosts.
+    \item   Fast deployment \& cluster-wide services like firewall and High Availability (HA).
+\end{itemize}
+
+\subsection{High Availability}
+Items managed under HA are referred to as \textit{resources}:
+\begin{itemize}
+    \item   The HA cluster is managed by \verb|pve-ha-crm.service|.
+    \item   The local HA resources are managed by \verb|pve-ha-lrm.service|.
+\end{itemize}
+
+The Guest HA is managed either through the dropdown on the guest window, or HA options on the Datacenter and this allows a guest VM to be automatically migrated or restarted on a different node if it is detected as down, e.g., because of node failure or maintenance.
+\\\\\
+Ensure that \verb|pve-ha-crm| and \verb|pve-ha-lrm| are both running under \verb|node -> services|.
+All migrations and other actions on HA resources are managed by the HA daemon.
+The task viewer only shows status of the request to HA daemon to carry out the task, not of the actual task.
+\\\\
+Migrations (generally, but particularly under HA conditions) may fail due to a number of causes, including:
+\begin{itemize}
+    \item   The guest has local attached storage which is not available on the target node.
+    \item   The guest has NUMA (Non-Uniform Memory Access) or other CPU settings not present on the target node.
+\end{itemize}
+
+Changing the HA manager state for a VM will cause the VM state to change.
+If any node hosting a HA resource loses corosync quorum:
+\begin{enumerate}
+    \item   The \verb|pve-ha-lrm.service| will no longer be able to write to the watchdog timer service.
+    \item   After 60 seconds, the node will reboot.
+    \item   After a further 60 seconds, the VM will be brought up on a different node.
+\end{enumerate}
+
+\subsubsection{HA Groups}
+Group members will prefer selected nodes if available:
+\begin{itemize}
+    \item   If \verb|restricted| is selected, members will only run on selected nodes.
+    \item   Guests will be stopped by the HA manager if the node(s) become unavailable.
+    \item   If \verb|nofailback| is not selected, guests will try to migrate back to a preferred node once it becomes available again.
+\end{itemize}
+
+\subsection{Performance Benchmarking}
+\begin{itemize}
+    \item   \verb|iperf| to test network throughput.
+    \item   \verb|systat| to monitor system statistics.
+    \item   \verb|iostat| to test I/O throughput.
+\end{itemize}
 
 
 
