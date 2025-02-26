@@ -649,80 +649,10 @@ RTP services include:
     \item   Payload type identification: determination of media encoding.
     \item   Synchronisation source identification: assigned to each distinct media source (such as a microphone or a camera).
             Enables synchronisation of multiple streams coming from the same source (e.g., lip-syncing audio \& video).
-    \item   Sequence numbering: a counter is used which is incremented on each RTP packet send and is used to detect lost packets.
-    \item   Time-stamping: time monitoring, synchronisation, jitter calculation.
-    \item   RTP issues: no QoS guarantees, no guarantee of packet delivery.
 \end{itemize}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{./images/RTPpheader.png}
-    \caption{ RTP header}
-\end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{./images/RTPdatadelirvery.png}
-    \caption{ RTP data delivery}
-\end{figure}
 
-\textbf{RTP Control Protocol (RTCP)} is a companion protocol to RTP that is used periodically to transmit control packets to participants in a streaming multimedia session.
-It gathers statistics on the media connection, including bytes sent, packets sent, lost packets, jitter, feedback, \& round-trip delay. 
-It provides feedback on the quality of the service being provided by RTP but does not actually transport any data.
-The application may use this information to increase the quality of service, perhaps by limiting flow or using a different codec.
-
-\subsubsection{Mouth-to-Ear M2E Delay}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{./images/m2e.png}
-    \caption{ M2E delay }
-\end{figure}
-
-M2E delay consists of:
-\begin{itemize}
-    \item   Sender:
-            \begin{itemize}
-                \item   Packetisation delay.
-                \item   Encoding delays.
-                \item   OS/Application/Driver software.
-                \item   MAC delays.
-            \end{itemize}
-
-    \item   Network:
-            \begin{itemize}
-                \item   Propagation delay.
-                \item   Queuing delays.
-                \item   Processing/serialisation delays in routers.
-            \end{itemize}
-
-    \item   Receiver:
-            \begin{itemize}
-                \item   NIC delays.
-                \item   OS/Application/Driver software.
-                \item   Jitter buffer delays.
-                \item   Decoding delays.
-            \end{itemize}
-\end{itemize}
-
-VOIP QoS strategies include:
-\begin{itemize}
-    \item   Sender-based:
-            \begin{itemize}
-                \item RTCP feedback with adaptive codeces: if loss/delay excessive, switch to lower-bandwidth code or implement Forward Error Correction (FEC) strategy.
-            \end{itemize}
-
-    \item   Network-based:
-            \begin{itemize}
-                \item   Prioritising delay-sensitive traffic flows.
-            \end{itemize}
-
-    \item   Receiver-based:
-            \begin{itemize}
-                \item   Buffering strategies: the human ear is not sensitive to short-term variations;
-                    the buffer ``absorbs'' variation in network queueing delays and the voice can be reconstructed using RTP timestamps, but this adds to overall M2E delay.
-                \item   Packet Loss Concealment (PLC) and FEC.
-            \end{itemize}
-\end{itemize}
 
 
 
