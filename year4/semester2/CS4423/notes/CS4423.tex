@@ -808,6 +808,100 @@ which, in turn, in matrix language is:
 for the vector $c^E = (c_i^E)$ which then is an eigenvector of $A$.
 So $c^E$ is an eigenvector of $A$ (but which one?).
 
+\subsubsection{How to find $c^E$ and/or $\lambda$}
+If the network is small, one could use the usual method (although it is almost never a good idea).
+\begin{enumerate}
+    \item   Find the \textit{characteristic polynomial} $p_A(x)$ of $A$ as \textit{determinant} of the matrix $xI -A$, where $I$ is the $n \times n$ identity matrix.
+    \item   Find the roots $\lambda$ of $p_A(x)$ (i.e., scalars $\lambda$ such that $p_A(\lambda) = 0$).
+    \item   Find a \textit{non-trivial solution} of the linear system $(\lambda I - A) c = 0$ (where $0$ stands for an all-$0$ column vector and $c = (c_1, \dots, c_n)$ is a column of \textit{unknowns}).
+\end{enumerate}
+
+For large networks, there is a much better algorithm, such as the \textbf{Power method}, which we will look at later.
+
+\subsubsection{Perron-Frobenius Theory}
+Presently, we'll lean that the adjacency matrix always has one eigenvalue which is greater than all the others.
+\\\\
+A matrix $A$ is called \textbf{reducible} if, for some simultaneous permutations of its rows and columns, it has the block form:
+\[
+    A =
+    \begin{pmatrix}
+        A_{1,1} & A_{1,2} \\
+        o & A_{2,2}
+    \end{pmatrix}
+\]
+
+If $A$ is not reducible, we say that it is \textbf{irreducible}.
+The adjacency matrix of a simple graph $G$ is \textbf{irreducible} if and only if $G$ is connected.
+\\\\
+A matrix $A=(a_{i,j})$ is \textbf{non-negative} is $a_{i,j \geq 0}$ for all $i$, $j$.
+For simplicity, we usually write $A \geq 0$.
+It is important to node that adjacency matrices are examples of non-negative matrices.
+There are similar concepts of, say, positive matrices, negative matrices, etc.
+Of particular importance are \textbf{positive vectors}:  $v = (v_i)$ is positive for if $v_i > 0$ for all $i$.
+We write $v \geq 0$.
+\\\\
+\textbf{Theorem:} suppose that $A$ is a square, non-negative, \textbf{irreducible} matrix.
+Then:
+\begin{itemize}
+    \item   $A$ has a real eigenvalue $\lambda = \rho(A)$ and $\lambda > |\lambda'|$ for any other eigenvalue $\lambda'$ of $A$.
+            $\lambda$ is called the \textbf{Perron root} of $A$.
+
+    \item   $\lambda$ is a simple root of the characteristic polynomial of $A$ (so has just one corresponding eigenvector).
+
+    \item   There is an eigenvector, $v$, associated with $\lambda$ such that $v >0$.
+\end{itemize}
+
+For us, this means:
+\begin{itemize}
+    \item   The adjacency matrix of a connected graph has an eigenvalue that is positive and greater in magnitude than any other.
+    \item   It has an eigenvector $v$ that is positive.
+    \item   $v_i$ is the eigenvector centrality of the node $i$.
+\end{itemize}
+
+
+\subsection{Closeness Centrality}
+A node $x$ in a network can be regarded as being central if it is \textbf{close} to (many) other nodes, as it can quickly interact with them.
+Recalling that $d(i,j)$ is the distance between nodes $i$ and $j$ (i.e., the length of the shortest path between them).
+Then, we can use $\frac{1}{d(i,j)}$ as a measure of ``closeness'';
+in a simple, \textit{connected} graph $G=(X,E)$ of order $n$, the \textbf{closeness centrality}, $c^C_i$ of node $i$ is defined as:
+\[
+    c_i^C = \frac{1}{\sum_{j \in X} d(i,j)} = \frac{1}{s(i)}
+\]
+
+where $s(i)$ is the \textbf{distance sum} for node $i$.
+As is usually the case, there is a \textbf{normalised} version of this measure;
+the \textbf{normalised closeness centrality} is defined as:
+\[
+    C_i^C = (n-1)c_i^C = \frac{n-1}{\sum_{j \in X} d(i,j)} = \frac{n-1}{s(i)}
+\]
+
+Note that $0 \leq C_i^C \leq 1$.
+\\\\
+The \textbf{distance matrix} of a graph, $G$, of order $n$ is the $n \times n$ matrix $D=(d_{i,j})$ such that:
+\[
+    d_{i,j} = d(i,j)
+\]
+
+We'll return to how to compute $D$ later, but for now we note:
+\begin{itemize}
+    \item   $s(i)$ is the sum of row $i$ of $D$.
+    \item   If $s$ is the vector of distance sums, then $s = De$ where $e = (1,1, \dots, 1)^T$.
+\end{itemize}
+
+\subsection{Betweenness Centrality}
+In a simple, connected graph $G$, the \textbf{betweenness centrality} $c_i^B$ of node $i$ is defined as:
+\[
+    c_i^B = \sum_j \sum_k \frac{n_i(j,k)}{n(j,k)}, \quad j \neq k \neq 1
+\]
+
+where $n(j,k)$ denotes the \textit{number} of shortest paths from node $j$ to node $k$, where $n_i(j,k)$ denotes the number of those shortest paths \textit{passing through} node $i$.
+\\\\
+In a simple, connected graph $G$, the \textbf{normalised betweenness centrality} $c_i^B$ of node $i$ is defined as:
+\[
+    C_i^B = \frac{c_i^B}{(n-1)(n-2)}
+\]
+
+
 
 
 
