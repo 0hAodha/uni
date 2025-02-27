@@ -724,7 +724,146 @@ VOIP QoS strategies include:
             \end{itemize}
 \end{itemize}
 
+\subsection{Packet Loss Strategies}
+The use of UDP limits delays but can lead to packet loss;
+to mitigate this, compensation strategies can be employed at the sender or receiver:
+\begin{itemize}
+    \item   Forward Error Correction (FEC): a form of information redundancy.
+    \item   Packet Loss Concealment (PLC): silence (simplest), repetition of last packet, or interpolation.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/jitterbufferstrat.png}
+    \caption{ Receiver-based packet loss strategies: jitter buffer strategies }
+\end{figure}
+
+The buffer playout delay adds to the M2E delay.
+In the above figure, packet 8 arrives too late for the playout; we could drop the packet, or increase the buffer size in response to increasing delays.
+With a fixed buffer, the limitations are that if it is too large, it extends overall delay, and if it is too small, there will be additional late packet losses due to late arrival.
+An adaptive buffer size can adapt to network conditions:
+\begin{itemize}
+    \item   \textbf{Per Talkspurt (PT):} operates by elongating/shortening inter talkspurt silence periods; less noticeable.
+    \item   \textbf{Per Packet Scaling (PPS):} speed up/slow down speech, like in Skype or Zoom.
+\end{itemize}
+
+\subsubsection{Network-Based Strategies}
+In a LAN environment: switched LANs are typically QoS enabled, and fast ethernet links are rarely congested.
+In a WAN environment, we could increase bandwidth (which is costly and mostly a temporary solution) or employ a reservation policy, traffic categorisation, \& prioritisation which requires an admission control policy.
+
+\subsection{Cloud Gaming}
+In \textbf{cloud gaming}, the game is installed and executed on a powerful remote server located in the cloud.
+The game rendering (processing graphics, physics, \& game logic) is done on this server.
+Once the game is rendered on the server, the video frames \& audio are compressed and streamed to the player's device via the internet.
+The player's inputs, such as controller buttons, mouse movements, or keyboard presses are sent back to the could server over the Internet in real-time.
+It is commonly used in Massively Multiplayer Online Games (MMOG), and the server must deal with multiple players.
+Cloud gaming solves several issues of the traditional approach:
+\begin{itemize}
+    \item   Tedious installation \& patching process.
+    \item   Extensive hardware \& GPUs.
+\end{itemize}
+
+It is an RTC application, so we need to minimise delays (lag) and need time synchronisation to measure delays.
+Simultaneity is also required: all players need to see the same game representation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/cloudgaming.png}
+    \caption{Client/server architecture of GamingAnywhere}
+\end{figure}
+
+\subsubsection{Response Delay}
+\begin{itemize}
+    \item   \textbf{Response Delay (RD)} is the time difference between a user submitting a command and the corresponding in-game action appearing on the screen.
+    \item   \textbf{Processing Delay (PD)} is the time required to receive / process a player's command and encode / transmit the corresponding frame.
+
+    \item   \textbf{Playout Delay (OD)} is the time required for the client to received, decode, and render a frame on the display.
+
+    \item   \textbf{Network Delay (ND)} is the round-trip delay.
+\end{itemize}
+
+\begin{align*}
+    \text{Response Delay (RD)} = \text{PD} + \text{OD} + \text{ND}
+\end{align*}
+
+\subsection{WebRTC}
+\textbf{Web Real-Time Communications (WebRTC)} is a free, open-source project that provides web browsers \& mobile applications with real-time communication (RTC) via simple APIs.
+It allows audio \& video communication to work inside web pages via direct peer-to-peer communication using JavaScript \& HTML, that is, eliminating the need to install plugins or download native apps.
+It uses DTLS for encryption \& SRTP for secure media streams.
+It works on major web browsers (Chrome, Firefox, Safari, Edge) and mobile platforms.
+Use cases include the web versions of Google Meet, Discord, Facebook Messenger, peer-to-peer file sharing, etc.
+
+\subsubsection{WebRTC Working Model}
+\begin{enumerate}
+    \item   \textbf{Media capture:} accesses camera \& microphone using browser APIs.
+    \item   \textbf{Connection management:} exchanges session control messages (via WebSockets, SIP, or custom methods) to set up connections.
+    \item   \textbf{Data transmission:} WebRTC uses the Interactive Connectivity Establishment (ICE) techniques to overcome the complexities of real-world networking like NAT:
+            \begin{itemize}
+                \item   STUN: finds public IP addresses.
+                \item   TURN: relays media if direct connections fail.
+            \end{itemize}
+
+        RTP/SRTP streams media, ensuring low-latency delivery.
+
+    \item   \textbf{Peer discovery:} in P2P communication, the peers need to be able to identify or locate each other over the wire.
+            Peer discovery mechanisms are not defined by WebRTC, although the process can be as simple as sharing a URL that peers can use to communicate.
+
+    \item   \textbf{ICE techniques:} ICE will first try to make a connection using the host address obtained from a device's operating system.
+            If the network is unsuccessful, ICE will obtain an external address using the STUN server.
+            If that fails, the traffic is routed via a TURN relay server.
+\end{enumerate}
+
+\textbf{Session Traversal Utilities for NAT (STUN)} is a protocol that is used to discover public addresses that determines any restrictions in your router that would prevent a direct connection to a peer.
+Clients receive their public addresses as requested from STUN servers.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/stun.png}
+    \caption{STUN}
+\end{figure}
+
+\textbf{Traversal Using Relays around NAT (TURN)} bypasses the symmetric NAT restriction by opening a connection with a TURN server and relaying all information through that server.
+A connection is required with a TURN server which will tell all the peers to send packets to the server which will then be forwarded to the requester.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/turn.png}
+    \caption{TURN}
+\end{figure}
+
+\subsection{DASH}
+\textbf{DASH} stands for Dynamic Adaptive Streaming over HTTP:
+\begin{itemize}
+    \item   \textbf{Dynamic:}  reacts to changing scenarios.
+    \item   \textbf{Adaptive:} has media represented in different it rates / codecs.
+    \item   \textbf{Streaming:} not strictly real-time communication, but timelines are still important.
+    \item   \textbf{HTTP:} web model, HTTP good for firewalls etc.
+\end{itemize}
+
+The DASH working model is as follows:
+\begin{itemize}
+    \item   \textbf{Encoding \& Segmentation:} the original video/audio content is divided into small segments (usually 2-10 seconds each).
+            Each segment is encoded at multiple bitrates \& resolutions for adaptability.
+            A manifest file is created, containing metadata about segments, their URLs, codecs, \& timing.
+
+    \item   \textbf{Delivery:} segments and the MPD file are uploaded to HTTP servers or CDNs.
+            The encoded video segments are pushed out to client devices over the Internet.
+
+    \item   \textbf{Playback:} the client downloads the MPD file to understand the available content \& quality options.
+        It chooses appropriate ``representation'' based on network conditions, device capabilities, \& user preferences, decodes the chunks, and plays back the video.
+
+    \item   \textbf{Quality adjustment:} the player continuously downloads \& plays segments, adjusting the quality as network conditions change.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/dash.png}
+    \caption{DASH}
+\end{figure}
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/dashdatamodel.png}
+    \caption{DASH data model}
+\end{figure}
 
 \end{document}
