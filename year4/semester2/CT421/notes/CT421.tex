@@ -535,7 +535,206 @@ This can be represented as a \textbf{state transformation function}:
 For the time being, we will make the simplifying assumption that an agent can make one of two actions: to co-operate $C$ or to defect $D$.
 We say a certain move is \textbf{rational} if the outcomes that arise through the action are better than all outcomes that arise from the alternative action.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/rationalchoice.png}
+    \caption{For player $j$, $D$ is the rational choice}
+\end{figure}
 
+\subsection{Dominant Strategy}
+Given a particular strategy $s$ for agent $i$, there will be a number of possible outcomes.
+We say $s_1$ dominates $s_2$ if every outcome possible by agent $i$ playing $s_1$ is preferred over every possible outcome by agent $i$ playing $s_2$.
+A rational agent will never play a dominated strategy.
+However, there is not usually a unique undominated strategy.
+
+\subsection{Nash Equilibrium}
+Two strategies $s_1$ and $s_2$ are in \textbf{Nash equilibrium} if:
+\begin{itemize}
+    \item   Assuming agent $i$ plays $s_1$, agent $j$ can do no better than play $s_2$; and
+    \item   Assuming agent $j$ plays $s_2$, agent $i$ can do no better than play $s_1$.
+\end{itemize}
+
+In Nash equilibrium, neither agent has any incentive to deviate from their strategy.
+Not all possible interactions have a Nash equilibrium, and some interactoins can have several Nash equilibria.
+
+\subsection{Prisoner's Dilemma}
+The \textbf{Prisoner's Dilemma} is usually expressed in terms of pay-offs (or rewards) for co-operating or defecting:
+
+\[
+\begin{array}{c c|c c}
+  & & \text{Player } j & \\
+  & & \text{C} & \text{D} \\
+\hline
+  \text{Player } i & \text{C} & (3, 3) & (0, 5) \\
+                  & \text{D} & (5, 0) & (1, 1)
+\end{array}
+\]
+
+\begin{itemize}
+    \item   If both co-operate, they each get a reward of 3.
+    \item   If both defect, they each get a reward of 1.
+    \item   If one co-operates and the other defects, the com-operators gets 0 (the sucker's payoff) and the other gets 5.
+\end{itemize}
+
+The individually rational action is to defect:
+it guarantees a payoff of no worse than 1, whereas co-operating guarantees a payoff of no worse than 0.
+So, defection is the best response to all strategies;
+however, common sense indicates that this is not the best response.
+\\\\
+The prisoner's dilemma occurs in many domains and is suitable for modelling large classes of multi-agent interactions.
+There have been many real-world scenarios that are implicitly prisoner's dilemmas (or variations):
+\begin{itemize}
+    \item   Arms race;
+    \item   Environmental issues;
+    \item   Free-rider systems;
+    \item   Warfare;
+    \item   Behaviour in many biological systems --- bats, guppie fish, etc;
+    \item   Competition between nodes in a distributed computer system;
+    \item   Modelling competition and collaboration between information providers;
+    \item   Sports.
+\end{itemize}
+
+Variations on the prisoner's dilemma include:
+\begin{itemize}
+    \item   \textbf{$N$-player dilemma:} for example, the voter's paradox, where it is true that a particular endeavour would return a benefit to all members where each individual would receive rewards;
+            it is also true that any member would receive an even greater reward by contributing nothing.
+            Elections, environment actions, and the tragedy of the commons are all examples of this phenomenon.
+
+    \item   \textbf{Spatial organisations:} where agents are placed in some 2-dimensional space and can only interact with neighbours.
+
+    \item   \textbf{Partial co-operation:} acts are no longer co-operative or non-co-operative, but can be in some range.
+            If we consider extending the classical IPD to this domain, we can define landscapes using pay-off equations.
+
+    \item   \textbf{Noise:} problems arise if we introduce any degree of noise, which will lead co-operations to be interpreted as defections, etc.
+            Consider two TFTs playing witha  degree of noise.
+\end{itemize}
+
+Summay so far:
+\begin{itemize}
+    \item   We need a means to organise \& co-ordinate agents.
+            There are underlying problems here with respect to co-operation.
+
+    \item   Game theory \& extensions provides a tool to reason about and to develop multi-agent systems.
+
+    \item   We assume agents have a rational ordering of possible outcomes and a set of actions they may choose to bring about those outcomes.
+
+    \item   We have limited the types of interactions to very simple cases.
+\end{itemize}
+
+One extension is the \textbf{ultimatum game}.
+We are no longer just discussing outcomes for simple choices:
+\begin{itemize}
+    \item   Two players $i$ and $j$.
+    \item   The goal is to distribute some resource, e.g., €100.
+    \item   Player $i$ picks a number $x$, in a range (0-100).
+    \item   Player $j$ must accept or reject the offer.
+    \item   If Player $j$ rejects: both get 0.
+    \item   If Player $j$ accepts: Player $i$ gets $x$ and Player $j$ gets $100-x$.
+\end{itemize}
+
+This allows us to reason about more complex scenarios.
+Many extensions are available and have been researched.
+If we wish to reason about two or more agents/systems agreeing on value for some exchange (information, service), we can look to auction theory.
+To reason about more complex scenarios, negotiation \& argumentation theory has been adopted.
+
+\subsection{Auction Theory}
+\textbf{Auction theory} can be used as a method to allow agents to arrive at an agreement regarding events \& actions when agents are self-interested.
+In some cases, no agreement is possible at all.
+However, in most scenarios, there is the potential to arrive at a mutually beneficial agreement.
+There are several approaches that have been adopted to do this;
+all can bee seen as a form of negotiation or argumentation by the agents.
+Negotiation or argumentation is governed by some protocol or mechanism:
+this protocol defines how the agents are to interact, i.e., the actual rules of encounter.
+Questions that arise include:
+\begin{itemize}
+    \item   How to design a protocol such that certain properties exist?
+    \item   How to design strategies for agents to use a given set of protocols?
+\end{itemize}
+
+Desired features from protocols include: guaranteed success, simplicity, maximising social utility, pareto-efficiency, \& individual rationality.
+\textbf{Auctions} represent a class of useful protocols, and are used in many domains.
+An auction takes place between an agent (auctioneer) and a set of other agents (bidders).
+The goal is to allocate the goods to one of the bidders.
+Usually, an auctioneer attempt to maximise the price;
+the bidders desire to minimise the price.
+We can categorise auctions according to a range of features:
+\begin{itemize}
+    \item   Bids may be:
+            \begin{itemize}
+                \item   Open-cry;
+                \item   Sealed bid.
+            \end{itemize}
+
+    \item   Bidding may be:
+            \begin{itemize}
+                \item   One shot;
+                \item   Ascending;
+                \item   Descending.
+            \end{itemize}
+\end{itemize}
+
+Selling goods by auction is more flexible than setting a fixed price and less time-consuming than explicit negotiation (haggling).
+In many domains, the value of an item may vary enough to preclude direct \& absolute pricing.
+It is a pure form of market;
+it is efficient in that auctions usually ensure goods are allocated to those who value them most.
+The price is set, not by the sellers, but by the buyers.
+No one auction protocol is the best;
+some are preferred by sellers, others by buyers.
+Some auctions attempt to prevent cheating, or at least decrease the incentive to cheat;
+others provide several means to cheat.
+People tend to bid in auctions for two reasons:
+\begin{itemize}
+    \item   They wish to acquire the goods (bases bid on private evaluation).
+    \item   They wish to acquire the goods to re-sell (bases bid on private evaluation and estimates on future valuations).
+\end{itemize}
+
+\subsubsection{English Auction}
+In an \textbf{English auction}, the auctioneer begins with the lowest acceptable price (reserve), and proceeds to obtain successively higher bids from bidders until no-one will increase the bid.
+It is effectively first-price, open-cry, \& ascending.
+The dominant strategy is to successively bid a small amount more than the current highest id until it reaches their valuation, then withdraw.
+Potential problems with English auctions include:
+\begin{itemize}
+    \item   Rings;
+    \item   Shills in the bidders;
+    \item   Winner's curse.
+\end{itemize}
+
+In some English auctions, the reserve price is kept secret to attempt to prevent rings from forming.
+
+\subsubsection{Dutch Auction}
+In a \textbf{Dutch auction}, bidding starts at an artificially high price.
+Lower prices are offered, in descending order, until a bidder equals to the current price.
+Goods are then sold to the bidder for that price
+Dutch auctions are descending, open-cry auctions.
+From a seller's perspective, the key to a successful auction is the effect of competition on the bidders.
+In an English auction, a winner may pay well under their valuation and thus the seller loses out;
+this is not the case in a Dutch auction.
+
+\subsubsection{First-Price, Sealed Bid}
+\textbf{First-price, sealed bid} auctions are usually one-shot auctions.
+Each bidders submits a sealed bid.
+The goods are sold to the highest bidders.
+Best strategy is to bid to true valuation.
+Interesting variations exist if there are a number of goods to be sold and a number of rounds.
+
+\subsubsection{Vickrey Auction}
+A \textbf{Vickrey auction} is a sealed-bid, second-price auction.
+The price paid by the winner is that price offered by the second-placed bidder.
+In this type of auction, contrary to initial intuition, sellers make as much, if not more than the first-price auctoins.
+In reality, bidders are not afraid to bid high, knowing that they will have to pay the second price;
+bidders tend to be more competitive.
+\\\\
+Other auction types exist also: reverse auctions, double auctions, haphazard (whisper auction, handshake auction), etc.
+We can use auctions as a means to allow agents to agree on a price for buying goods or services.
+Depending on the type of auction chosen, we will favour buyers or sellers.
+We sill have some problems though:
+\begin{itemize}
+    \item   Are auctions the best way?
+    \item   What happens following an auction, if upon receiving goods, one doesn't pay?
+    \item   What happens following an auction, if upon paying, one realise that the goods are not as expected?
+    \item   Is it possible to prevent shills, rings, \& other forms of manipulation?
+    \item   In auctions, agents agree on a price; can we deal with more dimensions of negotiation?
+\end{itemize}
 
 
 \end{document}
