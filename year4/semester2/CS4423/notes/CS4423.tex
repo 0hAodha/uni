@@ -901,6 +901,56 @@ In a simple, connected graph $G$, the \textbf{normalised betweenness centrality}
     C_i^B = \frac{c_i^B}{(n-1)(n-2)}
 \]
 
+\section{Random Graphs}
+A \textbf{random graph} is mathematical model of a family of networks, where certain parameters (like the number of nodes \& edges) have fixed values, but other aspects (like the actual edges) are randomly assigned.
+Although a random graph is not a specific object, many of its properties can be described precisely in the form of expected values or probability distributions.
+
+\subsection{Random Samples}
+Suppose our network $G = (X,E)$ has $|X| = n$ nodes.
+Then, we know that the greatest number of edges it can have is:
+\begin{align*}
+    \binom{n}{2} = \frac{n!}{(n-2)! 2!} = \frac{n(n-1)}{2}
+\end{align*}
+
+Our goal is to randomly select edges on the vertex set $X$, that is, pick random elements from the set $\binom{X}{2}$ of pairs of nodes.
+So, we need a procedure for selecting $m$ from $N$ objects randomly, in such a way that each of the $\binom{N}{m}$ subsets of the $N$ objects is an equally likely outcome.
+We first discuss sampling $m$ values in the range $\{0,1, \dots, N-1 \}$.
+\begin{enumerate}
+    \item   Suppose that we choose a natural number $N$ and a real number $p \in [0,1]$.
+    \item   Then, iterate over each element of the set $\{0,1 \dots, N-1\}$.
+    \item   For each, we pick a random number $x \in [0,1]$.
+    \item   If $x < p$, we keep that number.
+            Otherwise, remove it from the set.
+\end{enumerate}
+
+When we are done, how many elements do we expect in the set if $p = \frac{m}{N}$ for some chosen $m$?
+And what is the likelihood of there being, say, $K$ elements in the set?
+Since we are creating random samples, where the size of each is a random number, $k$, we expect that $E[k] = Np = m$; this is a \textbf{binomial distribution}:
+\begin{itemize}
+    \item   The probability of a specific subset of size $K$ to be chosen is $p^k(1-p)^{N-k}$.
+    \item   There are $\binom{N}{k}$ subsets of size $k$, so the probability $P(k)$ of the sample to have size $k$ is $P(k) = \binom{N}{k}p^k (1-p)^{N-k}$.
+\end{itemize}
+
+We use the following facts:
+\begin{itemize}
+    \item   $j\binom{N}{j}p^i = Np \binom{N-1}{j-1}p^{i-1}$.
+    \item   $(1-p)^{N-j} = (1-p)^{(N-1) - (j-1)}$.
+    \item   $(p + (1 -p))^r = 1$ for all $r$.
+\end{itemize}
+
+The expected value is:
+
+\begin{align*}
+    E[k]    =& \sum^N_{j=1}jP(j) \quad &\text{ weighted average of } j \\
+            =& \sum^N_{j=0} j \binom{N}{j} p^j (1-p)^{N-j} \quad \text{ formula for } P(j) \\
+            = & Np \sum^{N-1}_{l=0} \binom{N-1}{l} p^l (1-p)^{(N-1) - l} = Np \quad \text{ substituting } l=k-1
+\end{align*}
+
+\subsection{Erd\"os-Rényi Models}
+Let $n \geq 1$, let $N = \binom{n}{2}$ and let $0 \leq m \leq N$.
+The model $G_{ER}(n,m)$ consists of the ensemble of graphs $G$ on the $n$ nodes $X = \{0,1, \dots, n-1\}$, and $M$ randomly selected edges, chosen uniformly from the $N = \binom{n}{2}$  possible edges.
+Equivalently, one can choose uniformly at random one network in the set $G(n,m)$ of \textit{all} networks on a given set of $n$ nodes with exactly $m$ edges.
+
 
 
 
