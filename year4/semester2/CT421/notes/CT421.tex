@@ -736,5 +736,148 @@ We sill have some problems though:
     \item   In auctions, agents agree on a price; can we deal with more dimensions of negotiation?
 \end{itemize}
 
+\section{Automated Negotiation}
+\textbf{Negotiation} is a means for a group to arrive at an agreement.
+It is a process of joint decision-making where parties with different preferences seek to reach a mutually acceptable solution.
+It is a fundamental mechanism in multi-agent systems \& human society.
+Negotiation research deals with three topics:
+\begin{itemize}
+    \item   Negotiation protocols;
+    \item   Negotiation objects; \&
+    \item   Agents' decision-making models.
+\end{itemize}
+
+\subsection{Negotiation Protocols}
+\textbf{Negotiation protocols} are a set of rules that govern the interaction:
+\begin{itemize}
+    \item   Includes the permitted type of participants;
+    \item   Negotiation states;
+    \item   Events that change states;
+    \item   Actions of participants;
+    \item   Rules for agreement formation; \&
+    \item   Termination conditions.
+\end{itemize}
+
+\subsection{Negotiation Objects}
+\textbf{Negotiation objects} consist of a range of issues over which agreement must be reached.
+Related issues include the type of operations on agreements and altering the structure of the negotiation. 
+
+\subsection{Agents' Decision-Making Models}
+The \textbf{agents' decision-making models} are influenced by protocol, the nature of the negotiation objects, \& the range of operations.
+The relative importance of the components varies depending on the domain.
+
+\subsection{Domain Variation in Negotiation}
+In some domains, the negotiation protocol is the dominant concern.
+For example, in some auction settings, the best strategy for an agent is to bid to their true evaluation --- hence no strategic analysis is really required.
+In other domains, the converse is true;
+given the wide range of possibilities, there is no best technique for automated negotiation.
+
+\subsection{Negotiation as Distributed Search}
+Negotiation can be viewed as a \textbf{distributed search} through a space of potential agreements;
+the dimensionality \& topology of this space is determined by the structure of the negotiation object.
+One could consider each attribute of the negotiation object to have a separate dimension associated with it.
+As dimensions are added (or removed), the number of points of agreement may increase (or decrease).
+Similarly, if an agent changes one of the values, it is moving from one point in the agreement space to another.
+\\\\
+In a negotiation, participants are the active components that determine the direction of the search.
+Initially, each agent will have a portion of the space in which it will be willing to make an agreement.
+Also, agents will have some means to rate the points in the space.
+Negotiation involves the agents suggesting points or spaces.
+
+\subsection{Minimal Negotiation Capabilities}
+The \textbf{minimal negotiation capabilities} are:
+\begin{itemize}
+    \item   To propose some point of space as being acceptable; \& 
+    \item   To respond to such a proposal by indicating whether or not it is acceptable.
+\end{itemize}
+
+A simple setting is a Dutch auction:
+\begin{itemize}
+    \item   One agent (the auctioneer) calls out prices.
+    \item   If there is no signal of acceptance by an agent, then the auctioneer makes a new offer which it believes will be more acceptable.
+    \item   The process repeats.
+\end{itemize}
+
+If agents can only accept or reject offers, the negotiation will be very time-consuming \& inefficient.
+The proposer is effectively picking points in the agreement space based on what it perceives \& hopes to stumble upon correct point. 
+For negotiation to be more efficient, the recipient needs to offer feedback.
+
+\subsection{Feedback in Negotiation}
+\textbf{Feedback} can be a critique, or a counter-proposal.
+A \textbf{critique} provides two forms of feedback:
+it suggests constraints on issues, and indicates acceptation or rejection of particular negotiation issues.
+The more information placed in the critique, the easier it is for the original agent to determine the boundaries of the agreement space.
+\\\\
+A \textbf{counter-proposal} is a proposal that is more favourable to the sender, made in response to a previous proposal.
+It can suggest amendments or additions, provides implicit information about preferences, and can significantly speed up the negotiation process.
+
+\subsection{Limitations of Simple Proposals}
+Proposals, critiques, \& counter-proposals are mere statements of what the agents want; hence, the scope is confined.
+Agents can't justify their negotiation stance or persuade one another to change the negotiation stance.
+This leads to the idea of \textbf{argumentation-based negotiation}: allow agents to offer more information than available proposals, critiques, \& counter-proposals.
+
+\subsection{Approaches to Negotiation}
+Approaches to reasoning in a negotiation setting can be loosely categorised as game-theoretic, heuristic, or argumentation-based.
+
+\subsubsection{Game-Theoretic Approach}
+The \textbf{game-theoretic approach} can be applied in two manners:
+\begin{itemize}
+    \item   Designing appropriate protocols that will govern agent's interactions; \&
+    \item   Design of a particular agent's strategy.
+\end{itemize}
+
+Properties of the game-theoretic approach include:
+\begin{itemize}
+    \item   We usually assume that a rational agent will choose the best strategy;
+    \item   Finding the best strategy can be computationally intractable; \&
+    \item   Disadvantages include that it may be difficult to characterise agent's preferences with respect to all possible outcomes.
+\end{itemize}
+
+\subsubsection{Heuristic Approach}
+The \textbf{heuristic approach} seeks to search the negotiation space in a non-exhaustive fashion.
+It produces good solutions rather than optimal solutions.
+Disadvantages of the heuristic approach include:
+\begin{itemize}
+    \item   Sub-optimality: it adopts an approximate notion of rationality and does not fully examine the negotiation space;
+    \item   Models need extensive analysis true simulation; \&
+    \item   It is usually difficult to predict behaviour.
+\end{itemize}
+
+\subsubsection{Argumentation-Based Approach}
+In the \textbf{argumentation-based approach}, agents aim to persuade or change the opponent's ratings over the agreement space.
+Additional information is provided in addition to proposals, etc., usually taking the form of:
+\begin{itemize}
+    \item   \textbf{Threats:} ``if you don't accept, I'll have to...'';
+    \item   \textbf{Rewards:} ``if you accept this offer, in the future I'll...''; \&
+    \item   \textbf{Appeals:} ``this is standard practice in our industry...''.
+\end{itemize}
+
+\subsection{Extended Topics in Negotiation}
+\subsubsection{Learning in Negotiation}
+Agents can adapt strategies based on past interactions.
+Types of learning:
+\begin{itemize}
+    \item   Learning opponent's preferences;
+    \item   Learning effective negotiation strategies; \&
+    \item   Learning from past negotiation outcomes.
+\end{itemize}
+
+\subsubsection{Trust \& Reputation}
+\textbf{Trust \& reputation} are critical when agreements must be enforced overtime.
+\textbf{Trust} models help agents to decide with whom to negotiate.
+\textbf{Reputation} systems aggregate experiences across multiple agents.
+There are mechanisms for:
+\begin{itemize}
+    \item   Preventing reneging on agreements;
+    \item   Handling deception in negotiation; \&
+    \item   Building long-term relationships.
+\end{itemize}
+
+
+
+
+
+
+
 
 \end{document}
