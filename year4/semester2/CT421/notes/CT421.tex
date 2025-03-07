@@ -873,6 +873,102 @@ There are mechanisms for:
     \item   Building long-term relationships.
 \end{itemize}
 
+\section{Communication in Agent-Based Systems}
+We have considered mechanisms for agents to interact:
+mechanisms such as auction protocols or negotiation protocols allow agents to hopefully reach an agreement.
+In order to do so, agents need to be able to communicate in an expressive manner.
+Many approaches to communication in (multi-)agent systems are inspired by Austin's work in \textbf{Speech-Act Theory} (1962);
+speech-act theories are pragmatic theories of how language is used to achieve goals and / or intentions.
+Austin argued that many utterances are similar to physical actions in that they bring about a change in the state of the world, e.g., ``you're fired''.
+More generally, things human utter are done so with the intention of satisfying some goal, for example, asking a question, answering a question, making a request.
+A theory of how utterances are to achieve intentions is a speech-act theory.
+\\\\
+John Searle (1969) classified types of speech acts as:
+\begin{enumerate}
+    \item   \textbf{Representatives:} such as informing, e.g., ``it is cold'';
+    \item   \textbf{Directives:} attempts to get the listener to do something, e.g., ``please pass the beer'';
+    \item   \textbf{Commissives:} which commit the speaker to doing something, e.g., ``I promise to pay...'';
+    \item   \textbf{Expressives:} whereby a speaker expresses a mental state, e.g., ``thank you''.
+    \item   \textbf{Declarations:} such as declaring war.
+\end{enumerate}
+
+We can view a speech act as having two components:
+\begin{enumerate}
+    \item   A performative verb (e.g., to request, inform, promise, etc.).
+    \item   Propositional content (e.g., ``the light is on'').
+\end{enumerate}
+
+We can have the same content but the meaning is different depending on the performative.
+Consider, for example, the content ``\textit{the light is on}'':
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{Performative}   & \textbf{Content}          & \textbf{Speech Act} \\
+    \hline
+    Request                 & ``\textit{the light is on}''  & ``Please turn on the light.'' \\
+    \hline
+    Inform                  & ``\textit{the light is on}''  & ``The light is on!'' \\
+    \hline
+    Inquire                 & ``\textit{the light is on}''  & ``Is the light on?'' \\
+    \hline
+    \end{tabular}   
+    \caption{Same content, different meanings}
+\end{table}
+
+Questions arise as to how to define the semantics of a speech act.
+The semantics of speech acts can be formalised using a set of pre-conditions \& post-conditions.
+For example, when considering a ``request'' speech act, there are certain things that should be true prior to the request and a set of things that should be true following the request.
+The semantics for a request are as follows:
+\begin{align*}
+    \text{request}(a, b, X) \quad \text{(i.e., agent } a \text{ asks agent } b \text{ to do } X \text{)}
+\end{align*}
+
+The pre-conditions are:
+\begin{itemize}
+    \item   $a$ believes $b$ can do $X$;
+    \item   $a$ believes $b$ believes $b$ can do $X$;
+    \item   $a$ believes $a$ wants $X$.
+\end{itemize}
+
+The post conditions are:
+\begin{itemize}
+    \item   $b$ believes that $a$ believes $a$ wants $X$.
+\end{itemize}
+
+\subsection{Agent Communication Languages (ACLs)}
+There have been several attempts to create \textbf{Agent Communication Languages (ACLs)} based on speech-act theory, e.g., KQML, FIPA ACL.
+\textbf{KQML} is comprised of tow parts:
+\begin{itemize}
+    \item   The knowledge query \& manipulation language (KQML); \& 
+    \item   The knowledge interchange format (KIF).
+\end{itemize}
+
+KQML allows one to define various acceptable ``communicative verbs'' or performatives.
+Examples include:
+\begin{itemize}
+    \item   \verb|ask-if|: (``is it true that...'');
+    \item   \verb|perform|: (``please perform the following action...'');
+    \item   \verb|tell|: (``is it true that...'');
+    \item   \verb|reply|: (``the response is...'');
+\end{itemize}
+
+KIF Is a language for expressing the content of the messages.
+\\\\
+\textbf{FIPA} allows \verb|inform| \& \verb|request| as basic primitives:
+
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single, escapeinside=||]{lisp}
+(inform
+:sender agent1
+:receiver agent2
+:content (price item3 250)
+:language scheme
+:ontology art-auction
+)
+\end{minted}
+\caption{Example FIPA \texttt{inform} request} \end{code}
 
 
 
