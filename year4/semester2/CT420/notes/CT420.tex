@@ -29,6 +29,8 @@
 % \newcommand{\secref}[1]{\textbf{§~\nameref{#1}}}
 \newcommand{\secref}[1]{\textbf{§\ref{#1}~\nameref{#1}}}
 
+\usepackage{array}
+\usepackage{booktabs}
 \usepackage{mathtools}
 \usepackage{changepage}     % adjust margins on the fly
 
@@ -866,4 +868,166 @@ The DASH working model is as follows:
     \caption{DASH data model}
 \end{figure}
 
+\section{Emerging Protocols}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|p{4cm}|p{11cm}|}
+        \hline
+        \textbf{QoS Attribute} & \textbf{Definition} \\
+        \hline
+        Accuracy & The error rate produced by the service \\
+        \hline
+        Accessibility & The degree to which the service is capable of serving a Web service request \\
+        \hline
+        Capacity & The limit of concurrent requests for guaranteed performance \\
+        \hline
+        Response Time & The time to complete a Web service request (from the perspective of a client) \\
+        \hline
+        Throughput & The number of Web service requests served at a given time period \\
+        \hline
+        Availability & The probability that the service can respond to the consumer requests \\
+        \hline
+        MTTR & Mean Time To Repair \\
+        \hline
+        Interoperability & The ease with which a consumer application or agent interoperates with a service \\
+        \hline
+        Robustness & The degree to which a service can function correctly in the presence of invalid, incomplete or conflicting inputs \\
+        \hline
+        Authentication & A measure of how the service authenticates principals who can access the service \& data \\
+        \hline
+        Confidentiality & A measure of how the service protects the data, so that only authorized principals can access or modify the data \\
+        \hline
+    \end{tabular}
+    \caption{Quality of Service (QoS) Attributes and Their Definitions}
+\end{table}
+
+\textbf{Website speed}, or \textit{website performance}, refers to how quickly a browser is able to load fully-functional web pages for a given site.
+Site speed is important for user experience, SEO, \& bounce rate.
+Faster sites yield more page views, higher engagement, \& higher conversion rates.
+
+\subsection{How to achieve speed?}
+The speed limit of information is $c$, the speed of light.
+The two main ways of increasing speed are:
+\begin{itemize}
+    \item   Improving the communication link; \&
+    \item   Improving the protocols: app protocols provide useful user-level functions, transport protocols provide guarantees to apps, network protocols provide best-effort global packet delivery, \& link protocols provide best-effort local packet delivery.
+\end{itemize}
+
+\subsection{Evolution of the Web}
+There is a paradigm shift occurring in the way in which the Internet is accessed:
+there is a transformation from native applications to web applications.
+Traditional applications are getting migrated to the cloud, while web applications \& services are becoming extremely complex.
+QoS is very important in web applications.
+The complexity of web content over the years has necessitated updates to the HyperText Transfer Protocol (HTTP).
+
+\subsection{HTTP}
+\subsubsection{HTTP/0.9}
+In 1991, the first documented official version of HTTP was written as a plain document, less than 700 words in length, named \textbf{HTTP/0.9}
+This version only supported the \verb|GET| method, allowing clients to retrieve HTML documents from a server, but not supporting any other file formats or information upload.
+
+\subsubsection{HTTP/1.0}
+In May 1996, RFC 1945 was published as a final \textbf{HTTP/1.0}.
+In HTTP/1.0, each request/response pair requires opening a new connection.
+New features of HTTP/1.0 included:
+\begin{itemize}
+    \item   \textbf{Header:} the HTTP header was introduced, thereby allowing the transmission of metadata that made the protocol flexible \& extensible;
+    \item   \textbf{Status code:} HTTP responses now contained a status code, thereby enabling the receiver to check the request processing status;
+    \item   \textbf{Content-type:} HTTP could transmit other document types other than a plain HTML file;
+    \item   \textbf{New methods:} two new methods, \verb|POST| \& \verb|HEAD|, were added in addition to \verb|GET|.
+\end{itemize}
+
+Establishing a TCP connection using a three-way handshake is expensive;
+2 RTTs (Round-Trip Time) are required between the client and the server to establish a connection.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/tcpthreesome.png}
+    \caption{The TCP 3-way handshake is expensive}
+\end{figure}
+
+\subsubsection{HTTP/1.1}
+In January 1997, RFC 2068 was officially released as \textbf{HTTP/1.1}.
+Its most relevant enhancements were:
+\begin{itemize}
+    \item   \textbf{Persistent connections:} in HTTP/1.1, it is possible to execute several requests using a single connection, and thus amortise the cost of the initial connection establishment and the cost of slow starts across multiple requests.
+    \item   \textbf{New methods:} besides the already-available methods of HTTP/1.0, the 1.1 version added six extra methods: \verb|PUT|, \verb|PATCH|, \verb|DELETE|, \verb|CONNECT|, \verb|TRACE|, \& \verb|OPTIONS|.
+\end{itemize}
+
+With persistent connections, multiple requests could share the same connection, but they still had to be serialised one after the other;
+therefore, a client \& a server could only execute a single request/response exchange at any given time for each connection.
+As the web evolved, more concurrency was required when fetching \& rendering web pages with a large number of resources (such as CSS, JavaScript, images, etc.).
+The only way to gain concurrency at the network layer was to use multiple TCP connections to the same origin in parallel, but this has several negative effects:
+\begin{itemize}
+    \item   \textbf{Initial overhead:} establishing \& maintaining multiple connections requires additional overhead;
+    \item   \textbf{Network congestion:} multiple parallel connections increase the amount of traffic on the network;
+    \item   \textbf{Inefficient use of resources:} every TCP connection requires resources on both the client \& the server sides, such as buffers, sockets, \& memory; \&
+    \item   \textbf{Fairness issues:} some users or applications may monopolise bandwidth by opening many TCP connections.
+\end{itemize}
+
+\subsubsection{SPDY}
+An unofficial HTTP protocol named \textbf{SPDY} was developed by Google in 2009 as an experimental protocol to improve web performance.
+SPDY opens one connection per domain;
+multiple data streams are multiplexed over this single TCP connection for efficiency.
+This reduces the amount of redundant header information sent every time a new page is requested.
+Higher priority resources could be transferred faster than lower priority resources.
+SPDY was supported by the Chrome browser and deployed in most Google services.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/http11vsspdy.png}
+    \caption{HTTP/1.1 versus SPDY}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/spdyperformance.png}
+    \caption{SPDY performance}
+\end{figure}
+
+\subsubsection{HTTP/2.0}
+\textbf{HTTP/2.0} was officially released in 2015 (RFC 7540), about 18 years after HTTP/1.1.
+HTTP/2.0 is largely derived from SPDY, and implements several new features to improve the protocol performance:
+\begin{itemize}
+    \item   \textbf{Request multiplexing:} HTTP/1.1 was a \textit{sequential protocol}, meaning that we can only send a single request at a time;
+            HTTP/2.0 allows us to send requests \& receive responses asynchronously, thus allowing us to make multiple requests at the same time using a single connection.
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.8\textwidth]{./images/http2action.png}
+                \caption{HTTP/2.0 in action}
+            \end{figure}
+
+    \item   \textbf{Request prioritisation:} HTTP/2.0 allows us to set a priority for each request, thus allowing us to explicit about the order in which we expect responses, such as getting a webpage's CSS before its JavaScript file.
+
+    \item   \textbf{Header compression:} headers are compressed with HPACK (RFC 7541), with 76\% compression of the ingress header, \& 69\% compression of the egress header.
+
+    \item   \textbf{Server push:} to avoid a server receiving lots of requests, HTTP/2.0 introduced a server push functionality.
+            With that, the server tries to predict the resources that will be requested soon.
+            So, the server proactively pushes these resources to the client cache.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/httpversioncomparison.png}
+    \caption{HTTP version comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/httpversioncomparison.png}
+    \caption{HTTP version comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/http1vshttp2.png}
+    \caption{HTTP/1.0 versus HTTP/2.0 performance}
+\end{figure}
+
+Improvements at the application layer have been implemented in HTTP/2.0;
+to further improve the performance, fundamental changes to the underlying transport layer are required.
+
+
+
 \end{document}
+
