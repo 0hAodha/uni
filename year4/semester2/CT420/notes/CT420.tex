@@ -1027,7 +1027,129 @@ HTTP/2.0 is largely derived from SPDY, and implements several new features to im
 Improvements at the application layer have been implemented in HTTP/2.0;
 to further improve the performance, fundamental changes to the underlying transport layer are required.
 
+\subsection{Transport Protocols}
+The \textbf{Transmission Control Protocol (TCP)} ensures reliability \& flow control (by ensuring that data sent is delivered to the receiver application and ensuring that the receiver buffer doesn't overflow), ordered delivery (by ensuring bits pushed by the sender arrive at the receiver application in order), \& congestion control (by ensuring that the data sent doesn't overwhelm network resources).
+\\\\
+The \textbf{User Datagram Protocol (UDP)} facilitates abstraction of independent messages between endpoints.
+It has minimal overhead, making it the recommended transport to meet the strict latency bounds of real-time applications, but provides limited support to applications.
+There is no guarantee of delivery.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/tcpvsudp.png}
+    \caption{TCP versus UDP}
+\end{figure}
+
+\subsubsection{Issues with TCP}
+\begin{itemize}
+    \item   Slow connection establishment.
+    \item   The TCP 3-way handshake has very high latency, particularly for small web requests.
+            This problem is made worse by adding security (HTTP/TLS) over TCP: the TLS handshake adds more round trips.
+    \item   Head-of-line blocking.
+\end{itemize}
+
+TCP is implemented in the kernel of the operating system, and to change TCP, you would likely have to change the operating system kernel on all servers \& clients around the world.
+You might even need to change the entire network, as middleboxes may drop packets if they don't understand something on the packet.
+
+\subsection{QUIC}
+The \textbf{QUIC} protocol was developed to overcome the performance issues in TCP.
+It is a reliable transport over UDP.
+It was standardised in 2021, and in 2022 the IETF standardised HTTP/3 as RFC 9114 which uses QUIC by default.
+As of 2025, around 27-30\% of all website support HTTP/3.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/quicfit.png}
+    \caption{Where does QUIC fit?}
+\end{figure}
+
+The main difference between HTTP/2.0 and HTTP/3.0 is the underlying transport layer protocol:
+HTTP/2.0 uses TCP connections, while HTTP/3.0 uses QUIC (UDP-based) connections.
+\\\\
+QUIC features include:
+\begin{itemize}
+    \item   \textbf{Multiplexing without head-of-line blocking:} in QUIC, each byte stream is transport independently over the network.
+            QUIC ensures the in-order delivery of packets within the same byte stream;
+            if a packet gets lost, only the affected stream gets blocked and waits for its re-transmission.
+    \item   \textbf{Low-latency connections:} WUIC has a faster connection setup, as it combines the transport handshake with the TLS cryptographic session establishment, which in TCP+TLS are two separate processes.
+            To reduce the time required to establish a new connection, a client that has previously connected to a server may cache certain parameters from that connection and subsequently set up a \textbf{0-RTT connection} with the server;
+            with the 0-RTT feature, a HTTP request can be sent, and a (partial) response can be received during the very first handshake.
+    \item   \textbf{Connection migration:} QUIC improves performance during network-switching events, like what happens when a user of a mobile device moves from a local WiFi hotspot to a mobile network.
+            When this occurs on TCP, a lengthy process starts where every existing connection times out one-by-one and is then re-established on demand.
+            QUIC includes a connection identifier to uniquely identify the connection to the server regardless of source;
+            this allows the connection to be re-established simply by sending a packet, which always contains this ID, as the original connection ID will still be valid even if the user's IP address changes.
+    \item   \textbf{Linkability prevention: } to avoid privacy issues, e.g., to prevent hackers from following the physical movement of a smartphone user by tracking the unencrypted CID across networks, QUIC uses a list of connection identifiers instead of just one.
+    \item   \textbf{Encryption:} TCP + TLS only encrypts the actual HTTP data.
+            QUIC also encrypts large parts of the protocol header.
+            Metadata, such as packet numbers and connection-close signals, which were visible to all middleboxes (\& attackers) in TCP, are now only available to the client \& server in QUIC.
+    \item   \textbf{Resistance to protocol ossification:} protocol ossification is an inherent characteristic of protocols implemented in the oeprating system kernel, such as TCP;
+            kernels are rarely updated, which applies even more to the operating systems of middleboxes, such as firewalss \& load balancers.
+            It is a problem because it makes it hard to introduce new features, as middleboxes with an older version of the protoocl don't recognise the new feature and drop the packets.
+            QUIC aims to solve this issue:
+            it runs in the user space instead of the kernel, so it's easier to deploy new implementations.
+            Furthermore, QUIC is heavily encrypted, so if a middlebox can't read a piece of information, it can't make any decisions based on that information.
+
+    \item   \textbf{QPACK field compressoin:} QPACK is a field compression format for HTTP/3.0.
+            Field compression eliminates redundant metadata by assigning indexes to fields that are used multiple times during the connection.
+            The goal of QPACK is to reduce the space taken up by the HTTP headers:
+            smaller size translates to higher throughput and better user experience.
+            The effectiveness of data compression is expressed as a compression ratio.
+\end{itemize}
+
+A QUIC packet is composed of a common header followed by one or more frames.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/quicpacket.png}
+    \caption{QUIC packet structure}
+\end{figure}
+
+The QUIC endpoints communicate by exchanging packets;
+the QUIC packet consists of a header \& a payload.
+QUIC has two different types of headers: the long header is used prior to the connection establishment, and the short header is used after the first connection is established.
+Packets are carried in UDP datagrams.
+\\\\
+QUIC provides different packet types:
+\begin{itemize}
+    \item   \textbf{Initial packet:} transports the first CRYPTO frames transmitted by the client \& server during the key exchange and the ACK frames in both directions.
+    \item   \textbf{Handshake packet:} used for sending \& receiving encrypted handshake messages \& acknowledgements between the server \& the client.
+    \item   \textbf{0-RTT packet:} sends ``early'' data from the client to the server before the handshake is completed.
+    \item   \textbf{1-RTT packet:} used to exchange data between the client \& the server after the handshake is completed.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/quickinitalpacket.png}
+    \caption{QUIC initial packet example}
+\end{figure}
+
+A QUIC packet is composed of a common header followed by one or more frames.
+There are various types of frames:
+\begin{itemize}
+    \item   \textbf{\texttt{ACK} frame:} receivers send \verb|ACK| frames to inform senders of packets they have received \& processed.
+            The \verb|ACK| frame contains one or more \verb|ACK| ranges.
+
+    \item   \textbf{\texttt{CRYPTO} frame:} used to transmit cryptographic handshake messages.
+
+    \item   \textbf{\texttt{STREAM} frame:} implicitly creates a stream and carries stream data.
+            It contains a Stream ID, Offset, Length, \& Stream Data.
+
+    \item   \textbf{\texttt{MAX\_DATA} frame:} used in flow control to inform the peer of the maximum amount of data that can be sent on the connection as a whole.
+
+    \item   \textbf{\texttt{MAX\_STREAM\_DATA} frame:} used in flow control to inform a peer of the maximum amount of data that can be sent on a stream.
+
+    \item   \textbf{\texttt{MAX\_STREAMS} frame:} informs the peer of the cumulative number of streams of a give type it is permitted to open.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/quicframes.png}
+    \caption{QUIC \texttt{CRYPTO} frame examples}
+\end{figure}
+
+\textbf{Streams} in QUIC provide a lightweight, ordered byte-stream abstraction to an application.
+Streams can be created by either endpoint, and can concurrently send data interleaved with other streams.
+Streams are identified within a connection by a numeric value, referred to as the stream ID (a 62-bit integer) that is unique for all streams on a connection.
+Client-initiated streams have even-numbered stream IDs and server-initiated streams have odd-numbered stream IDs.
 
 \end{document}
 
