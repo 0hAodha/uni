@@ -947,9 +947,140 @@ The expected value is:
 \end{align*}
 
 \subsection{Erd\"os-Rényi Models}
+\subsubsection{Model A: $G_{ER}(n,m)$ --- Uniformly Selected Edges}
 Let $n \geq 1$, let $N = \binom{n}{2}$ and let $0 \leq m \leq N$.
 The model $G_{ER}(n,m)$ consists of the ensemble of graphs $G$ on the $n$ nodes $X = \{0,1, \dots, n-1\}$, and $M$ randomly selected edges, chosen uniformly from the $N = \binom{n}{2}$  possible edges.
 Equivalently, one can choose uniformly at random one network in the set $G(n,m)$ of \textit{all} networks on a given set of $n$ nodes with exactly $m$ edges.
+\\\\
+Equivalently, one can choose uniformly at random one network in the \textbf{set} $G(n,m)$ of \textit{all} networks on a given set of $n$ nodes with \textit{exactly} $m$ edges.
+One could think of $G(n,m)$ as a probability distribution $P: G(n,m) \rightarrow \mathbb{R}$ that assigns to each network $G \in G(n,m)$ the same probability
+\[
+    P(G) = \binom{N}{m}^-1
+\]
+where $N = \binom{n}{2}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/gnm.png}
+    \caption{ Some networks drawn from $G_{ER}(20,15)$ }
+\end{figure}
+
+
+\subsubsection{Model B: $G_{ER}(n,p)$ --- Randomly Selected Edges}
+Let $n \geq 1$, let $N = \binom{n}{2}$ and let $0 \leq p \leq 1$.
+The model $G_{ER}(n,p)$ consists of the ensemble of graphs $G$ on the $n$ nodes $X=\{0,1, \dots, n-1\}$ with each of the possible $N=\binom{n}{2}$ edges chosen with probability $p$.
+\\\\
+The probability $P(G)$ of a particular graph $G=(X,E)$ with $X=\{0,1, \dots, n-1\}$ and $m = |E|$ edges in the $G_{ER}(n,p)$ model is
+\[
+    P(G) = p^m(1-p)^{N-m}
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./images/gnm2005.png}
+    \caption{ Some networks drawn from $G_{ER}(20,0.5)$ }
+\end{figure}
+
+Of the two models, $G_{ER}(n,p)$ is the more studied.
+There are many similarities, but they do differ.
+For example:
+\begin{itemize}
+    \item   $G_{ER}(n,m)$ will have $m$ edges with probability 1.
+    \item   A graph in $G_{ER}(n,p)$ will have $m$ edges with probability $\binom{N}{m}p^m(p-1)^{N-m}$.
+\end{itemize}
+
+\subsubsection{Properties}
+We'd like to investigate (theoretically \& computationally) the properties of such graphs.
+For example:
+\begin{itemize}
+    \item   When might it be a tree?
+    \item   Does it contain a tree, or other cycles? If so, how many?
+    \item   When does it contain a small complete graph?
+    \item   When does it contain a \textbf{large component}, larger than all other components?
+    \item   When does the network form a single \textbf{connected component}?
+    \item   How do these properties depend on $n$ and $m$ (or $p$)?
+\end{itemize}
+
+Denote by $G_n$ the set of \textit{all} graphs the $n$ nodes $X=\{0, \dots, n-1\}$.
+Set $N=\binom{n}{2}$ the maximal number of edges of a graph $G \in \textsl{G}$.
+Regard the ER models A \& B as \textbf{probability distributions} $P : \mathcal{G}_n \rightarrow \mathbb{R}$
+\\\\
+Denote $m(G)$ as the number of edges of a graph $G$.
+As we have seen, the probability of a specific graph $G_{ER}$ to be sampled from the model $G(n,m)$ is:
+\begin{align*}
+    P(G) = 
+    \begin{cases}
+        \binom{N}{m}^{-1} & \text{if } m(G)= m, \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+And the probability of a specific graph $G$ to be sampled from the model $G(n,p)$ is 
+\begin{align*}
+    P(G) = n^m(1-n)&{N-m}
+\end{align*}
+
+\subsubsection{Expected Size \& Average Degree}
+Let's use the following notation:
+\begin{itemize}
+    \item   $\bar{a}$ is the expected value of property $a$ (that is, as the graphs vary across the ensemble produced by the model).
+    \item   $<a>$ is the average of property $a$ over all the nodes of a graph.
+\end{itemize}
+
+In $G(n,m)$ the expected \textbf{size} is
+\begin{align*}
+    \bar{m} = m
+\end{align*}
+as every graph $G$ in $G(n,m)$ has exactly $m$ edges.
+The expected \textbf{average degree} is
+\begin{align*}
+    \langle k \rangle = \frac{2m}{n}
+\end{align*}
+
+as every graph has average degree $\frac{2m}{n}$.
+Other properties of $G(n,m)$ are less straightforward, and it is easier to work with the $G(n,p)$.
+\\\\
+In $G(n,m)$, the \textbf{expected size} (i.e.,  expected number of edges) is 
+\begin{align*}
+    \bar{m} = pN
+\end{align*}
+
+Also, variance is $\sigma^2_m = Np(1-p)$.
+\\\\
+The expected \textbf{average degree} is
+\begin{align*}
+    \langle k\rangle = p(n-1)
+\end{align*}
+with standard deviation $\sigma_k = \sqrt{p(1-p) (n-1)}$.
+
+
+\subsubsection{Degree Distribution}
+The \textbf{degree distribution} $p: \mathbb{N}_0 \to \mathbb{R}, k \mapsto p_k$ of a graph $G$ is defined as 
+\begin{align*}
+    p_k = \frac{n_k}{n}
+\end{align*}
+where, for $k \geq 0$, $n_k$ is the number of nodes of degree $k$ in $G$.
+This definition can be extended to ensembles of graphs with $n$ nodes (like the random graphs $G(n,m)$ and $G(n,p)$) by setting 
+\begin{align*}
+    p_k \frac{\bar{n}_k}{n}
+\end{align*}
+
+where $\bar{n}_k$ denotes the expected value of the random graph $n_k$ over the ensemble of graphs.
+\\\\
+The degree distribution in a random graph $G(n,p)$ is a \textbf{binomial distribution}:
+\begin{align*}
+    p_k = \binom{n-1}{k}p^k (1-p)^{n-1-k} = \text{bin}(n-1,p,k)
+\end{align*}
+
+That is, in the $G(n,p)$ model, the probability that a nodes has degree $k$ is $p_k$.
+Also, the \textbf{average degree} of a randomly chosen node is
+\begin{align*}
+    \langle k \rangle = \sum^{n-1}_{k=0} kp_k = p(n-1)
+\end{align*}
+
+(with standard deviation $\sigma_k = \sqrt{p(1-p)(n-1))}.
+
+
 
 
 
