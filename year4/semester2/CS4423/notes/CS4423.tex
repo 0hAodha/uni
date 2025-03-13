@@ -1078,7 +1078,19 @@ Also, the \textbf{average degree} of a randomly chosen node is
     \langle k \rangle = \sum^{n-1}_{k=0} kp_k = p(n-1)
 \end{align*}
 
-(with standard deviation $\sigma_k = \sqrt{p(1-p)(n-1))}.
+(with standard deviation $\sigma_k = \sqrt{p(1-p)(n-1))}$.
+\\\\
+In general, it is not so easy to compute
+\[
+    \binom(n-1)(k) p^k (1-p)^{n-1-k}
+\]
+
+However, in the limit $n \to \infty$ with $\langle k \rangle k = p(n-1)$ kept constant, the binomial distribution $\text{bin}(n-1,p,k)$ is well-approximated by the \textbf{Poisson distribution}:
+\[
+    p_k = e^{-\lambda} \frac{\lambda^k}{k!} = \text{Pois}(\lambda, k)
+\]
+
+where $\lambda = p(n-1)$.
 
 
 
