@@ -970,9 +970,196 @@ KIF Is a language for expressing the content of the messages.
 \end{minted}
 \caption{Example FIPA \texttt{inform} request} \end{code}
 
+\section{Artificial Life}
+\textbf{Artificial life} is the study of man-made systems that exhibit behaviours characteristic of natural living systems.
+It involves the investigation of the essence of life \& the ability to construct life or life-like systems, and the investigation of biological / naturally-occurring systems.
+It attempts to develop life-like behaviours \& properties from simple rules \& interactions.
+The core principle of artificial life is creating complex behaviours from simple rules \& interactions. 
+\\\\
+Artificial life has connections with many existing fields:
+\begin{itemize}
+    \item   Physics;
+    \item   Artificial intelligences;
+    \item   Computer science;
+    \item   Social science;
+    \item   Philosophy;
+    \item   Psychology.
+\end{itemize}
 
+It has been explored as a means to understand the emergence of:
+\begin{itemize}
+    \item   Language;
+    \item   Order;
+    \item   Culture --- norms, artefacts;
+    \item   Social structures.
+\end{itemize}
 
+Modelling approaches include simulation, robotics, \& virtual environments, while key areas of study include emergence, self-organisation, adaptation, evolution, \& collective behaviour.
+Many models of creatures \& animals have been built in robotics \& in simulation which allows the exploration of the issues of co-operation \& competition in these ``species''.
 
+\subsection{Cellular Automata}
+A \textbf{cellular automaton (CA)} is a model of a parallel compute, consisting of \textit{processors} (cells), usually connected in an $n$-dimensional grid.
+Cellular automata are characterised by very simple rules and potentially very complex emergent behaviours;
+very simple rules govern interactions between neighbouring cells but give rise to recognisable groups of patterns, including static, dynamic, mobile, \& cyclic patterns.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/typesofcellularautomata.png}
+    \caption{ Types of cellular automata }
+\end{figure}
+
+\subsubsection{John von Neumann's Universal Constructor}
+John von Neumann's \textbf{universal constructor} is a self-replicating machine existing in a cellular environment developed by Jon von Neumann in the 1940s with the aim of specifying an abstract machine which, when ran, would replicate itself.
+The original experiment was created to see if a simple rule system could create a \textbf{universal computer}, a Turing machine capable of emulating any kind of information processing through a simple rule system.
+It was the first theoretical demonstration that self-reproduction based on on logical rules was possible.
+
+\subsubsection{Conway's Game of Life}
+\textbf{Conway's Game of Life} is a simple mathematical game where patterns unfold according to a set of rules.
+It is a form of cellular automata, and consists of a rectangular grid of ``living'' (on) \& ``dead'' (off) cells.
+Complex patterns result from simple structures.
+Three simple rules govern the Game of Life:
+\begin{enumerate}
+    \item   \textbf{Loneliness:} live cell dies if it has fewer than two live neighbours.
+    \item   \textbf{Overcrowding:} a live cell dies if it has more than three live neighbours.
+    \item   \textbf{Reproduction:} a dead cell becomes alive if it has exactly three live neighbours.
+\end{enumerate}
+
+From these simple rules emerge structures, oscillators, gliders, \& even computational elements.
+
+\subsubsection{Computational Properties of Cellular Automata}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/cellularneighbourhoods.png}
+    \caption{ Different neighbourhoods are possible in cellular automata }
+\end{figure}
+
+There are many open questions about the computational properties of cellular automata:
+\begin{itemize}
+    \item   What kind of patterns will emerge given a certain starting pattern?
+    \item   Update rules and their effect?
+    \item   Can CA be used to perform computation?
+\end{itemize}
+
+Stephen Wolfram put forward 4 classifications:
+\begin{enumerate}
+    \item   Class 1: evolution leads to a stable homogeneous state.
+    \item   Class 2: evolution leads to a simple stable or periodic structures.
+    \item   Class 3: evolution leads to chaotic patterns.
+    \item   Class 4: evolution leads to complex structures with long transients.
+\end{enumerate}
+
+There are similar emergent properties witnessed in evolutionary spatial game theory and in models \& simulations of multi-agent systems. 
+
+\subsection{Ant Colonies}
+\textbf{Ant colonies} are distributed systems of social insects, consisting of simple individuals with limited ``processing'' capabilities.
+The intelligence of the colony is far greater than the intelligence of the individuals, due to emergent intelligence through simple local interactions.
+Ant colonies have been studied in detail, and exhibit lots of properties desirable in computational systems:
+responsive to changes in environment, robust solutions, task decomposition \& allocation.
+\\\\
+Complex tasks are broken down into simpler sub-tasks:
+\begin{itemize}
+    \item   Leaf-cutting;
+    \item   Transportation;
+    \item   Transformation to pulp \& pellets;
+    \item   Planting fungi into pellets;
+    \item   Tending to pellets.
+\end{itemize}
+
+There are several million ants per colony working collectively;
+tasks are assigned based on local conditions and the needs of the colony.
+Individual ants can switch roles as needed.
+There is \textbf{emergent organisation}: without central control, ants self-organise into efficient work groups.
+
+\subsubsection{Self-Organisation}
+\textbf{Self-organisation} is a set of dynamical mechanisms whereby structure appears at the global level as the result of interactions among lower-level components.
+The rules specifying the interactions among the constituent units of the system are executed based on purely local information.
+The four basic ingredients of self-organisation are:
+\begin{enumerate}
+    \item   Multiple interactions;
+    \item   Randomness;
+    \item   Positive feedback;
+    \item   Negative feedback.
+\end{enumerate}
+
+\subsubsection{Indirect Communication in Ant Colonies}
+\textbf{Stigmergy} is co-ordination through environment modification.
+Ants deposit \textbf{pheromone trails} as they travel;
+the strength of the trial indicates \textit{desirability} and the trails evaporate over time (\textit{negative feedback}).
+When presented with two paths, ants collectively select the shorter one, demonstrating collective problem-solving capability (double bridge experiments, Deneubourg).
+\\\\
+Indirect communication is mediated by modifications of environmental states which are only locally accessible by the communicating agents.
+Features of \textbf{artificial stigmergy} include indirect communication \& local accessibility.
+Ant algorithms are multi-agent systems that exploit artificial stigmergy as a means for co-ordinating artificial ants for the solution of computational problems, such as:
+\begin{itemize}
+    \item   Shortest path;
+    \item   Network routing;
+    \item   Task allocation of labour;
+    \item   Robotics \& co-ordination;
+    \item   Graph partitioning.
+\end{itemize}
+
+\subsubsection{Ant Colony Optimisation}
+Ideas from ant colony optimisation can be mapped to a \textit{search algorithm}, originally applied to the Travelling Salesman Problem but can eb applied to a range of optimisation problems.
+An overview of the algorithm is as follows, although there are many extensions \& variants:
+\begin{enumerate}
+    \item   Ants initially perform a random walk on the graph, leaving a pheromone trail as they walk.
+            Domain knowledge or heuristics can be included on the edges of the graph.
+    \item   Ants are placed on cities randomly.
+    \item   Choose paths through the graph (initially random).
+    \item   Update the pheromone level as a function of the solution quality.
+\end{enumerate}
+
+The probability of an ant $k$ at node $i$ choosing to move to node $j$ is:
+\begin{align*}
+    p^{k}_{ij} =
+    \begin{cases}
+        \frac{[\tau_{ij}]^\alpha \cdot [\eta_{ij}]^\beta}{\sum_{l \in N_i^k} [\tau_{il}]^\alpha \cdot [\eta_{il}]^\beta} & \text{if } j \in N^k_i \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+where:
+\begin{itemize}
+    \item   $\tau{ij}$ is the pheromone intensity on edge $(i,j)$;
+    \item   $\eta_{ij}$ is the heuristic information (typically $\eta_{ij} = \frac{1}{d_ij}$ where $d_{ij}$ is the distance);
+    \item   $\alpha$ \& $\beta$ are parameters controlling the relative importance of pheromone versus heuristic;
+    \item   $N_i^k$ is the set of feasible nodes for ant $k$ when at node $i$.
+\end{itemize}
+
+The pheromone intensity influence which edges are followed.
+The value $\tau_{ij}$ on edge $(i,j)$ is updated periodically, based on two factors:
+evaporation \& reinforcement.
+
+\subsubsection{Swarm Intelligence in Other Species}
+Similar phenomena have been identified in other species:
+\begin{itemize}
+    \item   Termites: complex nest-building behaviour, temperature \& humidity regulation;
+    \item   Honeybees: nest location identification \& decision-making, several scouts explore \& decisions are made through communication, waggle dance for communicating food sources;
+    \item   Bird flocking \& fish schooling: simple rules of separation, alignment, \& cohesion, create complex \& co-ordinated movement patterns.
+\end{itemize}
+
+\subsubsection{Digital Evolution Systems}
+\begin{itemize}
+    \item   Avida: digital platform for studying evolution.
+            \begin{itemize}
+                \item   Digital organisms compete for resources;
+                \item   Mutations affect their ability to process information;
+                \item   Natural selection emerges without being explicitly programmed.
+            \end{itemize}
+
+    \item   Tierra: created by Thomas Ray.
+            \begin{itemize}
+                \item   Self-replicating computer programs;
+                \item   Programs evolve, compute for CPU time;
+                \item   Parasites, immunity, \&  other biological phenomena emerge.
+            \end{itemize}
+
+    \item   Polyworld: artificial ecosystem with 3D physics.
+            \begin{itemize}
+                \item   Organisms with neural networks as brains;
+                \item   Evolution of complex behaviours \& strategies.
+            \end{itemize}
+\end{itemize}
 
 
 
