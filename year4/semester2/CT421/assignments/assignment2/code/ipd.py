@@ -3,6 +3,21 @@
 import argparse
 import random
 
+# Each strategy is defined as follows:
+    # [first move, reaction to defection, reaction to co-operation]
+    # where 0 is defection and 1 is co-operation
+# I don't actually know the names for all of these strategies so I'm going to make some up:
+strategies = [
+    [0, 0, 0],  # Always defect.
+    [0, 0, 1],  # Grim tit-for-tat.
+    [0, 1, 0],  # Grim opposite day: defect at first, then do opposite of what opponent did last.
+    [0, 1, 1],  # Self-sabotage: defect at first, then always co-operate.
+    [1, 0, 0],  # Feint co-operation, then always defect.
+    [1, 0, 1],  # Tit-for-tat.
+    [1, 1, 0],  # Opposite day: co-operate at first, then do opposite of what opponent did last.
+    [1, 1, 1]   # Always co-operate.
+]
+
 def initialise_population(size):
     """
     Initialises a population of strategies for the Iterated Prisoner's Dilemma.
@@ -13,22 +28,6 @@ def initialise_population(size):
     Returns:
         population (list): A list of strategies
     """
-
-    # Each strategy is defined as follows:
-        # [first move, reaction to defection, reaction to co-operation]
-        # where 0 is defection and 1 is co-operation
-
-    # I don't actually know the names for all of these strategies so I'm going to make some up:
-    strategies = [
-        [0, 0, 0],  # Always defect.
-        [0, 0, 1],  # Grim tit-for-tat.
-        [0, 1, 0],  # Grim opposite day: defect at first, then do opposite of what opponent did last.
-        [0, 1, 1],  # Self-sabotage: defect at first, then always co-operate.
-        [1, 0, 0],  # Feint co-operation, then always defect.
-        [1, 0, 1],  # Tit-for-tat.
-        [1, 1, 0],  # Opposite day: co-operate at first, then do opposite of what opponent did last.
-        [1, 1, 1]   # Always co-operate.
-    ]
 
     # Since there are only 8 possible strategies, to initialise the population just perform a random over-sampling of the space.
     return random.choices(strategies, k=size)
@@ -95,7 +94,7 @@ def fitness(agent, num_iterations):
     fixed_strategies = [
         [0, 0, 0],  # Always defect.
         # [0, 0, 1],  # Grim tit-for-tat.
-        [0, 1, 0],  # Grim opposite day: defect at first, then do opposite of what opponent did last.
+        # [0, 1, 0],  # Grim opposite day: defect at first, then do opposite of what opponent did last.
         # [0, 1, 1],  # Self-sabotage: defect at first, then always co-operate.
         # [1, 0, 0],  # Feint co-operation, then always defect.
         [1, 0, 1],  # Tit-for-tat.
@@ -265,8 +264,8 @@ def evolve(size, num_generations, give_up_after, num_iterations, selection_propo
     fitnesses = list_fitnesses(population, num_iterations)
     current_best = get_best(population, fitnesses, 0)
 
-    results = ["Generation\tFitness\tStrategy"]
-    results.append(f"{current_best['generation']}\t{current_best['fitness']}\t{current_best['strategy']}")
+    results = ["Generation\tBestFitness\tBestStrategy\tAvgFitness\t000\t001\t010\t011\t100\t101\t110\t111"]
+    results.append(f"0\t{current_best['fitness']}\t{"".join(map(str, current_best['strategy']))}\t{sum(fitnesses) / len(fitnesses)}\t{population.count([0,0,0])}\t{population.count([0,0,1])}\t{population.count([0,1,0])}\t{population.count([0,1,1])}\t{population.count([1,0,0])}\t{population.count([1,0,1])}\t{population.count([1,1,0])}\t{population.count([1,1,1])}")
 
     for generation in range(1, num_generations):
         population = tournament_selection(population, fitnesses, int(len(population) *selection_proportion))
@@ -280,7 +279,7 @@ def evolve(size, num_generations, give_up_after, num_iterations, selection_propo
             current_best = generation_best
             print(f"New best strategy: {current_best['strategy']}, {current_best['fitness']}")
 
-        results.append(f"{current_best['generation']}\t{current_best['fitness']}\t{current_best['strategy']}")
+        results.append(f"{generation}\t{current_best['fitness']}\t{"".join(map(str, current_best['strategy']))}\t{sum(fitnesses) / len(fitnesses)}\t{population.count([0,0,0])}\t{population.count([0,0,1])}\t{population.count([0,1,0])}\t{population.count([0,1,1])}\t{population.count([1,0,0])}\t{population.count([1,0,1])}\t{population.count([1,1,0])}\t{population.count([1,1,1])}")
 
         if (generation - current_best['generation'] >= give_up_after):
             break
@@ -295,11 +294,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Program to evolve strategies for the Iterated Prisoner's Dilemma")
     parser.add_argument("-s", "--size", type=int, help="Initial population size", required=False, default=75)
     parser.add_argument("-g", "--num-generations", type=int, help="Number of generations", required=False, default=500)
-    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=100)
+    parser.add_argument("-a", "--give-up-after", type=int, help="Number of generations to give up after if best solution has remained unchanged", required=False, default=50)
     parser.add_argument("-i", "--num-iterations", type=int, help="Number of iterations of the dilemma between two agents", required=False, default=10)
     parser.add_argument("-p", "--selection-proportion", type=float, help="The proportion of the population to be selected (survive) on each generation", required=False, default=0.2)
     parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
-    parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.2)
+    parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.1)
     parser.add_argument("-o", "--output-file", type=str, help="File to write TSV results to", required=False, default="output.tsv")
     args=parser.parse_args()
 
