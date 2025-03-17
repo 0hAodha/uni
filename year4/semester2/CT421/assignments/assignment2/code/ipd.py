@@ -2,6 +2,7 @@
 
 import argparse
 import random
+import copy
 
 # Each strategy is defined as follows:
     # [first move, reaction to defection, reaction to co-operation]
@@ -10,11 +11,11 @@ import random
 strategies = [
     [0, 0, 0],  # Always defect.
     [0, 0, 1],  # Grim tit-for-tat.
-    [0, 1, 0],  # Grim opposite day: defect at first, then do opposite of what opponent did last.
-    [0, 1, 1],  # Self-sabotage: defect at first, then always co-operate.
+    [0, 1, 0],  # Defect at first, then do opposite of what opponent did last.
+    [0, 1, 1],  # Defect at first, then always co-operate.
     [1, 0, 0],  # Feint co-operation, then always defect.
     [1, 0, 1],  # Tit-for-tat.
-    [1, 1, 0],  # Opposite day: co-operate at first, then do opposite of what opponent did last.
+    [1, 1, 0],  # Co-operate at first, then do opposite of what opponent did last.
     [1, 1, 1]   # Always co-operate.
 ]
 
@@ -30,63 +31,20 @@ def initialise_population(size):
     """
 
     # Since there are only 8 possible strategies, to initialise the population just perform a random over-sampling of the space.
-    return random.choices(strategies, k=size)
+    return [copy.deepcopy(strategy) for strategy in random.choices(strategies, k=size)]
 
 
-def coevolve(agent1, agent2, num_iterations):
-    """
-    Play the Iterated Prisoner's Dilemma with two agents a specified number of times, and return each agent's score. 
-
-    Args:
-        agent1 (list): the strategy of agent1.
-        agent2 (list): the strategy of agent2.
-        iterations (int): the number of iterations to play.
-
-    Returns:
-        fitness1 (int): the score obtained by agent1.
-        fitness2 (int): the score obtained by agent2.
-    """
-
-    fitness1 = 0
-    fitness2 = 0
-
-    agent1_last_move = None
-    agent2_last_move = None
-
-    for iteration in range(num_iterations):
-        if (iteration == 0):
-            agent1_move = agent1[0]
-            agent2_move = agent2[0]
-        else:
-            # Set an agent's move to its reaction to co-operation if the other agent's last move was co-operation (1), else set it to its reaction to defection.
-            agent1_move = agent1[2] if agent2_last_move else agent1[1]
-            agent2_move = agent2[2] if agent1_last_move else agent2[1]
-
-        match (agent1_move, agent2_move):
-            case (0, 0):
-                fitness1 += 1
-                fitness2 += 1
-            case (0, 1):
-                fitness1 += 5
-            case (1, 0):
-                fitness2 += 5
-            case (1, 1):
-                fitness1 += 3
-                fitness2 += 3
-
-    return fitness1, fitness2
-
-
-def fitness(agent, num_iterations):
+def fitness(agent, num_iterations, noise_level):
     """
     Play the Iterated Prisoner's Dilemma against a number of fixed strategies and return its score.
 
     Args:
         agent1 (list): the strategy of agent1.
         iterations (int): the number of iterations to play.
+        noise_level (float): the probability that the opponent's last move will be misrepresented to the agent
 
     Returns:
-        fitness1 (int): the score obtained by agent1.
+        fitness (int): the score obtained by agent1.
     """
 
     fitness = 0
@@ -99,7 +57,7 @@ def fitness(agent, num_iterations):
         # [1, 0, 0],  # Feint co-operation, then always defect.
         [1, 0, 1],  # Tit-for-tat.
         # [1, 1, 0],  # Opposite day: co-operate at first, then do opposite of what opponent did last.
-        [1, 1, 1]   # Always co-operate.
+        [1, 1, 1],   # Always co-operate.
     ]
 
     for fixed_strategy in fixed_strategies:
@@ -115,8 +73,8 @@ def fitness(agent, num_iterations):
                 agent_move = agent[2] if fixed_strategy_last_move else agent[1]
                 fixed_strategy_move = fixed_strategy[2] if agent_last_move else fixed_strategy[1]
 
-            agent_last_move = agent_move
-            fixed_strategy_last_move = fixed_strategy_move
+            agent_last_move = agent_move if random.random() > noise_level else 1 - agent_move
+            fixed_strategy_last_move = fixed_strategy_move if random.random() > noise_level else 1 - fixed_strategy_move
 
             match (agent_move, fixed_strategy_move):
                 case (0, 0):
@@ -134,13 +92,14 @@ def fitness(agent, num_iterations):
     return fitness
 
 
-def list_fitnesses(population, num_iterations):
+def list_fitnesses(population, num_iterations, noise_level):
     """
     Calculate the fitness of each agent in a population.
 
     Args:
         population (list): the population of strategies.
         iterations (int): the number of iterations to play.
+        noise_level (float): the probability that the opponent's last move will be misrepresented to the agent
 
     Returns:
         fitnesses (list): the fitness of each agent.
@@ -149,7 +108,7 @@ def list_fitnesses(population, num_iterations):
     fitnesses = []
 
     for agent in population:
-        fitnesses.append(fitness(agent, num_iterations))
+        fitnesses.append(fitness(agent, num_iterations, noise_level))
 
     return fitnesses
 
@@ -186,15 +145,15 @@ def tournament_selection(population, fitnesses, num_survivors, tournament_size=3
     Returns:
         survivors (list): the selected agents.
     """
-
     survivors = []
 
     for _ in range(num_survivors):
         tournament = random.sample(list(zip(population, fitnesses)), tournament_size)
         winner = max(tournament, key=lambda agent: agent[1])
-        survivors.append(winner[0])
+        survivors.append(copy.deepcopy(winner[0]))  # Deep copy to prevent unintended modifications
 
     return survivors
+
 
 def crossover(parents, crossover_rate, num_offspring):
     """
@@ -216,12 +175,12 @@ def crossover(parents, crossover_rate, num_offspring):
 
             crossover_point = random.randint(1, 2)
 
-            child1 = p1[:crossover_point] + p2[crossover_point:]
-            child2 = p2[:crossover_point] + p1[crossover_point:]
+            child1 = copy.deepcopy(p1[:crossover_point] + p2[crossover_point:])
+            child2 = copy.deepcopy(p2[:crossover_point] + p1[crossover_point:])
 
             offspring.extend([child1, child2])
         else:
-            offspring.append(random.choice(parents))
+            offspring.append(copy.deepcopy(random.choice(parents)))
 
     return offspring[:num_offspring]
 
@@ -237,14 +196,16 @@ def mutate(offspring, mutation_rate):
     Returns:
         mutated_offspring (list): List of mutated strategies.
     """
-    for i in range(len(offspring)):
+    mutated_offspring = copy.deepcopy(offspring)  # Deep copy to prevent modifying original offspring
+
+    for i in range(len(mutated_offspring)):
         if random.random() < mutation_rate:
             mutation_point = random.randint(0, 2)
-            offspring[i][mutation_point] = 1 - offspring[i][mutation_point]
+            mutated_offspring[i][mutation_point] = 1 - mutated_offspring[i][mutation_point]
 
-    return offspring
+    return mutated_offspring
 
-def evolve(size, num_generations, give_up_after, num_iterations, selection_proportion, crossover_rate, mutation_rate):
+def evolve(size, num_generations, give_up_after, num_iterations, selection_proportion, crossover_rate, mutation_rate, noise_level):
     """
     Evolves strategies over a number of generations for the Iterated Prisoner's Dilemma.
 
@@ -255,13 +216,14 @@ def evolve(size, num_generations, give_up_after, num_iterations, selection_propo
         selection_proportion (float): The proportion of the population to be selected (survive) on each generation
         crossover_rate (float): Probability of a selected pair of solutions to sexually reproduce
         mutation_rate (float): Probability of a selected offspring to undergo mutation
+        noise_level (float): The probability that the opponent's last move will be misrepresented to the agent
 
     Returns:
         results (str): The results of the evolution in TSV format
     """
 
     population = initialise_population(size)
-    fitnesses = list_fitnesses(population, num_iterations)
+    fitnesses = list_fitnesses(population, num_iterations, noise_level)
     current_best = get_best(population, fitnesses, 0)
 
     results = ["Generation\tBestFitness\tBestStrategy\tAvgFitness\t000\t001\t010\t011\t100\t101\t110\t111"]
@@ -272,7 +234,7 @@ def evolve(size, num_generations, give_up_after, num_iterations, selection_propo
         offspring = crossover(population, crossover_rate, size - len(population))
         population += mutate(offspring, mutation_rate)
 
-        fitnesses = list_fitnesses(population, num_iterations)
+        fitnesses = list_fitnesses(population, num_iterations, noise_level)
         generation_best = get_best(population, fitnesses, generation)
 
         if (generation_best['fitness'] > current_best['fitness']):
@@ -300,9 +262,13 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--crossover-rate", type=float, help="Probability of a selected pair of solutions to sexually reproduce", required=False, default=0.8)
     parser.add_argument("-m", "--mutation-rate", type=float, help="Probability of a selected offspring to undergo mutation", required=False, default=0.1)
     parser.add_argument("-o", "--output-file", type=str, help="File to write TSV results to", required=False, default="output.tsv")
+    parser.add_argument("-n", "--noise-level", type=float, help="The probability that the opponent's last move will be misrepresented to the agent", required=False, default=0)
     args=parser.parse_args()
 
-    results = evolve(args.size, args.num_generations, args.give_up_after, args.num_iterations, args.selection_proportion, args.crossover_rate, args.mutation_rate)
+    results = evolve(args.size, args.num_generations, args.give_up_after, args.num_iterations, args.selection_proportion, args.crossover_rate, args.mutation_rate, args.noise_level)
+
+    for strategy in strategies:
+        print(str(strategy) + ": " + str(fitness(strategy, args.num_iterations, args.noise_level)))
 
     if (args.output_file):
         with open(args.output_file, "w") as f:
