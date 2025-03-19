@@ -1092,7 +1092,81 @@ However, in the limit $n \to \infty$ with $\langle k \rangle k = p(n-1)$ kept co
 
 where $\lambda = p(n-1)$.
 
+\section{Giant Components \& Small Worlds}
+Recall that a network may be made up of several \textbf{connected components}, and any connected network has a single connected component.
+It is common in large networks to observe a \textbf{giant component}: a connected component which has a large proportion of the network's nodes.
+This is particularly the case with graphs in $G_{ER}(n,p)$ with large enough $p$.
+More formally, a connected component of a graph $G$ is called a \textbf{giant component} if its number of nodes increases with the order $n$ of $G$ as some positive power of $n$.
+Suppose that $p(n) = cn^{-1}$ for some positive constant $c$;
+then, the average degree $\langle k \rangle = pn = c$ remains fixed as $n \to \infty$.
+For graphs $G_{ER}(n,p)$:
+\begin{itemize}
+    \item   If $c < 1$, the graph contains many small components with orders bounded by $O(\ln(n))$.
+    \item   If $c=1$ the graph has large components of order $S = O(n^\frac{2}{3})$.
+    \item   If $c > 1$, there is a unique \textbf{giant component} of order $S = O(n)$.
+\end{itemize}
 
+\subsection{Small World Network}
+Many real-world networks are \textbf{small world networks}, wherein most pairs of nodes are only a few steps away from each other, and where nodes to form \textit{cliques}, i.e., subgraphs in which all nodes are connected to each other.
+Three network attributes that measure these small-world effects are:
+\begin{itemize}
+    \item   \textbf{Characteristic path length}, $L$: the average length of all shortest paths in the network.
+    \item   \textbf{Transitivity}, $T$: the proportion of \textit{triads} that form triangles.
+    \item   \textbf{Clustering coefficient}, $C$: the average node clustering coefficient.
+\end{itemize}
+
+A network is called a \textbf{small world network} if it has:
+\begin{itemize}
+    \item   A small \textbf{average shortest path length} $L$ (scaling with $\log(n)$, where $n$ is the number of nodes) and
+    \item   A high \textbf{clustering coefficient} $C$.
+\end{itemize}
+
+It turns out that ER random networks do have a small average shortest path length, but not a high clustering coefficient.
+This observation justifies the need for a different model of random networks, if they are to be used to model the clustering behaviour of real-world networks.
+
+\subsubsection{Distance}
+We have seen how BFS can determine the length of a shortest path from a given node $x$ to any node $y$ in a \textit{connected network}.
+An application to all nodes $x$ yields the shortest distances between all pairs of nodes.
+Recall that the \textbf{distance matrix} of a connected graph $G = (X,E)$ is $\mathcal{D} = (d_{i,j})$ where entry $d_{i,j}$ is the length of the shortest path from node $i \in X$ to node $j \in X$.
+(Note that $d_{i,i} = 0$ for all $i$).
+There are a number of graph (and node) attributes that can be defined in terms of this matrix:
+\begin{itemize}
+    \item   The \textbf{eccentricity} $e_i$ of a node $i \in X$ is the maximum distance between $i$ and any other vertex in $G$, so $e_i = \text{max}_j(d_{i,j})$.
+    \item   The \textbf{graph radius} $R$ is the minimum eccentricity, $R = \text{min}_i(e_i)$.
+    \item   The \textbf{graph diameter} $D$ is the maximum eccentricity: $D = \text{max}_i(e_i) = - \text{max}_{i,j} (d_{i,j})$.
+\end{itemize}
+
+Note that one shouldn't think that the ``diameter is twice the radius'', but rather diameter is the distance between the points furthest from each other and radius is the distance from the ``centre'' to the furthest point from it.
+It can be helpful to think about $P_n$.
+
+\subsubsection{Characteristic Path Length}
+The \textbf{characteristic path length} (i.e., the average shortest path length) $L$ of a graph $G$ is the average distance between pairs of nodes:
+\[
+    L = \frac{1}{n(n-1)} \sum_i \sum_j d_{i,j}
+\]
+
+For graphs drawn from $G_{ER}(n,m)$ and $G_{ER}(n,p)$, $L = \frac{\ln(n)}{\ln( \langle k \rangle)}$.
+
+\subsubsection{Clustering}
+In contrast to random graphs, real-world networks also contain \textbf{many triangles}: it is not uncommon that a friend of one of my friends is also my friend.
+This \textbf{degree of transitivity} can be measured in several different ways.
+For the first, we need two concepts:
+\begin{itemize}
+    \item   The number of \textbf{triangles} in $G$, denoted $n_\Delta$, is the number of subgraphs of $G$ that are isomorphic to $C_3$.
+    \item   The number of \textbf{triads} in $G$, denoted $n_\land$, is the number of pairs of edges with a shared node.
+\end{itemize}
+
+There is an easy way to count the number of \textbf{triads} in a network:
+if node $i$ has degree $k_i = \text{deg}(i)$, then it is involved in $\binom{k_i}{2}$ triads,
+so the total number of triads is $n_\land = \sum_i \binom{k_i}{2}$.
+\\\\
+The \textbf{transitivity} $T$ of a graph $G = (X,E)$ is the proportion of \textbf{transitive} triads, i.e., triads which are subgraphs of \textbf{triangles}.
+This proportion can be computed as follows:
+\[
+    T = 3 \frac{n_\Delta}{n_\land}
+\]
+
+where $n_\Delta$ is the number of triangles in $G$ and $n_\land$ is the number of triads. 
 
 
 
