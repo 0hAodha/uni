@@ -12,13 +12,26 @@
 #include <string.h>
 #include <limits.h>
 
-#define ITERATIONS 1000
+#define ITERATIONS 10000
 #define NS_PER_SEC 1000000000L
 
 timer_t timer_id;
 volatile sig_atomic_t timer_expired = 0;
 volatile sig_atomic_t signal_received = 0;
 struct timespec start, end, sleep_time;
+
+void save_results(const char *filename, long long *data) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file, "Iteration,Latency/Jitter (ns)\n");
+    for (int i = 0; i < ITERATIONS; i++) {
+        fprintf(file, "%d,%lld\n", i, data[i]);
+    }
+    fclose(file);
+}
 
 void signal_handler(int signum) {
     signal_received = 1;
@@ -47,11 +60,7 @@ void lock_memory() {
 }
 
 void benchmark_nanosleep() {
-    // struct timespec start, end, sleep_time;
-    long long total_jitter = 0;
-    long long max_jitter = 0;
-    long long min_jitter = LLONG_MAX;
-
+    long long jitter_data[ITERATIONS];
     sleep_time.tv_sec = 0;
     sleep_time.tv_nsec = 1000000; // 1 ms
 
@@ -60,25 +69,13 @@ void benchmark_nanosleep() {
         nanosleep(&sleep_time, NULL);
         clock_gettime(CLOCK_MONOTONIC, &end);
 
-        long long elapsed = (end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec);
-        long long jitter = elapsed - sleep_time.tv_nsec;
-
-        total_jitter += llabs(jitter);
-        if (jitter > max_jitter) max_jitter = jitter;
-        if (jitter < min_jitter) min_jitter = jitter;
+        jitter_data[i] = ((end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec)) - sleep_time.tv_nsec;
     }
-
-    printf("Nanosleep Benchmark:\n");
-    printf("Average jitter: %lld ns\n", total_jitter / ITERATIONS);
-    printf("Max jitter: %lld ns\n", max_jitter);
-    printf("Min jitter: %lld ns\n", min_jitter);
+    save_results("nanosleep.csv", jitter_data);
 }
 
 void benchmark_signal_latency() {
-    long long total_latency = 0;
-    long long max_latency = 0;
-    long long min_latency = LLONG_MAX;
-
+    long long latency_data[ITERATIONS];
     signal(SIGUSR1, signal_handler);
 
     for (int i = 0; i < ITERATIONS; i++) {
@@ -86,25 +83,14 @@ void benchmark_signal_latency() {
         kill(getpid(), SIGUSR1);
         while (!signal_received);
 
-        long long latency = (end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec);
-        total_latency += latency;
-        if (latency > max_latency) max_latency = latency;
-        if (latency < min_latency) min_latency = latency;
-
+        latency_data[i] = (end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec);
         signal_received = 0;
     }
-
-    printf("\nSignal Latency Benchmark:\n");
-    printf("Average latency: %lld ns\n", total_latency / ITERATIONS);
-    printf("Max latency: %lld ns\n", max_latency);
-    printf("Min latency: %lld ns\n", min_latency);
+    save_results("signal_latency.csv", latency_data);
 }
 
 void benchmark_timer() {
-    long long total_jitter = 0;
-    long long max_jitter = 0;
-    long long min_jitter = LLONG_MAX;
-
+    long long jitter_data[ITERATIONS];
     struct sigevent sev;
     sev.sigev_notify = SIGEV_SIGNAL;
     sev.sigev_signo = SIGRTMIN;
@@ -119,7 +105,6 @@ void benchmark_timer() {
     its.it_value.tv_sec = 0;
     its.it_value.tv_nsec = 1000000; // 1 ms
     its.it_interval = its.it_value;
-
     signal(SIGRTMIN, timer_handler);
 
     if (timer_settime(timer_id, 0, &its, NULL) == -1) {
@@ -128,32 +113,27 @@ void benchmark_timer() {
     }
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (int i = 0; i < ITERATIONS; i++) {
-        // while (!timer_expired);
-
-        while (!timer_expired) {
-            struct timespec ts = {0, 100};
-            nanosleep(&ts, NULL);
-        }
+        while (!timer_expired);
 
         clock_gettime(CLOCK_MONOTONIC, &end);
-
-        long long elapsed = (end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec);
-        long long jitter = elapsed - its.it_interval.tv_nsec;
-
-        total_jitter += llabs(jitter);
-        if (jitter > max_jitter) max_jitter = jitter;
-        if (jitter < min_jitter) min_jitter = jitter;
-
+        jitter_data[i] = ((end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec)) - its.it_interval.tv_nsec;
         timer_expired = 0;
         start = end;
     }
+    save_results("timer.csv", jitter_data);
+}
 
-    printf("\nTimer Benchmark:\n");
-    printf("Average jitter: %lld ns\n", total_jitter / ITERATIONS);
-    printf("Max jitter: %lld ns\n", max_jitter);
-    printf("Min jitter: %lld ns\n", min_jitter);
+void benchmark_usleep() {
+    long long jitter_data[ITERATIONS];
 
-    timer_delete(timer_id);
+    for (int i = 0; i < ITERATIONS; i++) {
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        usleep(1000); // 1 ms
+        clock_gettime(CLOCK_MONOTONIC, &end);
+
+        jitter_data[i] = ((end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec)) - 1000000;
+    }
+    save_results("usleep.csv", jitter_data);
 }
 
 int main() {
@@ -163,6 +143,7 @@ int main() {
     benchmark_nanosleep();
     benchmark_signal_latency();
     benchmark_timer();
+    benchmark_usleep();
 
     return 0;
 }
