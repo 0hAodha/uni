@@ -68,7 +68,13 @@ void benchmark_timer() {
     }
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (int i = 0; i < ITERATIONS; i++) {
-        while (!timer_expired);
+        // while (!timer_expired);
+
+        while (!timer_expired) {
+            struct timespec ts = {0, 100};
+            nanosleep(&ts, NULL);
+        }
+
         clock_gettime(CLOCK_MONOTONIC, &end);
 
         long long elapsed = (end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec);
