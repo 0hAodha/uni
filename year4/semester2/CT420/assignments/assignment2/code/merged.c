@@ -113,7 +113,10 @@ void benchmark_timer() {
     }
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (int i = 0; i < ITERATIONS; i++) {
-        while (!timer_expired);
+        while (!timer_expired) {
+            struct timespec ts = {0, 100};
+            nanosleep(&ts, NULL);
+        }
 
         clock_gettime(CLOCK_MONOTONIC, &end);
         jitter_data[i] = ((end.tv_sec - start.tv_sec) * NS_PER_SEC + (end.tv_nsec - start.tv_nsec)) - its.it_interval.tv_nsec;
@@ -140,9 +143,16 @@ int main() {
     configure_realtime_scheduling();
     lock_memory();
 
+    printf("Getting nanosleep benchmark\n");
     benchmark_nanosleep();
+
+    printf("Getting signal benchmark\n");
     benchmark_signal_latency();
+
+    printf("Getting timer benchmark\n");
     benchmark_timer();
+
+    printf("Getting usleep benchmark\n");
     benchmark_usleep();
 
     return 0;
