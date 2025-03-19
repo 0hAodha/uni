@@ -8,8 +8,24 @@
 
 \usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black, citecolor = black]{hyperref} 
 \usepackage{fontspec}
-\setmainfont{EB Garamond}
-\setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+% \setmainfont{EB Garamond}
+% \setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\setmainfont{EB Garamond}[
+    Ligatures=TeX,
+    Numbers=OldStyle
+]
+
+% Fallback font (for missing characters)
+\setmainfont{EB Garamond}[
+    % Ligatures=TeX,
+    % Numbers=OldStyle
+]
+
+\newfontfamily{\emojifont}{Noto Color Emoji}[Renderer=Harfbuzz]
+
+% Monospace font configuration
+\setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
 
 \usepackage[backend=biber, style=numeric, date=iso, urldate=iso]{biblatex}
 \addbibresource{references.bib}
@@ -123,8 +139,38 @@ int main(){
     \caption{Getting the clock resolution of the virtual machine}
 \end{figure}
 
+\section{CPU \& Data-Intensive Applications}
+To develop my CPU \& data-intensive programs, I chose to use Python for ease of development (and because any Python program will stress your CPU \& memory no matter how simple {\emojifont 😉}).
+I chose \mintinline{shell}{htop} as my resource-monitoring tool as I have often used it in the past, it has easy to read \& understand output, and shows you exactly what proportion of the CPU \& memory is in use at that time.
+It also allows you to list processes by CPU consumption or memory consumption which is a useful option to have for this assignment.
 
+\begin{code}
+\inputminted[linenos, breaklines, frame=single]{python}{../code/stressers/stress_cpu.py}
+\caption{\texttt{stress\_cpu.py}}
+\end{code}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/medcpuload.png}
+    \caption{\mintinline{python}{htop} output when running \mintinline{shell}{python3 stress_cpu.py --load medium}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/highcpuload.png}
+    \caption{\mintinline{python}{htop} output when running \mintinline{shell}{python3 stress_cpu.py --load high}}
+\end{figure}
+
+\begin{code}
+\inputminted[linenos, breaklines, frame=single]{python}{../code/stressers/stress_memory.py}
+\caption{\texttt{stress\_memory.py}}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/memstress.png}
+    \caption{\mintinline{python}{htop} output when running \mintinline{shell}{python3 stress_memory.py --usage 0.85}}
+\end{figure}
 
 \printbibliography
 \end{document}
