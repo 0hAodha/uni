@@ -4,12 +4,16 @@
 % packages
 \usepackage{microtype}      % Slightly tweak font spacing for aesthetics
 \usepackage[english]{babel} % Language hyphenation and typographical rules
-\usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black]{hyperref} 
 \usepackage{changepage}     % adjust margins on the fly
 
+\usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black, citecolor = black]{hyperref} 
 \usepackage{fontspec}
 \setmainfont{EB Garamond}
 \setmonofont[Scale=MatchLowercase]{Deja Vu Sans Mono}
+
+\usepackage[backend=biber, style=numeric, date=iso, urldate=iso]{biblatex}
+\addbibresource{references.bib}
+\DeclareFieldFormat{urldate}{Accessed on: #1}
 
 \usepackage{minted}
 \usemintedstyle{algol_nu}
@@ -73,4 +77,54 @@
 \hrule
 \medskip
 
+\section{Host Environment}
+For my host environment, I chose to run Ubuntu Server 24.04.2 LTS using a VirtualBox hypervisor.
+I chose this operating system as I have sufficient Linux experience to feel confident using an operating system with no graphical interface (as opposed to Ubuntu Desktop), and the absence of a GUI means a smaller ISO file, memory footprint, \& CPU footprint.
+I chose Ubuntu specifically because it's a Linux system with which I have previous experience, and is well-document with plenty of packages available to install if needs be.
+Ubuntu also makes it easy to install the \verb|PREEMPT_RT| patches, which transform the standard Linux kernel into a fully preemptible, real-time kernel, which I felt was more suitable for this assignment, as the standard Linux kernel is not suitable for a hard real-time system due to its lack of preemption.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/hardware.png}
+    \caption{Virtual machine hardware configuration}
+\end{figure}
+
+I set the virtual machine to have a single CPU and set the amount of RAM to 2048MB which is the recommended minimum for Ubuntu Server\supercite{ubuntu_server_installation}.
+I left the hard disk size at the default of 25GB as I saw no reason to change it.
+The real-time kernel with the \verb|PREEMPT_RT| patches installed is available with Ubuntu Pro, which is free for personal use.
+After setting up an Ubuntu Pro account, I enabled the real-time kernel using the \mintinline{bash}{pro} command.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/proenable.png}
+    \caption{Enabling the real-time kernel with the \mintinline{bash}{pro} command}
+\end{figure}
+
+Finally, I transferred over the following C file (taken from the lecture slides) via \mintinline{shell}{scp} to the virtual machine to get the clock resolution, which is 1 nanosecond:
+\begin{code}
+\begin{minted}[linenos, breaklines, frame=single]{C}
+#include<unistd.h>
+#include<time.h>
+#include <stdio.h>
+
+int main(){
+    struct timespec clock_res;
+    int stat;
+    stat=clock_getres(CLOCK_REALTIME, &clock_res);
+    printf("Clock resolution is %d seconds, %ld nanoseconds\n",clock_res.tv_sec,clock_res.tv_nsec);
+    return 0;
+}
+\end{minted}
+\end{code}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/clockres.png}
+    \caption{Getting the clock resolution of the virtual machine}
+\end{figure}
+
+
+
+
+\printbibliography
 \end{document}
