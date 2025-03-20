@@ -1142,10 +1142,10 @@ It can be helpful to think about $P_n$.
 \subsubsection{Characteristic Path Length}
 The \textbf{characteristic path length} (i.e., the average shortest path length) $L$ of a graph $G$ is the average distance between pairs of nodes:
 \[
-    L = \frac{1}{n(n-1)} \sum_i \sum_j d_{i,j}
+    L = \frac{1}{n(n-1)} \sum_{i \neq j} d_{i,j}
 \]
 
-For graphs drawn from $G_{ER}(n,m)$ and $G_{ER}(n,p)$, $L = \frac{\ln(n)}{\ln( \langle k \rangle)}$.
+For graphs drawn from $G_{ER}(n,m)$ and $G_{ER}(n,p)$, $L = \frac{\ln(n)}{\ln( \langle k \rangle)}$, where $\langle k \rangle$ is the average degree of the network.
 
 \subsubsection{Clustering}
 In contrast to random graphs, real-world networks also contain \textbf{many triangles}: it is not uncommon that a friend of one of my friends is also my friend.
@@ -1168,7 +1168,89 @@ This proportion can be computed as follows:
 
 where $n_\Delta$ is the number of triangles in $G$ and $n_\land$ is the number of triads. 
 
+\subsubsection{Small World Behaviour}
+A network $G = (X,E)$ is said to exhibit \textbf{small world behaviour} if its characteristic path length $L$ grows proportionally to the logarithm of the number of nodes of $G$:
+\[
+    L \sim \ln(n)
+\]
 
+In this sense, the ensembles $G(n,m)$ \& $G(n,p)$ of random graphs do exhibit small world behaviour (as $n \to \infty$).
+
+\subsubsection{Transitivity}
+The \textbf{transitivity} $T$ of a graph $G=(X,E)$ is the proportion of \textbf{transitive} triads, i.e., triads which are subgraphs of \textbf{triangles}.
+This proportion can be computed as:
+\[
+    T = \frac{3n_\Delta}{n_\land}
+\]
+
+where $n_\Delta$ is the number of triangles in $G$ and $n_\land$ is the number of triads.
+\\\\
+The transitivity of a graph in $G_{ER}(n,p)$ is easy to estimate:
+for every triad, the ``third'' edge is present with probability $p$, so:
+\[
+    T = p
+\]
+
+Or, compute $\frac{3n_\Delta}{n_\land}$ using the explicit formulas from the previous lecture:
+$n_\Delta = \binom{n}{3} p^3$ and $n_\land = 3 \binom{n}{3}p^2$.
+
+\subsection{Clustering}
+The concept of \textbf{clustering} measures the transitivity of a node, or of an entire graph in a different way.
+To define it, we need the concept of an \textbf{induced subgraph}.
+
+\subsubsection{Induced Subgraph}
+Given $G = (X,E)$ and $Y \subset X$, the \textbf{induced subgraph} of $G$ on $Y$ is the graph $H = \left( Y, E \cap \binom{Y}{2} \right)$.
+That is:
+\begin{itemize}
+    \item   $H$ is a subgraph of $G$ with node set $Y$.
+    \item   $H$ has all possible edges in $G$ for which both nodes are in $Y$.
+\end{itemize}
+
+\subsubsection{Clustering Coefficient}
+For a node $i \in X$ of a graph $G = (X,E)$, denote by $G_i$ the subgraph induced on the neighbours of $i$ in $G$, and by $m(G_i)$ its number of edges;
+the \textbf{node clustering coefficient} $c_i$ of node $i$ is defined as:
+\[
+    c_i = 
+    \begin{cases}
+        \binom{k_i}{2}^{-1} m(G_i) & k_i \geq 2 \\
+        0 & \text{otherwise}
+    \end{cases}
+\]
+
+That is, the node clustering coefficient measures the proportion of existing edges in its \textbf{social graph} among the possible edges.
+\\\\
+The \textbf{graph clustering coefficient} $C$ of $G$ is the average node clustering coefficient:
+\[
+    C = \langle c \rangle c = \frac{1}{n} \sum^n_{i=1} c_i
+\]
+
+By definition,  $0 \leq c_i \leq 1$ for all nodes $i \in X$, and $0 \leq C \leq 1$.
+\\\\\
+The \textbf{node clustering coefficient} of any node $i$ in a $G_{ER}(n,p)$ \textbf{random graph} is $c_i = p$, i.e., in any selection of potential edges, by construction a proportion $p$ of them is present in the random graph;
+this is true in particular for the $\binom{k}{2}$ potential edges between the $k$ neighbours of a node of degree $k$.
+The \textbf{graph clustering coefficient} of a $G_{ER}(n,p)$ \textbf{random graph} is:
+\[
+    C = p
+\]
+
+Note that when $p(n) = \langle k \rangle n^{-1}$ for a fixed expected average degree $\langle k \rangle$, then $C = \frac{\langle k \rangle}{n} \to 0$ for $n \to \infty$;
+that is, in large $G_{ER}$ random graphs, the number of triangles is negligible.
+In real-world networks, one often observers that $\frac{C}{\langle k \rangle}$ does not depend on $n$ (as $n \to \infty$).
+
+\subsubsection{Clustering versus Transitivity}
+For a node $i \in X$, denote by $n^\land_i = \binom{k_i}{2}$ the number of triads containing $i$ as their central node, and by $n_i^\Delta$ the actual number of triangles containing $i$;
+then, the node clustering coefficient is:
+\begin{align*}
+    c_i = \frac{n_i^\Delta}{n_i^\land} \quad \text{ or,} \\
+    n_i^\Delta = n_i^\land c_i
+\end{align*}
+
+Moreover, $3n_\Delta = \sum_i n_i^\Delta$ and $n_\land = \sum_i n_i^\land$;
+it follows that $T = \frac{3n_\Delta}{n_\land} = \frac{1}{n_\land} \sum_i n_i^\land c_i$, in contrast to $C = \frac{1}{n} \sum_i c_i$.
+That is, $C$ is the (plain) \textbf{average} of the node clustering coefficients, whereas $T$ is a \textbf{weighted average} of node clustering coefficients, giving higher weight to high-degree nodes.
+\\\\
+The fact that ER random networks tend to have low transitivity \& clustering shows the need for a new kind of (random) network construction that is better at modelling real-world networks.
+One idea is to start with some \textbf{regular network} that naturally has \textit{high clustering}, and then to randomly distort its edges to introduce some \textbf{short paths}.
 
 
 
