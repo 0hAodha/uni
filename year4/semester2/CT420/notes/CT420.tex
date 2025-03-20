@@ -1151,5 +1151,91 @@ Streams can be created by either endpoint, and can concurrently send data interl
 Streams are identified within a connection by a numeric value, referred to as the stream ID (a 62-bit integer) that is unique for all streams on a connection.
 Client-initiated streams have even-numbered stream IDs and server-initiated streams have odd-numbered stream IDs.
 
+\section{Congestion Control in QUIC}
+Web performance is usually measured by the following metrics:
+\begin{itemize}
+    \item   \textbf{Latency:} we will often need quite a few round trips to load even a single file due to features such as congestion control.
+            Even low latencies of less than 50 milliseconds can add up to considerable delays.
+            This is one of the main reasons why CDNs exist: they place servers physically closer to the end user in order to reduce latency, and thus delay, as much as possible.
+
+    \item   \textbf{Bandwidth:} measures the amount of data that is able to pass through a network at a given time.
+            It is measured in bits per second.
+
+    \item   \textbf{Throughput:} the number of data packets that are able to reach their destination within a specific period of time.
+            Throughput can be affected by a number of factors, including bus or network congestion, latency, packet loss/errors, \& the protocol used.
+\end{itemize}
+
+Access to higher bandwidth data rates is always good, but latency is the limiting factor for everyday web browsing.
+
+\subsubsection{Deciding Sending Rate}
+Reliable transports don't just start sending data at full rate, because this could end up congesting the network.
+Each network link has only a certain amount of data it can process every second;
+sending excessive data will lead to packet loss.
+Lost packets need to be re-transmitted and can seriously affect performance in high latency networks.
+
+\subsubsection{Estimating Link Capacity}
+We don't know up front what the maximum bandwidth will be;
+it depends on a bottleneck somewhere in the end-to-end connection, but we cannot predict or know where this will be.
+The Internet also does not (yet) have mechanisms to signal link capacities back to the endpoints.
+Even if we knew the available physical bandwidth, that wouldn't mean we could use all of it ourselves --- several users are typically active on a network concurrently, each of whom need a fair share of the available bandwidth.
+
+\subsection{Congestion Control}
+In the 1980s when the Internet was still ran by the government and TCP was young, engineers were learning about bad TCP behaviour \& networks.
+At the time, TCP with no congestion control would occasionally ``collapse'' whole segments of the Internet.
+Clients were programmed to respect the capacity of the machine at the other end of the connection (flow control) but not the capacity of the network.
+In 1986, in an especially bad incident, backbone links under incredible congestion passed only 40bps, $\frac{1}{1000}$\textsuperscript{th} of their rated 32kbps capacity.
+\\\\
+In the network area, \textbf{congestion control} is how to decide how much data the connection can send into the network.
+Reliable transport protocols such as TCP \& QUIC constantly try to discover the available bandwidth over time by using congestion control algorithms.
+\begin{itemize}
+    \item   \textbf{Maximum Segment Size (MSS)} is the largest data payload that a device will accept from a network connection.
+    \item   The \textbf{Congestion Window (CWND)} is a sender-side limit on the amount of data the sender can transmit into the network before receiving an acknowledgement (ACK).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/congestionctrl.png}
+    \caption{Congestion control}
+\end{figure}
+
+In the \textbf{slow-start phase}, a connection is started slow, and waits one round trip to receive acknowledgements of these packets.
+If they are acknowledges, this means that the network has capacity, and the send rate is increased every iteration (usually doubled).
+In the \textbf{congestion avoidance phase}, the send rate continues to grow until some packets are not acknowledged (which indicates packet loss \& network congestion).
+On packet loss, the send rate is slashed, and afterward it is gradually increased in much smaller increments.
+This reduce-then-grow logic is repeated for every packet loss.
+\\\\
+Largely, there are two categories of congestion control strategies:
+\begin{itemize}
+    \item   \textbf{Loss-based congestion control:} where the congestion control responds to a packet loss event, e.g., Reno \& CUBIC.
+    \item   \textbf{Delay-based congestion control:} the algorithm tries to find a balance between the bandwidth \& RTT increase and tune the packet send rate, e.g., Vegas \& BBR.
+\end{itemize}
+
+\subsubsection{Reno}
+\textbf{Reno} (often referred to as NewReno) is a standard congestion control for TCP \& QUIC.
+Reno starts from ``slow start'' mode which increases the CWND (limits the amount of data a TCP connection can send) roughly $2 \times$  for every RTT until the congestion is detected.
+When packet loss is detected, it enters into the ``recovery'' mode until the packet loss is recovered.
+When it exits from recovery (no lost ranges) and the CWND is greater than the \textbf{SSTHRESH} (Slow Start Threshold), it enters into the ``congestion avoidance'' mode where the CWND grows slowly (roughly a full packet per RTT) and tries to converge on a stable CWND.
+A ``sawtooth'' pattern is observed when the CWND is graphed over time.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/reno.png}
+    \caption{Reno}
+\end{figure}
+
+\subsubsection{Cubic}
+\textbf{Cubic} is defined in RCF-8312 and implemented in many operating systems including Linux, BSD, \& Windows.
+The difference between Cubic \& Reno is that during congestion avoidance, the CWND growth is based on a textit{cubic} function instead of a linear function.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/cubic.png}
+    \caption{Cubic}
+\end{figure}
+
+$W_{\text{max}}$ is the value of the CWND when congestion is detected.
+The CWND will then be reduced by 30\% and will start to grow again using a cubic function as in the graph, approaching $W_{\text{max}}$ aggressively in the beginning but slowly converging to $W_{\text{max}}$ later.
+This makes sure the CWND growth approaches the previous point carefully, and once we pass $W_{\text{max}}$, it starts to grow aggressively again after some time to find a new CWND, called \textbf{max probing}.
+
 \end{document}
 
