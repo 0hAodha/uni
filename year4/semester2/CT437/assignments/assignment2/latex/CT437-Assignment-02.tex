@@ -5,6 +5,8 @@
 \usepackage{microtype}      % Slightly tweak font spacing for aesthetics
 \usepackage[english]{babel} % Language hyphenation and typographical rules
 \usepackage{changepage}     % adjust margins on the fly
+\usepackage{booktabs}  % For better-looking tables
+\usepackage{pgfplotstable}  % For reading and displaying CSV/TSV files
 
 \usepackage[final, colorlinks = true, urlcolor = black, linkcolor = black, citecolor = black]{hyperref} 
 \usepackage{fontspec}
@@ -94,6 +96,37 @@
 \medskip
 
 \section{Block Cipher Benchmarking}
+\begin{table}[H]
+    \centering
+    \pgfplotstabletypeset[
+        col sep=tab, % Specifies that the file is tab-separated
+        string type, % Ensures text columns are treated correctly
+        header=true, % Includes the header row
+        columns/Cipher/.style={column name=Cipher},
+        columns/Key Size/.style={column name=Key Size (bits)},
+        columns/Mode/.style={column name=Mode},
+        columns/Data Size (MB)/.style={column name=Data Size (MB)},
+        columns/Encryption Time (s)/.style={column name=Encryption Time (s)},
+        columns/Decryption Time (s)/.style={column name=Decryption Time (s)},
+        every head row/.style={before row=\toprule, after row=\midrule},
+        every last row/.style={after row=\bottomrule}
+    ] {../code/results.tsv} % Filename
+    \caption{Benchmarking results from TSV file}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/100mb.png}
+    \caption{Encryption \& decryption times for 100MB data}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/1000mb.png}
+    \caption{Encryption \& decryption times for 1000MB data}
+\end{figure}
+
+
 \section{Implementing \& Benchmarking Triple-DES}
 
 \end{document}
