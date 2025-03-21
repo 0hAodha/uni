@@ -1161,6 +1161,140 @@ Similar phenomena have been identified in other species:
             \end{itemize}
 \end{itemize}
 
+\section{Neural Networks}
+\subsection{Biological Underpinnings}
+\textbf{Neurons} are specialised cells that process \& transmit information.
+The structure of neurons include:
+\begin{itemize}
+    \item   \textbf{Soma}: the cell body which contains the nucleus and processes inputs;
+    \item   \textbf{Dendrites:} receives signals from other neurons;
+    \item   \textbf{Axon:} transmits signals to other neurons;
+    \item   \textbf{Synapses:} connection points between neurons.
+\end{itemize}
 
+The human brain contains over 80 billion neurons.
+Each neuron may connect to thousands of other.
+Signals can be \textbf{excitatory} (increase firing probability) or \textbf{inhibitory} (decrease firing probability).
+\\\\
+An \textbf{artificial neuron} has input connections to receive signals, an activation function (sigmoid, ReLU, etc.) that activates depending on the weighted sum of the inputs, and transmits the result on the output connection.
+Artificial neurons have weighted connections to other neurons.
+They learn through backpropagation and are used in parallel computing architectures.
+Key simplifications made in the artificial neural network model include:
+\begin{itemize}
+    \item   Discrete time steps instead of continuous firing;
+    \item   Simplified activation functions;
+    \item   Uniform neuron types instead of diverse cell types;
+    \item   Backpropagation instead of local learning rules.
+\end{itemize}
+
+\subsection{History of Artificial Neural Networks}
+\begin{itemize}
+    \item   \textbf{1934:} McCulloch \& Pitts proposed the first mathematical model of a neuron, with binary threshold units performing logical operations, and demonstrated that networks of these neurons could compute any arithmetic or logical function.
+
+    \item   \textbf{1949:} Donald Hebb published \textit{The Organisation of Behaviour}, introducing \textbf{Hebbian learning} (``neurons that fire together, wire together'') and first proposed learning rules for neural adaptation.
+
+    \item   \textbf{1958:} Frank Rosenblatt introduced the \textbf{perceptron}, the first trainable neural network models using a binary classifier with adjustable rates.
+            It could learn from examples using an error-correction rule.
+            \[
+                y = f \left( \sum^n_{i=1} w_ix_i + b \right) \quad \text{where } f(z) =
+                \begin{cases}
+                    1 & \text{if } z \geq 0 \\
+                    0 & \text{otherwise}
+                \end{cases}
+            \]
+
+    \item   \textbf{1969:} Minsky \& Papert published \textit{Perceptrons}, proving the fundamental limitations of single-layer perceptrons and demonstrated that they could not learn simple functions like \verb|XOR|;
+            the famous \verb|XOR| problem became emblematic of perceptron limitations.
+            The impact of this was a shift of focus to symbolic AI approaches.
+            There was a need for multiple layers to solve non-linearly separable problems, and there was a lack of effective training methods for multi-layer networks.
+    
+    \item   \textbf{1986:} Rumelhart, Hinton, \& Williams popularised \textbf{backpropagation}, an efficient algorithm for training multi-layer networks based on the chain rule for computing gradients, thus solving the \verb|XOR| problem and more complex pattern-recognition tasks.
+            Challenges that limited the adoption of artificial neural networks at this time included:
+            \begin{itemize}
+                \item   Computational limitations (training was extremely slow);
+                \item   Vanishing / exploding gradient problems in deep networks;
+                \item   Other approaches outperformed neural networks on many tasks;
+                \item   Need for large labelled datasets.
+            \end{itemize}
+
+        \item   \textbf{2006:} Hinton et al. introduced \textbf{deep belief networks}, allowing for effective training of deep architectures.
+
+        \item   \textbf{2010:} GPU computing transformed neural network training, making it orders of magnitude faster for matrix operations and enabling training of much larger networks.
+\end{itemize}
+
+\subsection{Neuro-Evolution}
+\textbf{Neuro-evolution} is the application of evolutionary algorithms to optimise neural networks.
+It is also adopted in the field of Artificial Life as a means to explore different learning approaches.
+The main approaches include direct encoding (weights, topologies) \& indirect encoding.
+Neuro-evolution can achieve global optimisation as they are less prone to local optima, can optimise both architectures \& hyperparameters.
+It is a useful approach when the architecture is unknown and is useful on highly multi-modal landscapes.
+\\\\
+In Artificial Life, neural networks are viewed as ``brains'': controllers for artificial organisms that enable complex behaviours \& adaptation.
+The biological inspiration is from the evolution of nervous systems and environmental pressures driving cognitive complexity.
+The goal is to understand how intelligence emerges through evolutionary processes.
+\\\\
+\textbf{Open-ended evolution} is defined by continuous adaptation \& complexity growth.
+Challenges associated with open-ended evolution in Artificial Life include creating sufficient environmental complexity, maintaining selective pressure over time, \& avoiding evolutionary dead-ends.
+Increasing network complexity for neural networks in open-ended evolution correlates with behavioural complexity, and incremental evolution builds on previous capabilities.
+The current research frontier is creating truly open-ended neural evolution.
+\\\\
+\textbf{Simple neuro-evolution} has a fixed network topology with a pre-determined architecture (e.g., layers, connectivity) and only weights are evolved.
+The encoding strategy is direct, with each weight being a separate gene.
+The genetic operators used are mutation (applying random perturbations to weights) \& crossover (combining weights from parents).
+The advantage of this approach is that it is simple \& efficient, but it is limited by architecture constraints.
+The neuro-evolution process is as follows:
+\begin{enumerate}
+    \item   \textbf{Initialisation:} generate an initial population of neural networks.
+    \item   \textbf{Evaluation:} assess the fitness of each network on a task.
+    \item   \textbf{Selection:} choose networks to reproduce based on their fitness.
+    \item   \textbf{Reproduction:} create new networks through crossover \& mutation.
+    \item   \textbf{Repeat:} iterate through generations until convergence.
+\end{enumerate}
+
+Potential representations for neuro-evolution include direct coding, marker-based encoding, \& indirect coding
+
+\subsubsection{NEAT}
+\textbf{NeuroEvolution of Augmenting Topologies (NEAT)} is concerned with the simultaneous evolution of weights \textit{and} topology that starts with a minimal network and grows the complexity as needed.
+It uses speciation to protection innovations.
+Its genetic operators include  weight mutation, add connection, add node, \& crossover with history tracking.
+The advantages of NEAT is that it facilitates the exploration of large search spaces, adapts to dynamic environments, and is effective for complex problem domains.
+It has applications in evolutionary robotics \& game-playing agents.
+
+\subsubsection{Artificial Life Models}
+In addition to application to practical optimisation problems, the neuro-evolution model has been adopted in a range of artificial life models where one can explore the interplay between population-based learning (genetic algorithms), lifetime learning (NNs), \& other forms of learning, and has led to some interesting results.
+Key areas in which Artificial Life models are used include signalling, language evolution, movement behaviours, flocking/clustering, \& means to explore the interplay between different learning types.
+Types of learning in Artificial Life include:
+\begin{itemize}
+    \item   Population-based learning (modelled with GAs);
+    \item   Lifetime learning (modelled with NNs);
+    \item   Cultural learning (allows communication between agents).
+\end{itemize}
+
+Consider a population of agents represented by NNs subject to evolutionary pressures (GAs).
+Many theories have been proposed to explain the evolution of traits in populations (Darwinian, Lamarckian, etc.).
+The \textbf{Baldwin effect} is a concept in evolutionary biology that suggests that learned behaviours acquired by individuals during their lifetime can influence the direction of evolution.
+Learned behaviours initially arise through individual learning and are not genetically encoded.
+Over time, individuals with adaptive learned behaviours may have higher fitness, leading to differential reproduction.
+Selection pressure favours those individuals with certain learned behaviours. 
+Eventually, these once-learned behaviours may become innate or genetically predisposed in subsequent generations.
+Hinton \& Nowlan experiments show this effect.
+\\\\
+Combining lifetime \& evolutionary learning can evolve greater plasticity in populations and can evolve the ability to learn useful functions.
+This can be useful in changing environment, as it allows populations to adapt.
+\textbf{Cultural learning} allows agents to learn from each other, and has been shown to allow even greater plasticity in populations.
+It has been used in conjunction with lifetime learning \& population-based learning and has been used to model the emergence of signals, ``language'', dialects, etc.
+
+\subsection{Case Studies}
+\subsubsection{Evolved Communication}
+The problem of evolving multi-agent communication involves agents with neural signalling networks with no pre-defined communication protocols, that must evolve signals \& interpretations.
+The key findings are that communication emerges when beneficial and signal complexity matches task complexity.
+Applications involve the origin of language models, emergent semantics, \& multi-agent co-ordination.
+
+\subsubsection{Predator-Prey Co-Evolution}
+The experimental set-up for predator-prey evolution consists of populations of predator \& prey agents, neural controllers for sensing \& movement, and evolving in a shared environment.
+The \textbf{Red Queen dynamics} are a continuous arms race with adaptation \& counter-adaptation, and no stable equilibrium.
+
+\subsubsection{Evolving Deep Neural Networks}
+Challenges include the high-dimensional search spaces, computational requirements, \& efficient encoding of complex architectures.
 
 \end{document}
