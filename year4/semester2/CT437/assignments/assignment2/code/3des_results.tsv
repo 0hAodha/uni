@@ -1,0 +1,5 @@
+Cipher	Key Size	Mode	Data Size (MB)	Encryption Time (s)	Decryption Time (s)
+TripleDES	192	ECB	100	2.998375	2.924084
+TripleDES	192	CBC	100	3.049974	3.044817
+TripleDES	192	ECB	1000	30.411056	30.296341
+TripleDES	192	CBC	1000	31.411292	30.818811
