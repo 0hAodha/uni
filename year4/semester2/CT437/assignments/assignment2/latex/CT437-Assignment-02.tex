@@ -114,6 +114,17 @@
     \caption{Benchmarking results from TSV file}
 \end{table}
 
+To benchmark the CPU time of my program, I used the standard POSIX \mintinline{c}{getrusage()} function declared in the \mintinline{c}{<sys/resource.h>} header, and wrote the collected experimental data to a tab-separated value (TSV) file defined in my \verb|benchmark.h| header file, as I generally prefer TSV to CSV due to its increased human-readability in plaintext form.
+I made sure to only open and write to the results file \textit{after} each benchmark had been measured to ensure that the data was accurate.
+The above table of results is generated automatically from the TSV file using the {\LaTeX} \mintinline{latex}{pgfplots} package, and the below bar charts were generated using a simple Python script.
+Since I already run a Linux-based operating system on my laptop, I was able to run these benchmarks natively on my machine, both making it slightly easier for me to run the tests but also likely greatly improving the performance of the block ciphers as the program had full access to my system resources instead of limited virtualised hardware.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/one.png}
+    \caption{ Compiling and running the benchmarking program }
+\end{figure}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{./images/100mb.png}
@@ -126,7 +137,63 @@
     \caption{Encryption \& decryption times for 1000MB data}
 \end{figure}
 
+The above bar charts contain the time taken for encryption \& decryption for each cipher, key size, \& mode combination tested;
+the blue columns represent the time taken for encryption and the red columns represent the time taken for decryption.
+The graphs are separated by the size of the data being encrypted / decrypted.
+What is most immediately obvious to me when looking at these two graphs is how similar the two are:
+the results and relative scaling look almost identical until you look at the $y$-axis and see that each time result is about 10 times higher in the 1000MB experiment than in the 100MB experiment, which makes perfect sense, as the one experiment involves 10 times the data of the other.
+Since block ciphers process only fixed-size blocks, processing each block (theoretically) takes a constant amount of time, and so the CPU time of the algorithm will scale linearly with the amount of data to be encrypted or decrypted.
+\\\\
+The next feature of the bar charts that is immediately obvious is that the blue columns are approximately the same height as the red columns: encryption time $\approx$ decryption time.
+This is what one would expect, as the block ciphers in question are \textbf{symmetric}: the operations used for encryption \& decryption are inverses of each other.
+The slight variations in some results can be attributed to fluctuations in background processes consuming CPU on my laptop when I ran the tests.
+The one exception here are the AES results:
+relative to the amount of time taken by encryption for the AES results, the decryption results are quite a bit higher.
+Furthermore, the decryption results are consistently higher than the encryption results, unlike the other algorithms where it appears to be more or less random noise.
+This is because of \textbf{AES-NI} (Advanced Encryption Standard New Instructions): a set of hardware instructions on Intel/AMD CPUs that allow hardware acceleration of AES operations.
+OpenSSL automatically detects if AES-NI is supported at runtime, and will automatically take advantage of these hardware accelerations if available.
+On Linux-based operating systems, you can check if your CPU has AES flags in its CPU information to check if AES-NI is supported by running \mintinline{shell}{grep -c aes /proc/cpuinfo}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/aesni.png}
+    \caption{Output of \mintinline{shell}{grep -c aes /proc/cpuinfo} showing that my CPU supports AES-NI}
+\end{figure}
+
+As can be seen from the terminal screenshot above, my laptop's CPU does indeed support AES-NI, which explains not only the slightly slower (relatively speaking) AES decryption times, but also why the AES times are so much faster than both the ARIA and Camellia times.
+Ordinarily, for similar amounts of data, one would expect that AES would take roughly the same amount of time as ARIA or Camellia, and possibly be outperformed by something like Camellia as AES has more lookup tables \& transformations than Camellia, which can be costly in software implementations.
+However, since my CPU has hardware-acceleration for AES operations with AES-NI, these operations occur in the hardware rather than the software, and are therefore much, much faster.
+\\\\
+We can also see from the bar charts that ARIA is consistently slower than Camellia;
+as there is no hardware acceleration for either, this is down purely to their software implementations / algorithmic design.
+This can be explained by the fact that ARIA has a computationally intensive round function that uses a substitution-permutation network structure (like AES) with multiple layers of S-box substitutions, diffusion matrices, \& key-dependent transformations.
+On the other hand, Camellia uses a Feistel network which is more lightweight and better-suited for software execution.
+\\\\
+If you look carefully at the graphs, you can see that encryption \& decryption with a 256-bit key is just slightly slower than encryption \& decryption with a 128-bit key.
+A larger key size means more encryption rounds and more computation per block, thus making using 256-bit key slower than a 128-bit key.
+However, this speed decrease is usually well worth it, as it makes the encryption far stronger and much more difficult to brute force.
+\\\\
+The last aspect of the bar charts to discuss is the impact of the various modes on encryption \& decryption time.
+The differences here are the most difficult to see in the bar charts but are there if you look closely; they may be easier to see in the tabulated results.
+\begin{enumerate}
+    \item   ECB mode is the fastest of the three modes because each block is encrypted independently with no chaining or initialisation vector required, making it simple \& fast, and easy to parallelise in both encryption \& decryption.
+            However, it is not particularly secure: identical plaintext blocks will result in identical ciphertext blocks, and it can leak data patterns in the encrypted data.
+
+    \item   CTR mode is the second fastest, as it works by converting the block cipher into a stream cipher and uses a counter \& a nonce to generate a keystream.
+            It encrypts the counter, then \verb|XOR|s it with the plaintext.
+            This is highly parallelisable for both encryption \& decryption, and uses the same logic for both.
+            It is also much more secure than ECB mode, as the counter never repeats.
+
+    \item   The slowest of the three modes is CBC mode:
+            in CBC mode, each plaintext block is \verb|XOR|ed with the previous ciphertext block before encryption, requiring an IV for the first block.
+            This makes it more secure than ECB as it removes repeating patterns, but it is not parallelisable as each block depends on the previous, making encryption much slower.
+            However, decryption can be parallelised somewhat, as ciphertext blocks can be decrypted independently before they are \verb|XOR|ed with the previous ciphertext block, but it is not clear from the results whether or not such parallelisation was utilised, and if it was, it had little impact on the performance.
+\end{enumerate}
 
 \section{Implementing \& Benchmarking Triple-DES}
+
+
+
+
 
 \end{document}
