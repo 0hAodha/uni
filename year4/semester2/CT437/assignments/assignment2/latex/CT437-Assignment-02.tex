@@ -191,8 +191,46 @@ The differences here are the most difficult to see in the bar charts but are the
 \end{enumerate}
 
 \section{Implementing \& Benchmarking Triple-DES}
+\begin{table}[H]
+    \centering
+    \pgfplotstabletypeset[
+        col sep=tab, % Specifies that the file is tab-separated
+        string type, % Ensures text columns are treated correctly
+        header=true, % Includes the header row
+        columns/Cipher/.style={column name=Cipher},
+        columns/Key Size/.style={column name=Key Size (bits)},
+        columns/Mode/.style={column name=Mode},
+        columns/Data Size (MB)/.style={column name=Data Size (MB)},
+        columns/Encryption Time (s)/.style={column name=Encryption Time (s)},
+        columns/Decryption Time (s)/.style={column name=Decryption Time (s)},
+        every head row/.style={before row=\toprule, after row=\midrule},
+        every last row/.style={after row=\bottomrule}
+    ] {../code/3des_results.tsv} % Filename
+    \caption{Benchmarking results from TSV file}
+\end{table}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/3desss.png}
+    \caption{Compiling \& running the benchmarking program}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{./images/3des.png}
+    \caption{Encryption \& decryption times for Triple-DES}
+\end{figure}
+
+As before, what is immediate obvious about this graph is that the times for 1000MB of data are pretty much exactly 10 times that of the times for 100MB of data, as Triple-DES is a block cipher and so the computational time scales linearly with input data size.
+We can also see that decryption is generally a little faster than encryption but is more or less the same speed. 
+This is likely due in part due to background noise, but is also possibly due to internal caching behaviour or other optimisations for decryption in the OpenSSL implementation.
+In general, however, one would expect encryption \& decryption to take more or less the same amount of time, as Triple-DES is a symmetric algorithm and therefore decryption requires the same steps as encryption, just inverted.
+As before, since ECB encrypts each block independently, it is faster than CBC due to being parallelisable, whereas CBC has dependency between blocks and is therefore not parallelisable and thus slower.
+\\\\
+The main comparison to be drawn from comparing the Triple-DES results to the results from the first experiment is that Triple-DES is much slower, taking 5--10 times more time to execute than any other algorithm from the first experiment.
+This is down to three primary reasons: DES operates on 64-bit blocks which is less efficient, is very outdated so has no hardware acceleration and not much software optimisation, and because Triple-DES runs DES three times, so it's automatically going to be 3 times slower.
+For example Triple-DES took about 6 times longer to run than Camellia in ECB mode on 1000MB of data: $\sim$30 seconds versus $\sim$5 seconds.
+This makes sense, as we would expect DES to be about twice as slow as Camellia and, Triple-DES will naturally be three times slower than DES, adding up to a 6$\times$ speed decrease.
 
 
 
