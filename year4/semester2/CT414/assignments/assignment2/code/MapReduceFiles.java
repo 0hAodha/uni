@@ -24,6 +24,11 @@ public class MapReduceFiles {
       input.put(args[0], readFile(args[0]));
       input.put(args[1], readFile(args[1]));
       input.put(args[2], readFile(args[2]));
+
+      for (String filename : args) {
+        input.put(filename, readFile(filename));
+      }
+
     }
     catch (IOException ex)
     {
