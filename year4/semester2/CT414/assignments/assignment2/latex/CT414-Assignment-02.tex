@@ -143,12 +143,40 @@ The distributed MapReduce saw significant improvements in the map \& group phase
 After implementing the requested changes in steps 2--6 of the assignment specification, I then implemented a grid-search function which tested a range of values for the number of lines of text per map thread and the number of words per reduce thread.
 The results of this grid-search were exported to a CSV file for analysis.
 I then wrote a Python script to visualise the parameter combinations using heatmaps.
+Heatmaps that contain results pertaining only to the map phase and the reduce phase, as well as a table of the results from the CSV file can be found in the Appendix. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{./images/gridsearch.png}
+    \includegraphics[width=0.8\textwidth]{./images/gridsearch.png}
     \caption{Running the grid-search and plotting the results}
 \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./images/total_time_heatmap.png}
+    \caption{Heatmap of total time taken by each parameter combination}
+\end{figure}
+
+As can be seen from the heatmap above, the best result achieved by the distributed MapReduce approach was 1,219 milliseconds with the parameter combination of 200 words per reduce thread and 5,500 lines per map thread.
+Not only is this an improvement of over 2600\% ($\frac{31874}{1219} \times 100 = 2614.766$), but it beats the original brute force result of 1,307 milliseconds and the non-distributed MapReduce result of 1,372 milliseconds.
+We can tell that this isn't a fluke, as this is consistent with other neighbouring values in the heatmap, with similar times of 1,296 milliseconds, 1,273 milliseconds, etc.
+\\\\
+What I find most interesting about these results is that they are so similar to the brute force results; while the fully-optimised \& tuned distributed MapReduce does beat brute force, it only does so by a narrow margin.
+I have a few ideas as to why this might be the case:
+it may be due to the brute force approach being more suitable to CPU caching due to its sequential approach, or due to the high thread overhead running it on the CPU of a single laptop, but I think that the main reason is that the dataset isn't actually very big.
+While 10 large books may seem to be quite a lot of data, MapReduce was created to deal with petabytes of data, not a few megabytes.
+I would hypothesise that the real performance benefits of distributed MapReduce would only become clear if the testing was repeated on at least a couple gigabytes of data.
+
+\section{Appendix: Source Code}
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{java}{../code/MapReduceFiles.java}
+    \caption{\texttt{MapReduceFiles.java}}
+\end{code}
+
+\begin{code}
+    \inputminted[linenos, breaklines, frame=single]{python}{../code/plots.py}
+    \caption{\texttt{plots.py}}
+\end{code}
 
 \begin{table}[H]
 \centering
@@ -168,13 +196,6 @@ I then wrote a Python script to visualise the parameter combinations using heatm
 \caption{Results written to \texttt{performance\_results.csv}}
 \end{table}
 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{./images/total_time_heatmap.png}
-    \caption{Heatmap of total time taken by each parameter combination}
-\end{figure}
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{./images/map_time_heatmap.png}
@@ -186,18 +207,6 @@ I then wrote a Python script to visualise the parameter combinations using heatm
     \includegraphics[width=0.8\textwidth]{./images/reduce_time_heatmap.png}
     \caption{Heatmap of time taken during the reduce phase by each parameter combination}
 \end{figure}
-
-\section{Appendix: Source Code}
-\begin{code}
-    \inputminted[linenos, breaklines, frame=single]{java}{../code/MapReduceFiles.java}
-    \caption{\texttt{MapReduceFiles.java}}
-\end{code}
-
-\begin{code}
-    \inputminted[linenos, breaklines, frame=single]{python}{../code/plots.py}
-    \caption{\texttt{plots.py}}
-\end{code}
-
 
 
 

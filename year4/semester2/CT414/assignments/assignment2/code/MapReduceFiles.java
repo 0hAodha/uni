@@ -22,8 +22,8 @@ public class MapReduceFiles {
       return;
     }
 
-    int[] mapSizes = {1000, 2000, 5000, 10000};
-    int[] reduceSizes = {100, 200, 500, 1000};
+    int[] mapSizes = {1000, 2000, 4500, 4750, 5000, 5250, 5500, 10000};
+    int[] reduceSizes = {100, 150, 200, 500, 1000};
 
     System.out.println("===== Starting Grid Search =====");
 
