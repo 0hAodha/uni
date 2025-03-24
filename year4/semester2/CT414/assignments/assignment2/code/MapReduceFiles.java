@@ -1,289 +1,162 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 public class MapReduceFiles {
 
-  private static final int LINES_PER_MAP_THREAD = 2000;
+  private static final String CSV_FILE = "performance_results.csv";
 
   public static void main(String[] args) {
-
-    if (args.length < 3) {
-      System.err.println("usage: java MapReduceFiles file1.txt file2.txt file3.txt");
-
+    if (args.length < 1) {
+      System.err.println("Usage: java MapReduceFiles file1.txt file2.txt ... fileN.txt");
+      return;
     }
 
-    Map<String, String> input = new HashMap<String, String>();
+    Map<String, String> input = new HashMap<>();
     try {
-      input.put(args[0], readFile(args[0]));
-      input.put(args[1], readFile(args[1]));
-      input.put(args[2], readFile(args[2]));
-
       for (String filename : args) {
         input.put(filename, readFile(filename));
       }
-
-    }
-    catch (IOException ex)
-    {
-      System.err.println("Error reading files...\n" + ex.getMessage());
+    } catch (IOException ex) {
+      System.err.println("Error reading files: " + ex.getMessage());
       ex.printStackTrace();
-      System.exit(0);
+      return;
     }
 
-    // APPROACH #1: Brute force
-    {
-      long startTime = System.currentTimeMillis();
+    int[] mapSizes = {1000, 2000, 5000, 10000};
+    int[] reduceSizes = {100, 200, 500, 1000};
 
-      Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
+    System.out.println("===== Starting Grid Search =====");
 
-      Iterator<Map.Entry<String, String>> inputIter = input.entrySet().iterator();
-      while(inputIter.hasNext()) {
-        Map.Entry<String, String> entry = inputIter.next();
-        String file = entry.getKey();
-        String contents = entry.getValue();
+    try (PrintWriter writer = new PrintWriter(new FileWriter(CSV_FILE))) {
+      writer.println("MapLines,ReduceWords,MapTime,GroupTime,ReduceTime,TotalTime");
 
-        String[] words = contents.trim().split("\\s+");
-
-        for(String word : words) {
-
-          Map<String, Integer> files = output.get(word);
-          if (files == null) {
-            files = new HashMap<String, Integer>();
-            output.put(word, files);
-          }
-
-          Integer occurrences = files.remove(file);
-          if (occurrences == null) {
-            files.put(file, 1);
-          } else {
-            files.put(file, occurrences.intValue() + 1);
-          }
+      for (int mapSize : mapSizes) {
+        for (int reduceSize : reduceSizes) {
+          runDistributedMapReduce(input, mapSize, reduceSize, writer);
         }
       }
 
-      long timeTaken = System.currentTimeMillis() - startTime;
-      System.out.println("Brute Force Results:");
-      System.out.println("\tTotal Time: " + timeTaken + "\n");
+    } catch (IOException e) {
+      System.err.println("Error writing to CSV file: " + e.getMessage());
     }
 
+    System.out.println("===== Grid Search Complete =====");
+    System.out.println("Results saved to: " + CSV_FILE);
+  }
 
-    // APPROACH #2: MapReduce
-    {
-      long startTime = System.currentTimeMillis();
+  public static void runDistributedMapReduce(Map<String, String> input, int linesPerMapThread, int wordsPerReduceThread, PrintWriter csvWriter) {
+    final Map<String, Map<String, Integer>> output = new HashMap<>();
 
-      Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
+    // MAP Phase
+    long mapStartTime = System.currentTimeMillis();
+    List<MappedItem> mappedItems = Collections.synchronizedList(new ArrayList<>());
 
-      // MAP:
-      long mapStartTime = System.currentTimeMillis();
-      List<MappedItem> mappedItems = new ArrayList<MappedItem>();
-
-      Iterator<Map.Entry<String, String>> inputIter = input.entrySet().iterator();
-      while(inputIter.hasNext()) {
-        Map.Entry<String, String> entry = inputIter.next();
-        String file = entry.getKey();
-        String contents = entry.getValue();
-
-        map(file, contents, mappedItems);
+    final MapCallback<String, MappedItem> mapCallback = new MapCallback<>() {
+      public synchronized void mapDone(String file, List<MappedItem> results) {
+        mappedItems.addAll(results);
       }
-      long mapTotalTime = System.currentTimeMillis() - mapStartTime;
+    };
 
-      // GROUP:
-      long groupStartTime = System.currentTimeMillis();
+    List<Thread> mapCluster = new ArrayList<>();
+    for (Map.Entry<String, String> entry : input.entrySet()) {
+      final String file = entry.getKey();
+      final String[] lines = entry.getValue().split("\\r?\\n");
 
-      Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
-
-      Iterator<MappedItem> mappedIter = mappedItems.iterator();
-      while(mappedIter.hasNext()) {
-        MappedItem item = mappedIter.next();
-        String word = item.getWord();
-        String file = item.getFile();
-        List<String> list = groupedItems.get(word);
-        if (list == null) {
-          list = new ArrayList<String>();
-          groupedItems.put(word, list);
+      for (int i = 0; i < lines.length; i += linesPerMapThread) {
+        int end = Math.min(i + linesPerMapThread, lines.length);
+        final List<String> chunk = new ArrayList<>();
+        for (int j = i; j < end; j++) {
+          chunk.addAll(splitLongLine(lines[j]));
         }
-        list.add(file);
-      }
 
-      long groupTotalTime = System.currentTimeMillis() - groupStartTime;
-
-      // REDUCE:
-      long reduceStartTime = System.currentTimeMillis();
-
-      Iterator<Map.Entry<String, List<String>>> groupedIter = groupedItems.entrySet().iterator();
-      while(groupedIter.hasNext()) {
-        Map.Entry<String, List<String>> entry = groupedIter.next();
-        String word = entry.getKey();
-        List<String> list = entry.getValue();
-
-        reduce(word, list, output);
-      }
-
-      long endTime = System.currentTimeMillis();
-      long reduceTotalTime = endTime - reduceStartTime;
-      long totalTime = endTime - startTime;
-
-      System.out.println("MapReduce Results:");
-      System.out.println("\tMap Time: " + mapTotalTime);
-      System.out.println("\tGroup Time: " + groupTotalTime);
-      System.out.println("\tReduce Time: " + reduceTotalTime);
-      System.out.println("\tTotal Time: " + totalTime + "\n");
-    }
-
-
-    // APPROACH #3: Distributed MapReduce
-    {
-      long startTime = System.currentTimeMillis();
-      final Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
-
-      // MAP:
-      long mapStartTime = System.currentTimeMillis();
-
-      List<MappedItem> mappedItems = new ArrayList<MappedItem>();
-
-      final MapCallback<String, MappedItem> mapCallback = new MapCallback<String, MappedItem>() {
-        @Override
-        public synchronized void mapDone(String file, List<MappedItem> results) {
-          mappedItems.addAll(results);
-        }
-      };
-
-      List<Thread> mapCluster = new ArrayList<Thread>();
-
-      for (Map.Entry<String, String> entry : input.entrySet()) {
-        final String file = entry.getKey();
-        final String contents = entry.getValue();
-        final String[] lines = contents.split("\\r?\\n");
-
-        for (int i = 0; i < lines.length; i += LINES_PER_MAP_THREAD) {
-          int end = Math.min(i + LINES_PER_MAP_THREAD, lines.length);
-          final List<String> chunk = new ArrayList<>();
-          for (int j = i; j < end; j++) {
-            chunk.addAll(splitLongLine(lines[j]));
-          }
-
-          Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-              map(file, chunk, mapCallback);
-            }
-          });
-          mapCluster.add(t);
-          t.start();
-        }
-      }
-
-      // wait for mapping phase to be over:
-      for(Thread t : mapCluster) {
-        try {
-          t.join();
-        } catch(InterruptedException e) {
-          throw new RuntimeException(e);
-        }
-      }
-
-      long mapTotalTime = System.currentTimeMillis() - mapStartTime;
-
-      // GROUP:
-      long groupStartTime = System.currentTimeMillis();
-      Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
-
-      Iterator<MappedItem> mappedIter = mappedItems.iterator();
-      while(mappedIter.hasNext()) {
-        MappedItem item = mappedIter.next();
-        String word = item.getWord();
-        String file = item.getFile();
-        List<String> list = groupedItems.get(word);
-        if (list == null) {
-          list = new ArrayList<String>();
-          groupedItems.put(word, list);
-        }
-        list.add(file);
-      }
-
-      long groupTotalTime = System.currentTimeMillis() - groupStartTime;
-
-      // REDUCE:
-      long reduceStartTime = System.currentTimeMillis();
-
-      final ReduceCallback<String, String, Integer> reduceCallback = new ReduceCallback<String, String, Integer>() {
-        @Override
-        public synchronized void reduceDone(String k, Map<String, Integer> v) {
-          output.put(k, v);
-        }
-      };
-
-      List<Thread> reduceCluster = new ArrayList<Thread>(groupedItems.size());
-
-      // Replace this constant if you want to try different values for performance tests
-      final int WORDS_PER_REDUCE_THREAD = 500; // Between 100 and 1000
-
-      List<Map<String, List<String>>> reduceChunks = new ArrayList<>();
-      Map<String, List<String>> currentChunk = new HashMap<>();
-      int count = 0;
-
-// Build chunks of words (100-1000 per thread)
-      for (Map.Entry<String, List<String>> entry : groupedItems.entrySet()) {
-        currentChunk.put(entry.getKey(), entry.getValue());
-        count++;
-        if (count >= WORDS_PER_REDUCE_THREAD) {
-          reduceChunks.add(currentChunk);
-          currentChunk = new HashMap<>();
-          count = 0;
-        }
-      }
-      if (!currentChunk.isEmpty()) {
-        reduceChunks.add(currentChunk);
-      }
-
-      for (final Map<String, List<String>> chunk : reduceChunks) {
-        Thread t = new Thread(new Runnable() {
-          @Override
-          public void run() {
-            for (Map.Entry<String, List<String>> entry : chunk.entrySet()) {
-              reduce(entry.getKey(), entry.getValue(), reduceCallback);
-            }
-          }
-        });
-        reduceCluster.add(t);
+        Thread t = new Thread(() -> map(file, chunk, mapCallback));
+        mapCluster.add(t);
         t.start();
       }
-
-      // wait for reducing phase to be over:
-      for(Thread t : reduceCluster) {
-        try {
-          t.join();
-        } catch(InterruptedException e) {
-          throw new RuntimeException(e);
-        }
-      }
-
-      long endTime = System.currentTimeMillis();
-      long reduceTotalTime = endTime - startTime;
-      long totalTime = endTime - startTime;
-
-
-      System.out.println("Distributed MapReduce Results:");
-      System.out.println("\tMap Time: " + mapTotalTime);
-      System.out.println("\tGroup Time: " + groupTotalTime);
-      System.out.println("\tReduce Time: " + reduceTotalTime);
-      System.out.println("\tTotal Time: " + totalTime + "\n");
     }
+
+    for (Thread t : mapCluster) {
+      try {
+        t.join();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    long mapTotalTime = System.currentTimeMillis() - mapStartTime;
+
+    // GROUP Phase
+    long groupStartTime = System.currentTimeMillis();
+    Map<String, List<String>> groupedItems = new HashMap<>();
+    for (MappedItem item : mappedItems) {
+      groupedItems.computeIfAbsent(item.getWord(), k -> new ArrayList<>()).add(item.getFile());
+    }
+    long groupTotalTime = System.currentTimeMillis() - groupStartTime;
+
+    // REDUCE Phase
+    long reduceStartTime = System.currentTimeMillis();
+    final ReduceCallback<String, String, Integer> reduceCallback = (word, result) -> {
+      synchronized (output) {
+        output.put(word, result);
+      }
+    };
+
+    List<Thread> reduceCluster = new ArrayList<>();
+    List<Map<String, List<String>>> reduceChunks = new ArrayList<>();
+    Map<String, List<String>> currentChunk = new HashMap<>();
+    int count = 0;
+
+    for (Map.Entry<String, List<String>> entry : groupedItems.entrySet()) {
+      currentChunk.put(entry.getKey(), entry.getValue());
+      count++;
+      if (count >= wordsPerReduceThread) {
+        reduceChunks.add(currentChunk);
+        currentChunk = new HashMap<>();
+        count = 0;
+      }
+    }
+    if (!currentChunk.isEmpty()) reduceChunks.add(currentChunk);
+
+    for (final Map<String, List<String>> chunk : reduceChunks) {
+      Thread t = new Thread(() -> {
+        for (Map.Entry<String, List<String>> entry : chunk.entrySet()) {
+          reduce(entry.getKey(), entry.getValue(), reduceCallback);
+        }
+      });
+      reduceCluster.add(t);
+      t.start();
+    }
+
+    for (Thread t : reduceCluster) {
+      try {
+        t.join();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    long reduceTotalTime = System.currentTimeMillis() - reduceStartTime;
+    long totalTime = mapTotalTime + groupTotalTime + reduceTotalTime;
+
+    // Print & Log
+    System.out.println("MapLines: " + linesPerMapThread + ", ReduceWords: " + wordsPerReduceThread);
+    System.out.println("\tMap Time: " + mapTotalTime + " ms");
+    System.out.println("\tGroup Time: " + groupTotalTime + " ms");
+    System.out.println("\tReduce Time: " + reduceTotalTime + " ms");
+    System.out.println("\tTotal Time: " + totalTime + " ms");
+    System.out.println("----------------------------------------------------");
+
+    csvWriter.printf("%d,%d,%d,%d,%d,%d%n",
+            linesPerMapThread, wordsPerReduceThread,
+            mapTotalTime, groupTotalTime, reduceTotalTime, totalTime);
+    csvWriter.flush();
   }
 
   public static void map(String file, List<String> lines, MapCallback<String, MappedItem> callback) {
-    List<MappedItem> results = new ArrayList<MappedItem>();
+    List<MappedItem> results = new ArrayList<>();
     for (String line : lines) {
-      String[] words = line.trim().split("\s+");
-      for(String word: words) {
+      String[] words = line.trim().split("\\s+");
+      for (String word : words) {
         word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();
         if (!word.isEmpty()) {
           results.add(new MappedItem(word, file));
@@ -293,53 +166,23 @@ public class MapReduceFiles {
     callback.mapDone(file, results);
   }
 
-  public static void map(String file, String contents, List<MappedItem> mappedItems) {
-    String[] words = contents.trim().split("\s+");
-    for(String word: words) {
-      word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();
-      if (!word.isEmpty()) {
-        mappedItems.add(new MappedItem(word, file));
-      }
-    }
-  }
-
-  public static void reduce(String word, List<String> list, Map<String, Map<String, Integer>> output) {
-    Map<String, Integer> reducedList = new HashMap<String, Integer>();
-    for(String file: list) {
-      Integer occurrences = reducedList.get(file);
-      if (occurrences == null) {
-        reducedList.put(file, 1);
-      } else {
-        reducedList.put(file, occurrences.intValue() + 1);
-      }
-    }
-    output.put(word, reducedList);
-  }
-
   public static void reduce(String word, List<String> list, ReduceCallback<String, String, Integer> callback) {
-
-    Map<String, Integer> reducedList = new HashMap<String, Integer>();
-    for(String file: list) {
-      Integer occurrences = reducedList.get(file);
-      if (occurrences == null) {
-        reducedList.put(file, 1);
-      } else {
-        reducedList.put(file, occurrences.intValue() + 1);
-      }
+    Map<String, Integer> reducedList = new HashMap<>();
+    for (String file : list) {
+      reducedList.put(file, reducedList.getOrDefault(file, 0) + 1);
     }
     callback.reduceDone(word, reducedList);
   }
 
-  public static interface MapCallback<E, V> {
-    public void mapDone(E key, List<V> values);
+  public interface MapCallback<E, V> {
+    void mapDone(E key, List<V> values);
   }
 
-  public static interface ReduceCallback<E, K, V> {
-    public void reduceDone(E e, Map<K,V> results);
+  public interface ReduceCallback<E, K, V> {
+    void reduceDone(E e, Map<K, V> results);
   }
 
   private static class MappedItem {
-
     private final String word;
     private final String file;
 
@@ -369,11 +212,8 @@ public class MapReduceFiles {
     String lineSeparator = System.getProperty("line.separator");
 
     try {
-      if (scanner.hasNextLine()) {
-        fileContents.append(scanner.nextLine());
-      }
       while (scanner.hasNextLine()) {
-        fileContents.append(lineSeparator + scanner.nextLine());
+        fileContents.append(scanner.nextLine()).append(lineSeparator);
       }
       return fileContents.toString();
     } finally {
