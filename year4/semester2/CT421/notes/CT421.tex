@@ -1297,4 +1297,119 @@ The \textbf{Red Queen dynamics} are a continuous arms race with adaptation \& co
 \subsubsection{Evolving Deep Neural Networks}
 Challenges include the high-dimensional search spaces, computational requirements, \& efficient encoding of complex architectures.
 
+\section{Explainable AI}
+Explainable AI is a large research are that has received much attention as of late in the machine learning community.
+It has a long history in AI research and has much domain-specific work.
+The ``black box'' nature of many AI systems leads to a lack of transparency, and makes it difficult to explain their decisions.
+\textbf{Explainable AI (XAI)} promotes AI algorithms that can show their internal process and explain how they make their decisions.
+Deep learning has out-performed traditional ML approaches but there is a lack of transparency.
+\\\\
+Many things rely on AI decisions, such as product recommendations, friend suggestions, new recommendations, autonomous vehicles, financial decisions, \& medical recommendations.
+There are also regulations such as GDPR and the FDA on medical decisions/predictions, and the Algorithmic Accountability Act 2019, as well as many others.
+Users need to understand \textit{why} AI makes specific recommendations;
+if there is a lack of trust, then there will be lower adoption.
+There is also ethical responsibility: accountability for algorithmic decisions and detecting \& mitigating bias.
+\\\\
+Explainability is also useful for debugging \& improvement, such as for understanding failures, model \& algorithm enhancement, detecting adversarial attacks, and informing feature engineering \& future data collection.
+
+\subsection{Evaluation}
+Evaluation of explanations can be made under three headings:
+\begin{itemize}
+    \item   \textbf{Correctness:} how accurately the explanation represents the model's actual decision process;
+    \item   \textbf{Comprehensibility:} how understandable the explanation is to the target audience;
+    \item   \textbf{Efficiency:} computational \& cognitive resources required to generate \& process explanations.
+\end{itemize}
+
+\textbf{User-centered methods} for evaluation of explanations typically look at:
+\begin{itemize}
+    \item   Simulated task experiments: \textit{do explanations improve user performance on specific tasks?};
+    \item   Effect on trust: \textit{assessing if explanations appropriately increase or decrease user trust based on model capabilities}.
+\end{itemize}
+
+Humans generally prefer simple explanations, such as causal structures, etc., which makes capturing edge cases difficult.
+\\\\
+\textbf{Computational evaluation methods} include:
+\begin{itemize}
+    \item   \textbf{Perturbation-based changes:} identify the top $k$ features, perturb the features (alter, delete, replace with random), and plot the prediction versus the number of features perturbed.
+            Usually, the bigger the change following perturbation, the better the feature.
+
+    \item   \textbf{Example-based explanation:} generation of an example to explain the prediction.
+            \begin{itemize}
+                \item   \textbf{Prototypes:} representative examples that illustrate typical cases;
+                \item   \textbf{Counterfactuals:} examples showing how inputs could be minimally changed to get different outcomes;
+                \item   \textbf{Influential instances:} training examples that have the most influence;
+                \item   \textbf{Boundary examples:} cases near the decision boundary that demonstrate the model's limitations.
+            \end{itemize}
+
+            For example-based explanation, evaluation metrics include:
+            \begin{itemize}
+                \item   \textbf{Proximity:} how close examples are to the original input;
+                \item   \textbf{Diversity:} variety of examples provided;
+                \item   \textbf{Plausibility:} whether examples seem realistic to users.
+            \end{itemize}
+
+    \item   \textbf{Saliency} methods highlight the input features or regions that most influence a model's prediction.
+            \begin{itemize}
+                \item   \textbf{Gradient-based methods:} calculate the sensitivity of output with respect to input features;
+                \item   \textbf{Perturbation-based methods:} observe prediction changes when features are modified.
+            \end{itemize}
+
+            Applications of saliency methods include:
+            \begin{itemize}
+                \item   Image classification: highlighting regions that influenced the classification;
+                \item   NNLP: identifying influential words or phrases in text classification.
+            \end{itemize}
+\end{itemize}
+
+\subsection{XAI Approaches}
+In AI systems, we typically use data to give a recommendation, classification, prediction, etc.
+In XAI, we give the recommendation \textit{and} an explanation, and typically try to allow feedback.
+
+\textbf{Pre-modelling explainability} includes:
+\begin{itemize}
+    \item   Data selection;
+    \item   Preparation transparency;
+    \item   Feature engineering (\& documentation): why certain variables were selected;
+    \item   Design constraints documentation: outlining constraints \& considerations.
+    \item   Success metrics definition: how the algorithm's performance will be measured beyond just technical accuracy.
+\end{itemize}
+
+An \textbf{explanation} is the meaning behind a decision;
+a decision may be correct, but complex (such as a conjunction of many features).
+Giving an explanation for non-linear models is more difficult.
+Often, as accuracy increases, explainability suffers:
+linear models are relatively easy to explain, while NN \& non-linear models are harder to explain. 
+There is usually a trade-off between performance \& explainability;
+much previous work has concentrated on improving performance and has largely ignored transparency.
+XAI attempts to enable better model interpretability while maintaining performance.
+\\\\
+Some models are \textbf{intrinsically explainable:}
+\begin{itemize}
+    \item   In linear regression, the effect of each feature is the weight of the feature times the feature value.
+    \item   Decision tree-based models split the data multiple times according to certain cutoff values in the features.
+            The decision path can be decomposed into one component per feature, with all edges connected by an \verb|AND|;
+            we can then measure the importance of the feature by considering the information gain.
+\end{itemize}
+
+Similarly, in reasoning systems, explanations can be generated relatively easily.
+Oftentimes, simple explanation concepts can be helpful;
+consider a complex MAS with learning: it can be hard to explain dynamics, but analysis of equilibria can give a reasonable explanation of likely outcomes.
+\\\\
+Basic learning approaches may give better understanding / explanations;
+if some function is learnable from a simple model, then use the simple model, as this tends to lead to better explainability.
+As we move to more complex models which are less interpretable, other approaches are adopted such as
+feature importance, dependence plots, \& sensitivity analysis.
+
+\subsubsection{Explainability in Neural Networks}
+It can be difficult to generate explanations for neural networks.
+Neural networks can also be extremely sensitive to perturbations and are susceptible to adversarial attacks.
+The predictions for NNs must be aligned with humans to make sense to humans.
+Approaches for this include simplifying the neural network, visualisation, \& highlight aspects.
+
+
+
+
+
+
+
 \end{document}
