@@ -1,4 +1,103 @@
+Old:
 - always question about rsa and diffie helman
 - don't expecct any diffie helman calculations on the exam, that would be ridiciulous
 - "double ratchet algorithm will be covered in exam paper"
+
+New:
+2023/2024
+- similar to question 2 smaple paper (2023/2024)
+    - mode of operation
+- any digital certificate question will be like question 3 sample paper
+- for design questions, no right or wrong, justify design show thinking
+- ipsec question on exa would not go beyond sample paper
+    - nothing sinister, nothing complicated
+- timing attack question would be along same lines
+- seems like basically everything would be "along same lines" - me
+- double des, triple des important
+- TLS will be on the exam.
+    - answer different tls-related terms
+    - difference between tls 1.2 and 1.3
+    - diagram of handshake
+    - authentication
+    - keyshare extension
+    - nothing sinister, all stuff we have done
+- block cipher fundamentals such as s-boxes and p-boxes
+    - recurring theme
+- LSFR also
+    - should understand different stream ciphers
+    - maybe come up with a design of your own making
+
+- message authentication
+    - things like sequence authentication
+
+2022/2023
+- relatively similar
+- block modes, lsfrs, block ciphers, public key encryption i.e. diffie helman key exchange
+- look at the diffie hellman examples we exercies
+- public key will be on the exam
+- eliptic curve, diffie hellman
+    - have a good working understanding of both
+    - hands on understanding of diffie hellman would be useful
+        - guess be able to calculate?
+- steaganography wont be covered this year
+- kerberos was also not covered
+
+lecture notes:
+- definitions terminology stuff like that make great questions
+    - what is cyber security what is defense in depth what is attacker threat agent hacker
+    - briefly describe what the terms mean
+    - what is spear phishing
+- case studies have no revelance for exam paper
+- cia triad
+    - good few definitions
+    - what is cia triad
+- no questions about gdpr
+- history of cryptography
+    - have a good working understanding of different cryptographic algorithms
+        - caesar cipher, monoalphabetic substitution
+        - playfair cipher
+            - might be quite useful to know how it works
+        - rotor ciphre, vigenere cipher
+        - differnt attack types
+    - don't expect to exercise complicated examples but do need to understand
+- no cryptoanalysis question
+- block ciphers:
+    - what is a block cipher
+    - building blocks
+    - feistel networks etc
+    - typical algs
+    - typical modes of operation
+- stream ciphers
+    - understanding what it does, different ways
+    - don't memorise rc4
+    - but be able to design your own using lfsr
+- data integrity and hash functions and macs important
+    - what are hash functions
+    - different mode sof operations
+    - how to use to ensure integrity
+    - characterisitcs, stonrg and weak colision resistance
+- hash cracking and rainbow tables not relevant
+- public key cryptography
+- key distribution
+    - don't expect any complicated graphs
+    - should understand different methodologies but that's it
+    - what's the purpose
+    - what approaches to public and private keys
+- digital certificates
+    - more applied questions
+- no openssl
+- no code writing
+- ipsec
+- heartbleed and tls tie together
+    - how does tls work
+    - bigger picture, bells and whistles tls
+
+= secure network principals
+    - very useful if you are asked to design one yourself
+    - apply principles to get starting point
+
+- double ratchet will be on exam
+    - new question never covered before
+
+- should be fair exam paper
 
