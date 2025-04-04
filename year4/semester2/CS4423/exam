@@ -1,1 +1,17 @@
-Ger(n,m) will be on the exam every year
+old:
+- Ger(n,m) will be on the exam every year
+
+new:
+- probably won't be asked to get powers of matrices but probably will be asked *how* you could use powers
+- bipartite graphs important, line graphs less so
+- won't be asked to calculate eigenvector centrality of nodes in a graph
+    - "cruel and unusual"
+- betweenness centrality is difficult to calculate in exam situation  
+    - might have to explain what it means rather than compute it
+- know degree centrality and closeness centrality!
+- normalised or not normalised is fine
+- graph laplacian will feature only briefly but will
+- ER graphs will be on the exam
+- no bow tie structure this year
+- networkx is mentioned in exam in the exact same way as in the sample paper and no other way
+- generate tree from prufer code
