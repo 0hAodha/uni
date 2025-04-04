@@ -1,0 +1,64 @@
+Recap:
+    search
+    - heuristics
+
+    adverarial search
+    - minimax
+    - alpha - beta pruning
+    - hill climbing
+    - monte carlo tim esaved
+
+    schemata theorem
+    - GAs
+    - representation / ooperataors
+
+    questions relating to
+    - diversity
+    - novelty
+
+    understanding balance betweeen
+    - exploration
+    - exploitation
+
+    agents / artificial life
+    - autonomous
+    - emergence
+
+    theory:
+        - auctions
+        - negotiation
+        - speech act theory
+        - game theory
+
+    cellular automata / ant colony optimisation
+        - neuro-evolution
+
+    how to generate explanations
+
+exam:
+- 4 questoins do 3
+- question 1: search
+    - a) 2-player search
+    - b) general search
+    - c) modern where no full access to search spaces
+
+- question 2: assignment 1
+    - a) evolutionary computation
+    - b) problem (some kind of optimisation of an NP hard problem, try to come up with representation to solve it)
+    - relatively straightforward if you did assignment 1
+    - come up with a fitness function or representation that is justifiable
+
+- question 3:
+    - a) game theory | some loose overlap with assignmnet 2
+    - b) 
+    - c) agent theory / agent systems
+        - autonomy, negotiations, speech act theory
+
+- question 4:
+    - a) artificial life type stuff
+    - b) general AI more general theory or models of ai
+    - c) learning mechanisms / explainable ai
+
+- bullet points are enough
+- long essays take longer to pull out the points
+- no mad surprises
