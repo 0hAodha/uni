@@ -45,3 +45,23 @@ multiplexing,
 
 Ok, this year they're swapping performance benchmarking with soft RTS
 Made with Glean
+
+2 out of 3 in two sections
+No mandatory questions like last year
+#### Shukat Section
+- POSIX API Question
+    - Look at previous years
+    - What is a signal etc.
+- Time synchronisation
+- PTP and NTP
+    - Could be a question on either but not both
+    - Explain how offsets are calculated etc.
+    - Just be able to explain the whole thing
+- Scheduling
+    - Look at the worksheet for RM and EDF scheduling
+- Similar to previous years
+
+#### Jawad Section
+- No question from week 12
+- There is a question from Soft RTS
+
