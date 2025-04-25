@@ -10,11 +10,11 @@
 08 - [X] 03c. CT420 WCET Analysis.pdf
 
 09 - [X] 04a. CT420 POSIX Introduction.pdf
-10 - [ ] 04b. CT420 POSIX Signals.pdf
-11 - [ ] 04c. CT420 Process Synchronization and RTS.pdf
+10 - [X] 04b. CT420 POSIX Signals.pdf
+11 - [X] 04c. CT420 Process Synchronization and RTS.pdf
 
-12 - [ ] 05a. CT420 RTS Scheduling II.pdf
-13 - [ ] 05b. CT420 Worksheet RM and EDF Schedulability.pptx
+12 - [X] 05a. CT420 RTS Scheduling II.pdf
+13 - [X] 05b. CT420 Worksheet RM and EDF Schedulability.pptx
 
 14 - [ ] 06. Design considerations for RTSCS.pdf
 15 - [ ] 07. Soft RTS.pdf
