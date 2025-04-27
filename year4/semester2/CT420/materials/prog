@@ -16,10 +16,12 @@
 12 - [X] 05a. CT420 RTS Scheduling II.pdf
 13 - [X] 05b. CT420 Worksheet RM and EDF Schedulability.pptx
 
-14 - [ ] 06. Design considerations for RTSCS.pdf
-15 - [ ] 07. Soft RTS.pdf
-16 - [ ] 08. Emerging protocols-I.pdf
-17 - [ ] 09. Emerging protocols-part-2.pdf
-18 - [ ] 10. 4-QUIC Congestion conrtol.pdf
-19 - [ ] 11. 5-QUIC Logging.pdf
-20 - [ ] 12. 6-Performance Benchmarking.pdf
+14 - [X] 06. Design considerations for RTSCS.pdf
+
+15 - [X] 07. Soft RTS.pdf
+16 - [X] 08. Emerging protocols-I.pdf
+17 - [X] 09. Emerging protocols-part-2.pdf
+18 - [X] 10. 4-QUIC Congestion conrtol.pdf
+19 - [X] 11. 5-QUIC Logging.pdf
+
+20 - [X] 12. 6-Performance Benchmarking.pdf (not on exam)
